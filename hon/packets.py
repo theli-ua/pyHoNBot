@@ -83,6 +83,8 @@ class ID:
     HON_SC_TOTAL_ONLINE = 0x68
     HON_SC_REQUEST_NOTIFICATION = 0xB2
     HON_SC_NOTIFICATION = 0xB4
+
+
 FILTER=''.join([(len(repr(chr(x)))==3) and chr(x) or '.' for x in range(256)])
 
 def dump(src, length=8):
@@ -98,6 +100,11 @@ def dump(src, length=8):
 class packet_factory:
     cs_structs = {
             ID.HON_CS_AUTH_INFO : 'IsssIIB',
+            ID.HON_CS_PONG      : '',
+            ID.HON_CS_JOIN_CHANNEL : 's',
+            }
+    sc_structs = {
+            ID.HON_SC_PING : '',
             }
     @staticmethod
     def pack(packet_id, *args):
@@ -106,5 +113,12 @@ class packet_factory:
             if f == 's':
                 fmt[i] = '{0}s'.format(1 + len(args[i]))
         fmt = ''.join(fmt)
-        print dump(struct.pack('<H' + fmt,packet_id,*args))
         return struct.pack('<H' + fmt,packet_id,*args)
+
+    @staticmethod
+    def parse_packet(data):
+        packet_id = struct.unpack('<H',data[:2])[0]
+        data = data[2:]
+        #print(hex(packet_id))
+        #print(dump(data))
+        return packet_id,data
