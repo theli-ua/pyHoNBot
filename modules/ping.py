@@ -4,8 +4,8 @@
 from hon.packets import ID
 
 
-def pong(bot,packet_id,input): 
-    print('got ping,sending pong!')
+def pong(bot,*args): 
+    #print('got ping,sending pong!')
     bot.write_packet(ID.HON_CS_PONG)
 pong.event = [ID.HON_SC_PING]
 
