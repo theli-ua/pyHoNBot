@@ -162,6 +162,7 @@ cs_structs = {
         ID.HON_CS_PM : 'ss',
         ID.HON_CS_WHISPER : 'ss',
         ID.HON_CS_CHANNEL_MSG : 'sI',
+        ID.HON_CS_CHANNEL_EMOTE : 'sI',
         }
 sc_structs = {
         ID.HON_SC_PING : '',
