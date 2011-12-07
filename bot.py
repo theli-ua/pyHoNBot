@@ -138,7 +138,7 @@ class Bot( asynchat.async_chat ):
                 func.thread = True
 
             if not hasattr(func, 'event'): 
-                func.event = []
+                func.event = [packets.ID.HON_SC_WHISPER,packets.ID.HON_SC_PM,packets.ID.HON_SC_CHANNEL_MSG]
 
             if hasattr(func, 'rule'): 
                 if isinstance(func.rule, str): 
