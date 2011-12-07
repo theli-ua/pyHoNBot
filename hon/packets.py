@@ -105,6 +105,8 @@ class packet_factory:
             }
     sc_structs = {
             ID.HON_SC_PING : '',
+            ID.HON_SC_PM    : 'ss',
+            ID.HON_SC_WHISPER : 'ss',
             }
     @staticmethod
     def pack(packet_id, *args):

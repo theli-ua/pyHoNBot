@@ -200,10 +200,8 @@ class Bot( asynchat.async_chat ):
 
     def dispatch(self,data):
         packet_id,data = packets.packet_factory.parse_packet(data)
- 
-        #bytes, event, args = args[0], args[1], args[2:]
-        #text = decode(bytes)
-        print 'trying to dispatch',hex(packet_id)
+        #print 'trying to dispatch',hex(packet_id)
+        origin = (packet_id,None,None)
 
         for priority in ('high', 'medium', 'low'): 
             items = self.commands[priority].items()

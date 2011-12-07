@@ -3,7 +3,7 @@
 """
 from hon.packets import ID
 
-def startup(bot, packet_id,input): 
+def startup(bot, *args): 
     for channel in bot.config.channels: 
         bot.write_packet(ID.HON_CS_JOIN_CHANNEL,channel)
 
