@@ -27,7 +27,7 @@ class Bot( asynchat.async_chat ):
         
 
     def write_packet(self,packet_id,*args):
-        self.write(packets.packet_factory.pack(packet_id,*args))
+        self.write(packets.pack(packet_id,*args))
  
     def write( self, data ):
         self.push(data)
@@ -39,7 +39,7 @@ class Bot( asynchat.async_chat ):
         print ('socket connected')
         self.set_terminator(2)
         self.got_len = False
-        #self.write(packets.packet_factory.pack(packets.ID.HON_CS_AUTH_INFO,self.account_id,
+        #self.write(packets.pack(packets.ID.HON_CS_AUTH_INFO,self.account_id,
             #self.cookie,self.ip,self.auth_hash,packets.ID.HON_PROTOCOL_VERSION,5,0))
         self.write_packet(packets.ID.HON_CS_AUTH_INFO,self.account_id,
             self.cookie,self.ip,self.auth_hash,packets.ID.HON_PROTOCOL_VERSION,5,0)
@@ -264,7 +264,7 @@ class Bot( asynchat.async_chat ):
         return CommandInput(text, origin, data, match)
 
     def dispatch(self,data):
-        origin,data = packets.packet_factory.parse_packet(data)
+        origin,data = packets.parse_packet(data)
         packet_id = origin[0]
         #print 'trying to dispatch',hex(packet_id)
 
