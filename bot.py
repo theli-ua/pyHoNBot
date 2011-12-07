@@ -11,6 +11,7 @@ import socket, asyncore, asynchat
 from hon import masterserver,packets
 from struct import unpack
 from hon.honutils import normalize_nick
+import time
 
 home = os.getcwd() 
 
@@ -26,13 +27,25 @@ class Bot( asynchat.async_chat ):
         self.id2nick = {}
         self.nick2id = {}
         self.setup()
+        self.sending = threading.RLock()
+        self.sleep = time.time() - 10
+        self.send_threshold = 1
+
+        self.ac_in_buffer_size = 2
+        #self.ac_out_buffer_size = 2
         
 
     def write_packet(self,packet_id,*args):
         self.write(packets.pack(packet_id,*args))
  
     def write( self, data ):
+        self.sending.acquire()
+        to_sleep =  time.time() - self.sleep - self.send_threshold
+        if to_sleep < 0:
+            time.sleep(-to_sleep)
         self.push(data)
+        self.sleep = time.time()
+        self.sending.release()
  
     #def handle_close( self ):
         #print 'disconnected'
