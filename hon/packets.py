@@ -163,6 +163,8 @@ cs_structs = {
         ID.HON_CS_WHISPER : 'ss',
         ID.HON_CS_CHANNEL_MSG : 'sI',
         ID.HON_CS_CHANNEL_EMOTE : 'sI',
+        ID.HON_CS_CLAN_ADD_MEMBER : 's',
+        ID.HON_CS_CLAN_MESSAGE : 's',
         }
 sc_structs = {
         ID.HON_SC_PING : '',
