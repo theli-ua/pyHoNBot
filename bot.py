@@ -10,6 +10,7 @@ import re
 import socket, asyncore, asynchat
 from hon import masterserver,packets
 from struct import unpack
+from hon.honutils import normalize_nick
 
 home = os.getcwd() 
 
@@ -22,8 +23,9 @@ class Bot( asynchat.async_chat ):
         self.buffer = ''
         self.doc = {}
         self.stats = {}
-        self.setup()
         self.id2nick = {}
+        self.nick2id = {}
+        self.setup()
         
 
     def write_packet(self,packet_id,*args):
@@ -67,6 +69,30 @@ class Bot( asynchat.async_chat ):
         self.auth_hash = auth_data['auth_hash']
         self.got_len = False
         self.nick = auth_data['nickname']
+        if "clan_member_info" in auth_data:
+            self.clan_info = auth_data["clan_member_info"]
+        else:
+            self.clan_info = {}
+        if "clan_roster" in auth_data:
+            self.clan_roster = auth_data["clan_roster"]
+        else:
+            self.clan_roster = {}
+        if "buddy_list" in auth_data:
+            buddy_list = auth_data["buddy_list"]
+        else:
+            buddy_list = {}
+        self.buddy_list = {}
+        for id in self.clan_roster:
+            nick = normalize_nick(self.clan_roster[id]['nickname'])
+            self.id2nick[id] = nick
+            self.nick2id[nick] = id
+        for buddies in buddy_list.values():
+            for buddy in buddies.values():
+                id = int(buddy['buddy_id'])
+                nick = normalize_nick(buddy['nickname'])
+                self.id2nick[id] = nick
+                self.nick2id[nick] = id
+                self.buddy_list[id] = buddy
         self.connect( ( auth_data['chat_url'], packets.ID.HON_CHAT_PORT ) )
         asyncore.loop()
     def setup(self): 

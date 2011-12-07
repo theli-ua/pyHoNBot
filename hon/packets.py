@@ -4,6 +4,19 @@ class ID:
     #generic constants
     HON_CHAT_PORT = 11031
     HON_PROTOCOL_VERSION = 20
+
+    HON_STATUS_OFFLINE    =  0
+    HON_STATUS_ONLINE     =  3
+    HON_STATUS_INLOBBY    =  4
+    HON_STATUS_INGAME     =  5
+
+    HON_FLAGS_PREPURCHASED =0x40
+    HON_FLAGS_CHAT_NONE =0x00
+    HON_FLAGS_CHAT_OFFICER =0x01
+    HON_FLAGS_CHAT_LEADER =0x02
+    HON_FLAGS_CHAT_ADMINISTRATOR =0x03
+    HON_FLAGS_CHAT_STAFF =0x04
+        
     
 
     #- Client -> Server
@@ -112,9 +125,23 @@ def parse_channel_join(packet_id,data):
         tmp,data = parse_part(data,'sIBBsss') #nick,id,status,flags,chatsymbol,shield,icon?
         members.append(tmp)
     res.append(members)
-    #print origin
-    #print res
     return origin,res
+
+def parse_initiall_statuses(packet_id,data):
+    origin = [packet_id,None,None]
+    res,data = parse_part(data,'I') #count
+    buddies = []
+    for _ in xrange(res[-1]):
+        m,data = parse_part(data,'IBB') #id,status,flags
+        if m[1] in [ ID.HON_STATUS_INLOBBY , ID.HON_STATUS_INGAME ]:
+            tmp,data = parse_part(data,'ss') # server, gamename
+            m.extend(tmp)
+        else:
+            m.extend([None,None])
+        buddies.append(m)
+    res.append(buddies)
+    return origin,res
+
 
 chat_packets = [ID.HON_SC_PM,ID.HON_SC_WHISPER,ID.HON_SC_CHANNEL_MSG]
 cs_structs = {
@@ -131,6 +158,7 @@ sc_structs = {
         ID.HON_SC_WHISPER : 'ss',
         ID.HON_SC_CHANNEL_MSG : 'IIs',
         ID.HON_SC_CHANGED_CHANNEL : parse_channel_join,
+        ID.HON_SC_INITIAL_STATUS  : parse_initiall_statuses,
         }
 def pack(packet_id, *args):
     args = list(args)
