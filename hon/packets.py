@@ -142,6 +142,18 @@ def parse_initiall_statuses(packet_id,data):
     res.append(buddies)
     return origin,res
 
+def parse_user_status(packet_id,data):
+    origin = [packet_id,None,None]
+    res,data = parse_part(data,'IBBIssss') #id,status,flags,clan_id,clan_name,chatsymbol,shield,icon
+    if res[1] in [ ID.HON_STATUS_INLOBBY , ID.HON_STATUS_INGAME ]:
+        tmp,data = parse_part(data,'s') #server
+        res.append(tmp[0])
+        if res[1] == ID.HON_STATUS_INGAME:
+            tmp,data = parse_part(data,'sI') #game name, matchid
+            res.extend(tmp)
+    return origin,res
+
+
 
 chat_packets = [ID.HON_SC_PM,ID.HON_SC_WHISPER,ID.HON_SC_CHANNEL_MSG]
 cs_structs = {
@@ -159,6 +171,7 @@ sc_structs = {
         ID.HON_SC_CHANNEL_MSG : 'IIs',
         ID.HON_SC_CHANGED_CHANNEL : parse_channel_join,
         ID.HON_SC_INITIAL_STATUS  : parse_initiall_statuses,
+        ID.HON_SC_UPDATE_STATUS : parse_user_status,
         }
 def pack(packet_id, *args):
     args = list(args)
