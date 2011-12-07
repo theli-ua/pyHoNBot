@@ -154,7 +154,6 @@ def parse_user_status(packet_id,data):
     return origin,res
 
 
-
 chat_packets = [ID.HON_SC_PM,ID.HON_SC_WHISPER,ID.HON_SC_CHANNEL_MSG]
 cs_structs = {
         ID.HON_CS_AUTH_INFO : 'IsssIIB',
@@ -172,6 +171,7 @@ sc_structs = {
         ID.HON_SC_CHANGED_CHANNEL : parse_channel_join,
         ID.HON_SC_INITIAL_STATUS  : parse_initiall_statuses,
         ID.HON_SC_UPDATE_STATUS : parse_user_status,
+        ID.HON_SC_JOINED_CHANNEL : 'sIIBBsss', #nick,id,chat_id,status,flags,chatsymbol,shield,icon
         }
 def pack(packet_id, *args):
     args = list(args)
