@@ -4,6 +4,7 @@
 from hon.packets import ID
 
 def startup(bot, *args): 
+    print ('startup')
     for channel in bot.config.channels: 
         bot.write_packet(ID.HON_CS_JOIN_CHANNEL,channel)
 

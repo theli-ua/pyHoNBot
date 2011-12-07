@@ -98,21 +98,30 @@ def dump(src, length=8):
     return result
 
 class packet_factory:
+    chat_packets = [ID.HON_SC_PM,ID.HON_SC_WHISPER,ID.HON_SC_CHANNEL_MSG]
     cs_structs = {
             ID.HON_CS_AUTH_INFO : 'IsssIIB',
             ID.HON_CS_PONG      : '',
             ID.HON_CS_JOIN_CHANNEL : 's',
+            ID.HON_CS_PM : 'ss',
+            ID.HON_CS_WHISPER : 'ss',
+            ID.HON_CS_CHANNEL_MSG : 'sI',
             }
     sc_structs = {
             ID.HON_SC_PING : '',
             ID.HON_SC_PM    : 'ss',
             ID.HON_SC_WHISPER : 'ss',
+            ID.HON_SC_CHANNEL_MSG : 'IIs'
             }
     @staticmethod
     def pack(packet_id, *args):
+        args = list(args)
         fmt = list(packet_factory.cs_structs[packet_id])
         for i,f in enumerate(fmt):
             if f == 's':
+                #print (args[i].__class__.__name__)
+                if isinstance(args[i],unicode):
+                    args[i] = args[i].encode('utf-8')
                 fmt[i] = '{0}s'.format(1 + len(args[i]))
         fmt = ''.join(fmt)
         return struct.pack('<H' + fmt,packet_id,*args)
@@ -121,6 +130,29 @@ class packet_factory:
     def parse_packet(data):
         packet_id = struct.unpack('<H',data[:2])[0]
         data = data[2:]
-        #print(hex(packet_id))
-        #print(dump(data))
-        return packet_id,data
+        origin = [packet_id,None,None]
+        if packet_id in packet_factory.sc_structs:
+            fmt = list(packet_factory.sc_structs[packet_id])
+            res = []
+            for f in fmt:
+                if f == 's':
+                    i = data.index('\0')
+                    res.append(data[:i].decode("utf-8"))
+                    #print res
+                    data = data[i+1:]
+                else:
+                    f = '<' + f
+                    i = struct.calcsize(f)
+                    res.append(struct.unpack(f,data[:i])[0])
+                    data = data[i:]
+            data = res
+
+            if packet_id in packet_factory.chat_packets:
+                origin[1] = data[0]
+                if packet_id == ID.HON_SC_CHANNEL_MSG:
+                    origin[2] = data[1]
+                    data = data[2]
+                else:
+                    data = data[1]
+            #print(origin,data,isinstance(data,unicode))
+        return origin,data
