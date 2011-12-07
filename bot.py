@@ -263,6 +263,7 @@ class Bot( asynchat.async_chat ):
                     #return lambda msg: self.bot.msg(sender, msg)
                 if attr == 'reply':
                     if origin[0] == packets.ID.HON_SC_CHANNEL_MSG:
+                        origin[0] = packets.ID.HON_SC_CHANNEL_EMOTE
                         return (lambda msg:
                                 self.bot.write_packet(origin[0],self.id2nick[origin[1]] + ': ' + msg,
                                     origin[2]))
@@ -271,6 +272,7 @@ class Bot( asynchat.async_chat ):
                                 self.bot.write_packet(origin[0],origin[1],msg))
                 elif attr == 'say':
                     if origin[0] == packets.ID.HON_SC_CHANNEL_MSG:
+                        origin[0] = packets.ID.HON_SC_CHANNEL_EMOTE
                         return (lambda msg:
                                 self.bot.write_packet(origin[0],msg,origin[2]))
                     else:
