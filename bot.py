@@ -12,6 +12,7 @@ from hon import masterserver,packets
 from struct import unpack
 from hon.honutils import normalize_nick
 import time
+from hon.honutils import normalize_nick
 
 home = os.getcwd() 
 
@@ -296,6 +297,8 @@ class Bot( asynchat.async_chat ):
                 s.match = match
                 s.group = match.group
                 s.groups = match.groups
+                if isinstance(origin[1],unicode):
+                    origin[1] = normalize_nick(origin[1])
                 s.admin = origin[1] in self.config.admins
                 s.owner = origin[1] == self.config.owner
                 return s
