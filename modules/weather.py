@@ -67,7 +67,7 @@ def code(phenny, search):
             sumOfSquares = (diff, icao_code)
       return sumOfSquares[1]
 
-def f_weather(self, input): 
+def weather(self, input): 
    """.weather <ICAO> - Show the weather at airport with the code <ICAO>."""
    #if origin.sender == '#talis': 
    #   if args[0].startswith('.weather '): return
@@ -405,7 +405,7 @@ def f_weather(self, input):
       args = (cover, temp, pressure, cond, wind, str(icao_code), time)
 
    self.say( format.encode('utf-8') % args)
-f_weather.rule = (['weather'], r'(.*)')
+weather.rule = (['weather'], r'(.*)')
 
 if __name__ == '__main__': 
    print __doc__.strip()

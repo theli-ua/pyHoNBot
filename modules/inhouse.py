@@ -60,6 +60,7 @@ def initiall_statuses(bot,packet_id,data):
 initiall_statuses.event = [ID.HON_SC_INITIAL_STATUS]
 
 def ih(bot,input):
+    """List inhouses"""
     for game in _games.values():
         if len(game.players) >= _min_players or _check_ih(game.name):
             players = [bot.id2nick[id] for id in game.players]

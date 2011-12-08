@@ -17,5 +17,6 @@ _responses = ['It is possible.', 'Yes!', 'Of course.',
                            'The answer is def-- oooh! shiny thing!']
 
 def eightball(bot,*args):
+    """Decide your fate"""
     bot.say(_responses[randint(0,len(_responses) - 1)])
 eightball.commands = ['eightball']
