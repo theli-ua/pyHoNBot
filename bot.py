@@ -20,7 +20,7 @@ class Bot( asynchat.async_chat ):
     def __init__( self,config ):
         asynchat.async_chat.__init__( self )   
         self.config = config
-        self.nick = 'nickname'
+        self.nick = self.config.nick
         self.buffer = ''
         self.doc = {}
         self.stats = {}
@@ -164,11 +164,8 @@ class Bot( asynchat.async_chat ):
                     report.append(line[0].lower() + line[1:])
                     break
             else: report.append('source unknown')
-
-            #self.msg(origin.sender, report[0] + ' (' + report[1] + ')')
-            print(origin.sender, report[0] + ' (' + report[1] + ')')
-        #except: self.msg(origin.sender, "Got an error.")
-        except: print(origin.sender, "Got an error.")
+            print(report[0] + ' (' + report[1] + ')')
+        except: print("Got an error.")
 
     def register(self, variables): 
         # This is used by reload.py, hence it being methodised
