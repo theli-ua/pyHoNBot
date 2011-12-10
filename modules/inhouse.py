@@ -19,17 +19,19 @@ _min_players = 2
 _ih_keywords = set(['inhouse','ih','funhouse'])
 _ih_threshold = 1
 def _check_ih(game_name):
-    keywords = set(game_name.split(' '))
+    keywords = set([w.strip('^;;"') for w in game_name.split(' ')])
     if len(keywords & _ih_keywords) >= _ih_threshold:
         return True
     return False
 
 def _add_game(account_id,game_name,matchid,server,bot):
     key = (matchid,game_name)
+    print 'add',game_name,server,matchid
     if key not in _games:
         _games[key] = Game(game_name,matchid,server)
         if _check_ih(game_name):
             bot.write_packet(ID.HON_CS_CLAN_MESSAGE,'^:{0} ^;was started,join up!'.format(game_name))  
+            bot.mumbleannounce('"{0}" was started,join up!'.format(game_name))
             _games[key].announced = True
     _games[key].players |= set([account_id])
     _id2game[account_id] = key

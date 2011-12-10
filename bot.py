@@ -27,6 +27,8 @@ class Bot( asynchat.async_chat ):
         self.stats = {}
         self.id2nick = {}
         self.nick2id = {}
+        self.chan2id = {}
+        self.id2chan = {}
         self.setup()
         self.sending = threading.RLock()
         self.sleep = time.time() - 10
@@ -299,6 +301,14 @@ class Bot( asynchat.async_chat ):
                 s.groups = match.groups
                 if isinstance(origin[1],unicode):
                     origin[1] = normalize_nick(origin[1])
+                    s.nick = origin[1]
+                    s.account_id = self.nick2id[s.nick]
+                elif isinstance(origin[1],int):
+                    s.account_id = origin[1]
+                    s.nick = self.id2nick[origin[1]]
+                else:
+                    s.nick = None
+                    s.account_id = None
                 s.admin = origin[1] in self.config.admins
                 s.owner = origin[1] == self.config.owner
                 return s
