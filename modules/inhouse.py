@@ -26,7 +26,6 @@ def _check_ih(game_name):
 
 def _add_game(account_id,game_name,matchid,server,bot):
     key = (matchid,game_name)
-    print 'add',game_name,server,matchid
     if key not in _games:
         _games[key] = Game(game_name,matchid,server)
         if _check_ih(game_name):
