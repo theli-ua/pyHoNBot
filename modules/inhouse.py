@@ -19,7 +19,7 @@ _min_players = 2
 _ih_keywords = set(['inhouse','ih','funhouse'])
 _ih_threshold = 1
 def _check_ih(game_name):
-    keywords = set([w.strip('^;;"') for w in game_name.split(' ')])
+    keywords = set([w.strip('^;;"').lower() for w in game_name.split(' ')])
     if len(keywords & _ih_keywords) >= _ih_threshold:
         return True
     return False
