@@ -1,0 +1,11 @@
+quickstart for windows users:
+download and install python version 2.7 ( http://python.org/ )
+download latest code: https://github.com/theli-ua/pyHoNBot/zipball/master
+unpack honbot
+enter its dir
+if needed edit honbot.cmd (it assumes python is installed in C:\Python27)
+run honbot.cmd
+edit settings files ( on windows 7 default location is C:\Documents and Settings\.honbot\default.py )
+you need to change login, password, owner
+
+run honbot.cmd
