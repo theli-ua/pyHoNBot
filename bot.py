@@ -74,6 +74,11 @@ class Bot( asynchat.async_chat ):
         self.buffer = ''
         self.got_len = not self.got_len
 
+    def masterserver_request(self,query, path = None,decode = True, cookie = False):
+        if cookie:
+            query['cookie'] = self.cookie
+        return masterserver.request(query,path = path,decode = decode)
+
     def run(self):
         auth_data = masterserver.auth(self.config.nick,self.config.password)
         print ('got auth data')
