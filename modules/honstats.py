@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-MATCH_FORMAT_STRING = '{nick} {hero}[{lvl}] {ratin} {outcome} ^g{K}^*/^r{D}^*/^y{A}^* {name}{mode} {len} ^:|^; CK:{ck} CD:{cd} ^:|^; XPM:{xpm:g} GPM:{gpm:g} ^:|^; WARDS:{wards} ^:|^; {mdt}'
+MATCH_FORMAT_STRING = '{nick} {hero}[{lvl}] {rating} {outcome} ^g{K}^*/^r{D}^*/^y{A}^* {name}{mode} {len} ^:|^; CK:{ck} CD:{cd} ^:|^; XPM:{xpm:g} GPM:{gpm:g} ^:|^; WARDS:{wards} ^:|^; {mdt}'
 PLAYER_STATS_FORMAT = '{nick} ^g{rating}^* WIN^g{win_percent:.2%}^*({matches} played) ^:|^; Average stats ^r^:=>^*^; len: {len} ^:|^; CK:{ck} CD:{cd} ^:|^; XPM:{xpm:g} GPM:{gpm:g} APM:{apm} ^:|^; K/D/A {kda} ^:|^; WARDS {wards}'
 def match(bot,input):
     """Show last match info for player (or command sender if unspecified)"""
