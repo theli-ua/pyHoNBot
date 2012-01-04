@@ -79,12 +79,15 @@ def match(bot,input):
 match.commands = ['match']
 
 def rstats(bot,input):
+    """Get ranked (mm) stats for [player] .. nick is optional"""
     get_stats(bot,input,'ranked')
 rstats.commands = ['rstats']
 def cstats(bot,input):
+    """Get casual (mm) stats for [player] .. nick is optional"""
     get_stats(bot,input,'casual')
 cstats.commands = ['cstats']
 def player_stats(bot,input):
+    """Get public stats for [player] .. nick is optional"""
     get_stats(bot,input,'player')
 player_stats.commands = ['stats']
 
