@@ -1,7 +1,7 @@
 from datetime import timedelta
 
-MATCH_FORMAT_STRING = '{nick} {hero}[{lvl}] {outcome} ^g{K}^*/^r{D}^*/^y{A}^* {name}{mode} {len} ^:|^; CK:{ck} CD:{cd} ^:|^; XPM:{xpm:g} GPM{gpm:g} ^:|^; WARDS:{wards} ^:|^; {mdt}'
-
+MATCH_FORMAT_STRING = '{nick} {hero}[{lvl}] {outcome} ^g{K}^*/^r{D}^*/^y{A}^* {name}{mode} {len} ^:|^; CK:{ck} CD:{cd} ^:|^; XPM:{xpm:g} GPM:{gpm:g} ^:|^; WARDS:{wards} ^:|^; {mdt}'
+PLAYER_STATS_FORMAT = '{nick} ^g{rating}^* WIN^g{win_percent:.2%}^*({matches} played) ^:|^; Average stats ^r^:=>^*^; len: {len} ^:|^; CK:{ck} CD:{cd} ^:|^; XPM:{xpm:g} GPM:{gpm:g} APM:{apm} ^:|^; K/D/A {kda} ^:|^; WARDS {wards}'
 def match(bot,input):
     """Show last match info for player (or command sender if unspecified)"""
     player = input.group(2)
@@ -77,3 +77,70 @@ def match(bot,input):
 
                 bot.say(MATCH_FORMAT_STRING.format(**match_stats))
 match.commands = ['match']
+
+def rstats(bot,input):
+    get_stats(bot,input,'ranked')
+rstats.commands = ['rstats']
+def cstats(bot,input):
+    get_stats(bot,input,'casual')
+cstats.commands = ['cstats']
+def player_stats(bot,input):
+    get_stats(bot,input,'player')
+player_stats.commands = ['stats']
+
+
+def get_stats(bot,input,table):
+    player = input.group(2)
+    if player is None:
+        player = input.nick
+    query = { 'f' : 'show_stats', 'nickname' : player, 'table' : table }
+    stats_data = bot.masterserver_request(query)
+    
+    stats = {'nick' : player}
+    common = { 
+            'len' : 'avgGameLength',
+            'xpm' : 'avgXP_min',
+            'ck' : 'avgCreepKills',
+            'cd' : 'avgDenies',
+            'wards' : 'avgWardsUsed',
+            'apm' : 'avgActions_min',
+            'kda' : 'k_d_a',
+            }
+    mapping = { 
+            'ranked' :
+            { 
+                'rating' : 'rnk_amm_team_rating',
+                'matches' : 'rnk_games_played',
+                'wins' : 'rnk_wins',
+                'gold' : 'rnk_gold',
+                'exp_time' : 'rnk_time_earning_exp',
+            },
+            'casual' :
+            { 
+                'rating' : 'cs_amm_team_rating',
+                'matches' : 'cs_games_played',
+                'wins' : 'cs_wins',
+                'gold' : 'cs_gold',
+                'exp_time' : 'cs_time_earning_exp',
+            },
+            'player' :
+            { 
+                'rating' : 'acc_pub_skill',
+                'matches' : 'acc_games_played',
+                'wins' : 'acc_wins',
+                'gold' : 'acc_gold',
+                'exp_time' : 'acc_time_earning_exp',
+            }
+            }
+    for d in [common,mapping[table]]:
+        for k,v in d.iteritems():
+            stats[k] = stats_data[v]
+    total = float(stats['matches'])
+    wins = float(stats['wins'])
+    if total == 0.0 or wins == 0.0:
+        stats['win_percent'] = 0.0
+    else:
+        stats['win_percent'] = wins/total
+    stats['gpm'] = float(stats['gold']) / (float(stats['exp_time']) / 60.0)
+    stats['len'] = str(timedelta(seconds=int(stats['len'])))
+    bot.say(PLAYER_STATS_FORMAT.format(**stats))
