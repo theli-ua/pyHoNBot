@@ -94,7 +94,7 @@ class Bot( asynchat.async_chat ):
             self.clan_info = auth_data["clan_member_info"]
         else:
             self.clan_info = {}
-        if "clan_tag" in auth_data and "clan_roster" in auth_data:
+        if "clan_roster" in auth_data and "error" not in auth_data["clan_roster"]:
             self.clan_roster = auth_data["clan_roster"]
         else:
             self.clan_roster = {}
