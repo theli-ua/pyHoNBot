@@ -165,6 +165,8 @@ cs_structs = {
         ID.HON_CS_CHANNEL_EMOTE : 'sI',
         ID.HON_CS_CLAN_ADD_MEMBER : 's',
         ID.HON_CS_CLAN_MESSAGE : 's',
+        ID.HON_CS_JOIN_CHANNEL : 's',
+        ID.HON_CS_LEAVE_CHANNEL : 's',
         }
 sc_structs = {
         ID.HON_SC_PING : '',
