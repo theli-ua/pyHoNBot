@@ -1,8 +1,7 @@
 from datetime import timedelta
 
-MATCH_FORMAT_STRING = '{nick} {hero}[{lvl}] {rating}MMR {outcome} ^g{K}^*/^r{D}^*/^y{A}^* {name}{mode} {len} ^:|^; CK:{ck} CD:{cd} ^:|^; XPM:{xpm:g} GPM:{gpm:g} ^:|^; WARDS:{wards} ^:|^; {mdt}'
-PLAYER_STATS_FORMAT = '{nick} {hero} ^g{rating}^*MMR WIN^g{win_percent:.2%}^*({matches} played) ^:|^; Average stats ^r^:=>^*^; len: {avg_len} ^:|^; CK:{avg_ck:g} CD:{avg_cd:g} ^:|^; XPM:{xpm:g} GPM:{gpm:g} APM:{apm:g} ^:|^; K/D/A ^g{avg_K:g}^*/^r{avg_D:g}^*/^b{avg_A:g}^* ^:|^; WARDS {avg_wards:g}'
-
+MATCH_FORMAT_STRING = '{nick} {hero}[{lvl}] {rating}MMR {outcome} ^g{K}^*/^r{D}^*/^y{A}^* {name}{mode} {len} ^:|^; CK:{ck} CD:{cd} ^:|^; XPM:{xpm:.2f} GPM:{gpm:.2f} ^:|^; WARDS:{wards} ^:|^; {mdt}'
+PLAYER_STATS_FORMAT = '{nick} {hero} ^g{rating}^*MMR WIN^g{win_percent:.2%}^*({matches} played) ^:|^; Average stats ^r^:=>^*^; len: {avg_len} ^:|^; CK:{avg_ck:.2f} CD:{avg_cd:.2f} ^:|^; XPM:{xpm:.2f} GPM:{gpm:.2f} APM:{apm:.2f} ^:|^; K/D/A ^g{avg_K:.2f}^*/^r{avg_D:.2f}^*/^b{avg_A:.2f}^* ^:|^; WARDS {avg_wards:.2f}'
 
 depend = ['honstringtables']
 
@@ -214,6 +213,5 @@ def hero_stats(bot,input):
     get_stats(bot,input,table='hero_ranked',hero=bot.heroshorts[input.group(1)])
 
 def setup(bot):
-    print ('honstats setup')
     if hasattr(bot,'heroshorts'):
         hero_stats.rule = r'[\!|\.]({0})(?:\ +(.+))?'.format('|'.join(bot.heroshorts.keys()))

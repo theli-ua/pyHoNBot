@@ -93,9 +93,6 @@ def setup(bot):
                             i+=1
                         bot.heroshorts[short_old] = old
                         bot.heroshorts[short_new] = m2.group(1)
-        for k in bot.heroshorts:
-            print(k,bot.heroshorts[k])
 
     bot.stringtable_version = verinfo['version']
-    print('stringtables')
     
