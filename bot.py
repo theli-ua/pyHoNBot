@@ -13,6 +13,7 @@ from struct import unpack
 from hon.honutils import normalize_nick
 import time
 from hon.honutils import normalize_nick
+from utils.dep import dep
 
 home = os.getcwd() 
 
@@ -139,6 +140,8 @@ class Bot( asynchat.async_chat ):
 
         modules = []
         excluded_modules = getattr(self.config, 'exclude', [])
+        deps = {}
+        imp_modules = {}
         for filename in filenames: 
             name = os.path.basename(filename)[:-3]
             if name in excluded_modules: continue
@@ -148,10 +151,20 @@ class Bot( asynchat.async_chat ):
             except Exception, e: 
                 print >> sys.stderr, "Error loading %s: %s (in bot.py)" % (name, e)
             else: 
+                if hasattr(module, 'depend'):
+                    deps[name] = module.depend
+                else:
+                    deps[name] = []
+                imp_modules[name] = module
+        deps = dep(deps)
+        for s in deps:
+            for name in s:
+                module = imp_modules[name]
                 if hasattr(module, 'setup'): 
                     module.setup(self)
                 self.register(vars(module))
                 modules.append(name)
+
 
         if modules: 
             print >> sys.stderr, 'Registered modules:', ', '.join(modules)
