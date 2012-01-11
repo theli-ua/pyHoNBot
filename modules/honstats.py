@@ -189,14 +189,19 @@ def get_stats(bot,input,table,hero=None):
     else:
         stats['win_percent'] = wins/total
     #averages per game
-    if stats['matches'] > 0:
-        for stat in [('K','avg_K'), ('D','avg_D'), ('A','avg_A'), ('ck','avg_ck'),
-                ('cd','avg_cd'), ('wards','avg_wards'),
-                ('exp_time','avg_len')]:
+    for stat in [('K','avg_K'), ('D','avg_D'), ('A','avg_A'), ('ck','avg_ck'),
+            ('cd','avg_cd'), ('wards','avg_wards'),
+            ('exp_time','avg_len')]:
+        if stats['matches'] > 0:
             stats[stat[1]] = float(stats[stat[0]])/float(stats['matches'])
+        else:
+            stats[stat[1]] = 0.0
     #averages per minute
     for stat in [('gold','gpm'), ('xp','xpm'), ('actions','apm')]:
-        stats[stat[1]] = float(stats[stat[0]]) / (float(stats['exp_time']) / 60.0)
+        if stats['exp_time'] > 0:
+            stats[stat[1]] = float(stats[stat[0]]) / (float(stats['exp_time']) / 60.0)
+        else:
+            stats[stat[1]] = 0
 
     stats['avg_len'] = str(timedelta(seconds=int(stats['avg_len'])))
     if hero is None:
@@ -211,4 +216,4 @@ def hero_stats(bot,input):
 def setup(bot):
     print ('honstats setup')
     if hasattr(bot,'heroshorts'):
-        hero_stats.rule = r'[\!|\.]({0})\ *?(.+)?'.format('|'.join(bot.heroshorts.keys()))
+        hero_stats.rule = r'[\!|\.]({0})(?:\ +(.+))?'.format('|'.join(bot.heroshorts.keys()))
