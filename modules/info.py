@@ -32,9 +32,8 @@ commands.priority = 'low'
 
 def help(phenny, input): 
    response = (
-      'Hi, I\'m a bot. Say ".commands" to me in private for a list ' + 
-      'of my commands. My owner is %s.'
-   ) % phenny.config.owner
+      'Hi, I\'m a bot. My name is {0}. Say ".commands" to me in private for a list '.format(phenny.config.nick) + 
+      'of my commands. My owner is {0}.'.format(phenny.config.owner))
    phenny.reply(response)
 help.commands = ['help']
 help.priority = 'low'
