@@ -4,7 +4,8 @@ import StringIO
 from os.path import basename
 
 stringtablefiles = [ 'game/resources0.s2z/stringtables/entities_en.str' ]
-re_entry = re.compile(r'(.+?)\t+(.+)')
+re_entry = re.compile(r'(.+?)[\t\ ]+(.+)')
+re_hero_name = re.compile(r'(Hero_[a-zA-z]+)_name')
 
 def getVerInfo(os,arch,masterserver):
     details = urlencode().encode('utf8')
@@ -15,7 +16,7 @@ def getVerInfo(os,arch,masterserver):
     return d
 
 def setup(bot):
-    if True:#not hasattr(bot,'stringtables'):
+    if not hasattr(bot,'stringtables'):
         bot.stringtable_version = None
 
     verinfo = bot.masterserver_request({'version' : '0.0.0.0', 'os' : 'lac' ,'arch' : 'x86-biarch'},path = 'patcher/patcher.php')
@@ -38,6 +39,7 @@ def setup(bot):
         return
     
     bot.stringtables = {}
+    bot.heroshorts = {}
     manifest = etree.fromstring(zipfile.ZipFile(StringIO.StringIO(manifest)).read('manifest.xml'))
     files = []
     for e in manifest:
@@ -67,5 +69,14 @@ def setup(bot):
             m = re_entry.match(line)
             if m:
                 bot.stringtables[m.group(1)] = m.group(2)
+                m2 = re_hero_name.match(m.group(1))
+                if m2:
+                    #print (m.group(1),m.group(2))
+                    short = m.group(2).lower()
+                    if short.startswith('the '):
+                        short = short[4:]
+                    short = short[:4].strip()
+                    bot.heroshorts[short] = m2.group(1)
     bot.stringtable_version = verinfo['version']
+    print('stringtables')
     

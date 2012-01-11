@@ -1,7 +1,11 @@
 from datetime import timedelta
 
 MATCH_FORMAT_STRING = '{nick} {hero}[{lvl}] {rating} {outcome} ^g{K}^*/^r{D}^*/^y{A}^* {name}{mode} {len} ^:|^; CK:{ck} CD:{cd} ^:|^; XPM:{xpm:g} GPM:{gpm:g} ^:|^; WARDS:{wards} ^:|^; {mdt}'
-PLAYER_STATS_FORMAT = '{nick} ^g{rating}^* WIN^g{win_percent:.2%}^*({matches} played) ^:|^; Average stats ^r^:=>^*^; len: {len} ^:|^; CK:{ck} CD:{cd} ^:|^; XPM:{xpm:g} GPM:{gpm:g} APM:{apm} ^:|^; K/D/A {kda} ^:|^; WARDS {wards}'
+PLAYER_STATS_FORMAT = '{nick} {hero} ^g{rating}^* WIN^g{win_percent:.2%}^*({matches} played) ^:|^; Average stats ^r^:=>^*^; len: {avg_len} ^:|^; CK:{avg_ck:g} CD:{avg_cd:g} ^:|^; XPM:{xpm:g} GPM:{gpm:g} APM:{apm:g} ^:|^; K/D/A ^g{avg_K:g}^*/^r{avg_D:g}^*/^b{avg_A:g}^* ^:|^; WARDS {avg_wards:g}'
+
+
+depend = ['honstringtables']
+
 def match(bot,input):
     """Show last match info for player (or command sender if unspecified)"""
     player = input.group(2)
@@ -92,23 +96,20 @@ def player_stats(bot,input):
 player_stats.commands = ['stats']
 
 
-def get_stats(bot,input,table):
+def get_stats(bot,input,table,hero=None):
     player = input.group(2)
     if player is None:
         player = input.nick
-    query = { 'f' : 'show_stats', 'nickname' : player, 'table' : table }
-    stats_data = bot.masterserver_request(query)
+    query = {'nickname' : player}
+    if hero is None:
+        query['table'] = table
+        query['f'] = 'show_stats'
+    else:
+        query['f'] = 'get_hero_stats'
+        query['hero'] = hero
+    stats_data = bot.masterserver_request(query,cookie=True)
     
     stats = {'nick' : player}
-    common = { 
-            'len' : 'avgGameLength',
-            'xpm' : 'avgXP_min',
-            'ck' : 'avgCreepKills',
-            'cd' : 'avgDenies',
-            'wards' : 'avgWardsUsed',
-            'apm' : 'avgActions_min',
-            'kda' : 'k_d_a',
-            }
     mapping = { 
             'ranked' :
             { 
@@ -117,7 +118,16 @@ def get_stats(bot,input,table):
                 'wins' : 'rnk_wins',
                 'gold' : 'rnk_gold',
                 'exp_time' : 'rnk_time_earning_exp',
-            },
+                'secs' : 'rnk_secs',
+                'xp'    : 'rnk_exp',
+                'ck'    : 'rnk_teamcreepkills',
+                'cd'    : 'rnk_denies',
+                'actions':'rnk_actions',
+                'K'     : 'rnk_herokills',
+                'D'     : 'rnk_deaths',
+                'A'     : 'rnk_heroassists',
+                'wards' : 'rnk_wards',
+                },
             'casual' :
             { 
                 'rating' : 'cs_amm_team_rating',
@@ -125,7 +135,16 @@ def get_stats(bot,input,table):
                 'wins' : 'cs_wins',
                 'gold' : 'cs_gold',
                 'exp_time' : 'cs_time_earning_exp',
-            },
+                'secs' : 'cs_secs',
+                'xp'    : 'cs_exp',
+                'ck'    : 'cs_teamcreepkills',
+                'cd'    : 'cs_denies',
+                'actions':'cs_actions',
+                'K'     : 'cs_herokills',
+                'D'     : 'cs_deaths',
+                'A'     : 'cs_heroassists',
+                'wards' : 'cs_wards',
+                },
             'player' :
             { 
                 'rating' : 'acc_pub_skill',
@@ -133,17 +152,63 @@ def get_stats(bot,input,table):
                 'wins' : 'acc_wins',
                 'gold' : 'acc_gold',
                 'exp_time' : 'acc_time_earning_exp',
-            }
-            }
-    for d in [common,mapping[table]]:
-        for k,v in d.iteritems():
-            stats[k] = stats_data[v]
+                'secs' : 'acc_secs',
+                'xp'    : 'acc_exp',
+                'ck'    : 'acc_teamcreepkills',
+                'cd'    : 'acc_denies',
+                'actions':'acc_actions',
+                'K'     : 'acc_herokills',
+                'D'     : 'acc_deaths',
+                'A'     : 'acc_heroassists',
+                'wards' : 'acc_wards',
+                },
+            'hero_ranked':
+                {
+                'rating' : 'rnk_ph_amm_team_rating',
+                'matches' : 'rnk_ph_used',
+                'wins' : 'rnk_ph_wins',
+                'gold' : 'rnk_ph_gold',
+                'exp_time' : 'rnk_ph_time_earning_exp',
+                'secs' : 'rnk_ph_secs',
+                'xp'    : 'rnk_ph_exp',
+                'ck'    : 'rnk_ph_teamcreepkills',
+                'cd'    : 'rnk_ph_denies',
+                'actions':'rnk_ph_actions',
+                'K'     : 'rnk_ph_herokills',
+                'D'     : 'rnk_ph_deaths',
+                'A'     : 'rnk_ph_heroassists',
+                'wards' : 'rnk_ph_wards',
+                },
+        }
+    for k,v in mapping[table].iteritems():
+        stats[k] = stats_data[v]
     total = float(stats['matches'])
     wins = float(stats['wins'])
     if total == 0.0 or wins == 0.0:
         stats['win_percent'] = 0.0
     else:
         stats['win_percent'] = wins/total
-    stats['gpm'] = float(stats['gold']) / (float(stats['exp_time']) / 60.0)
-    stats['len'] = str(timedelta(seconds=int(stats['len'])))
+    #averages per game
+    if stats['matches'] > 0:
+        for stat in [('K','avg_K'), ('D','avg_D'), ('A','avg_A'), ('ck','avg_ck'),
+                ('cd','avg_cd'), ('wards','avg_wards'),
+                ('exp_time','avg_len')]:
+            stats[stat[1]] = float(stats[stat[0]])/float(stats['matches'])
+    #averages per minute
+    for stat in [('gold','gpm'), ('xp','xpm'), ('actions','apm')]:
+        stats[stat[1]] = float(stats[stat[0]]) / (float(stats['exp_time']) / 60.0)
+
+    stats['avg_len'] = str(timedelta(seconds=int(stats['avg_len'])))
+    if hero is None:
+        stats['hero'] = ''
+    else:
+        stats['hero'] = bot.stringtables[hero + '_name']
     bot.say(PLAYER_STATS_FORMAT.format(**stats))
+
+def hero_stats(bot,input):
+    get_stats(bot,input,table='hero_ranked',hero=bot.heroshorts[input.group(1)])
+
+def setup(bot):
+    print ('honstats setup')
+    if hasattr(bot,'heroshorts'):
+        hero_stats.rule = r'[\!|\.]({0})\ *?(.+)?'.format('|'.join(bot.heroshorts.keys()))
