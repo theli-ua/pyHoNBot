@@ -71,12 +71,31 @@ def setup(bot):
                 bot.stringtables[m.group(1)] = m.group(2)
                 m2 = re_hero_name.match(m.group(1))
                 if m2:
-                    #print (m.group(1),m.group(2))
                     short = m.group(2).lower()
                     if short.startswith('the '):
                         short = short[4:]
                     short = short[:4].strip()
-                    bot.heroshorts[short] = m2.group(1)
+                    if short not in bot.heroshorts:
+                        bot.heroshorts[short] = m2.group(1)
+                    else:
+                        old = bot.heroshorts[short]
+                        longer_old = bot.stringtables[bot.heroshorts[short] + '_name'][4:].strip().lower()
+                        longer_new = m.group(2).lower()[4:].strip()
+                        del bot.heroshorts[short]
+                        short_old = short
+                        short_new = short
+                        i = 0
+                        while short_old == short_new:
+                            if i < len(longer_old):
+                                short_old += longer_old[i]
+                            if i < len(longer_new):
+                                short_new += longer_new[i]
+                            i+=1
+                        bot.heroshorts[short_old] = old
+                        bot.heroshorts[short_new] = m2.group(1)
+        for k in bot.heroshorts:
+            print(k,bot.heroshorts[k])
+
     bot.stringtable_version = verinfo['version']
     print('stringtables')
     
