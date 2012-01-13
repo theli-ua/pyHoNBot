@@ -19,6 +19,11 @@ home = os.getcwd()
 
 
 class Bot( asynchat.async_chat ):
+    #thread-safety, kinda
+    def initiate_send(self):
+        self.sending.acquire()
+        asynchat.async_chat.initiate_send(self)
+        self.sending.release()
     def __init__( self,config ):
         asynchat.async_chat.__init__( self )   
         self.config = config
@@ -31,7 +36,7 @@ class Bot( asynchat.async_chat ):
         self.chan2id = {}
         self.id2chan = {}
         self.setup()
-        self.sending = threading.RLock()
+        self.sending = threading.Lock()
         self.sleep = time.time() - 10
         self.send_threshold = 1
 
@@ -43,13 +48,11 @@ class Bot( asynchat.async_chat ):
         self.write(packets.pack(packet_id,*args))
  
     def write( self, data ):
-        self.sending.acquire()
         to_sleep =  time.time() - self.sleep - self.send_threshold
         if to_sleep < 0:
             time.sleep(-to_sleep)
         self.push(data)
         self.sleep = time.time()
-        self.sending.release()
  
     #def handle_close( self ):
         #print 'disconnected'
