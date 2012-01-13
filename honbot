@@ -38,11 +38,14 @@ def create_default_config(fn):
    # But admin.py is disabled by default, as follows:
    exclude = ['admin','mumble']
 
+   #cooldown for users
+   # cooldown = 3
+   # means after user sent any command all his consequent commands will be ignored for 3 seconds
+
    # format strings for honstats plugin
    #MATCH_FORMAT_STRING = '{nick} {hero}[{lvl}] {rating}MMR {outcome} ^g{K}^*/^r{D}^*/^b{A}^* {name}{mode} {len} ^:|^; CK:{ck} CD:{cd} ^:|^; XPM:{xpm:.2f} GPM:{gpm:.2f} ^:|^; WARDS:{wards} ^:|^; {mdt}'
    #PLAYER_STATS_FORMAT = '{nick} {hero} ^g{rating}^*MMR WIN^g{win_percent:.2%}^*({matches} played) ^:|^; Average stats ^r^:=>^*^; len: {avg_len} ^:|^; CK:{avg_ck:.2f} CD:{avg_cd:.2f} ^:|^; XPM:{xpm:.2f} GPM:{gpm:.2f} APM:{apm:.2f} ^:|^; K/D/A ^g{avg_K:.2f}^*/^r{avg_D:.2f}^*/^b{avg_A:.2f}^* ^:|^; WARDS {avg_wards:.2f}'
 
-depend = ['honstringtables']
 
    # If you want to enumerate a list of modules rather than disabling
    # some, use "enable = ['example']", which takes precedent over exclude
@@ -141,6 +144,10 @@ def main(argv=None):
 
       if not hasattr(module, 'password'): 
          module.password = None
+
+
+      if not hasattr(module, 'cooldown'): 
+         module.cooldown = 3
 
       config_modules.append(module)
 

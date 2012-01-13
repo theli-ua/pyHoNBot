@@ -37,6 +37,7 @@ class Bot( asynchat.async_chat ):
         self.id2chan = {}
         self.setup()
         self.sending = threading.Lock()
+        self.cooldowns = {}
         #self.writelock = threading.Lock()
         #self.sleep = time.time() - 10
         #self.send_threshold = 1
@@ -333,8 +334,8 @@ class Bot( asynchat.async_chat ):
                 else:
                     s.nick = None
                     s.account_id = None
-                s.admin = origin[1] in self.config.admins
-                s.owner = origin[1] == self.config.owner
+                s.admin = s.nick in self.config.admins
+                s.owner = s.nick == self.config.owner
                 return s
         return CommandInput(text, origin, data, match)
 
@@ -361,17 +362,23 @@ class Bot( asynchat.async_chat ):
 
                             phenny = self.wrapped(origin, text, match)
                             input = self.input(origin, text, data, match)
+                            t = time.time()
+                            if input.admin or input.nick not in self.cooldowns or\
+                                    (input.nick in self.cooldowns \
+                                    and \
+                                    t - self.cooldowns[input.nick]\
+                                    >= self.config.cooldown):
+                                self.cooldowns[input.nick] = t
+                                if func.thread: 
+                                    targs = (func, origin, phenny, input)
+                                    t = threading.Thread(target=self.call, args=targs)
+                                    t.start()
+                                else: self.call(func, origin, phenny, input)
 
-                            if func.thread: 
-                                targs = (func, origin, phenny, input)
-                                t = threading.Thread(target=self.call, args=targs)
-                                t.start()
-                            else: self.call(func, origin, phenny, input)
-
-                            #for source in [origin.sender, origin.nick]: 
-                                #try: self.stats[(func.name, source)] += 1
-                                #except KeyError: 
-                                    #self.stats[(func.name, source)] = 1
+                                #for source in [origin.sender, origin.nick]: 
+                                    #try: self.stats[(func.name, source)] += 1
+                                    #except KeyError: 
+                                        #self.stats[(func.name, source)] = 1
 
 
 
