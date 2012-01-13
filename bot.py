@@ -37,8 +37,9 @@ class Bot( asynchat.async_chat ):
         self.id2chan = {}
         self.setup()
         self.sending = threading.Lock()
-        self.sleep = time.time() - 10
-        self.send_threshold = 1
+        #self.writelock = threading.Lock()
+        #self.sleep = time.time() - 10
+        #self.send_threshold = 1
 
         self.ac_in_buffer_size = 2
         #self.ac_out_buffer_size = 2
@@ -48,11 +49,13 @@ class Bot( asynchat.async_chat ):
         self.write(packets.pack(packet_id,*args))
  
     def write( self, data ):
-        to_sleep =  time.time() - self.sleep - self.send_threshold
-        if to_sleep < 0:
-            time.sleep(-to_sleep)
+        #self.writelock.acquire()
+        #to_sleep =  time.time() - self.sleep - self.send_threshold
+        #if to_sleep < 0:
+            #time.sleep(-to_sleep)
         self.push(data)
-        self.sleep = time.time()
+        #self.sleep = time.time()
+        #self.writelock.release()
  
     #def handle_close( self ):
         #print 'disconnected'
