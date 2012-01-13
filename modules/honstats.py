@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-MATCH_FORMAT_STRING = '{nick} {hero}[{lvl}] {rating}MMR {outcome} ^g{K}^*/^r{D}^*/^y{A}^* {name}{mode} {len} ^:|^; CK:{ck} CD:{cd} ^:|^; XPM:{xpm:.2f} GPM:{gpm:.2f} ^:|^; WARDS:{wards} ^:|^; {mdt}'
+MATCH_FORMAT_STRING = '{nick} {hero}[{lvl}] {rating}MMR {outcome} ^g{K}^*/^r{D}^*/^b{A}^* {name}{mode} {len} ^:|^; CK:{ck} CD:{cd} ^:|^; XPM:{xpm:.2f} GPM:{gpm:.2f} ^:|^; WARDS:{wards} ^:|^; {mdt}'
 PLAYER_STATS_FORMAT = '{nick} {hero} ^g{rating}^*MMR WIN^g{win_percent:.2%}^*({matches} played) ^:|^; Average stats ^r^:=>^*^; len: {avg_len} ^:|^; CK:{avg_ck:.2f} CD:{avg_cd:.2f} ^:|^; XPM:{xpm:.2f} GPM:{gpm:.2f} APM:{apm:.2f} ^:|^; K/D/A ^g{avg_K:.2f}^*/^r{avg_D:.2f}^*/^b{avg_A:.2f}^* ^:|^; WARDS {avg_wards:.2f}'
 
 depend = ['honstringtables']
