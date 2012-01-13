@@ -213,5 +213,10 @@ def hero_stats(bot,input):
     get_stats(bot,input,table='hero_ranked',hero=bot.heroshorts[input.group(1).lower()])
 
 def setup(bot):
+    global MATCH_FORMAT_STRING,PLAYER_STATS_FORMAT
+    if hasattr(bot.config,'MATCH_FORMAT_STRING'):
+        MATCH_FORMAT_STRING = bot.config.MATCH_FORMAT_STRING
+    if hasattr(bot.config,'PLAYER_STATS_FORMAT'):
+        PLAYER_STATS_FORMAT = bot.config.PLAYER_STATS_FORMAT
     if hasattr(bot,'heroshorts'):
         hero_stats.rule = '(?i)' + bot.config.prefix + r'({0})(?:[^\ ]*\ +(.+))?'.format('|'.join(bot.heroshorts.keys()))
