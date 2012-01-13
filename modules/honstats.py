@@ -210,8 +210,8 @@ def get_stats(bot,input,table,hero=None):
     bot.say(PLAYER_STATS_FORMAT.format(**stats))
 
 def hero_stats(bot,input):
-    get_stats(bot,input,table='hero_ranked',hero=bot.heroshorts[input.group(1)])
+    get_stats(bot,input,table='hero_ranked',hero=bot.heroshorts[input.group(1).lower()])
 
 def setup(bot):
     if hasattr(bot,'heroshorts'):
-        hero_stats.rule = r'[\!|\.]({0})(?:\ +(.+))?'.format('|'.join(bot.heroshorts.keys()))
+        hero_stats.rule = '(?i)' + bot.config.prefix + r'({0})(?:[^\ ]*\ +(.+))?'.format('|'.join(bot.heroshorts.keys()))
