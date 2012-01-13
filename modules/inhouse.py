@@ -47,10 +47,11 @@ def _del_game(account_id):
 def status_update(bot,packet_id,data):
     #id,status,flags,clan_id,clan_name,chatsymbol,shield,icon
     #if ingame -> server,game name, matchid
-    if data[1] == ID.HON_STATUS_INGAME:
-        _add_game(data[0],data[9],data[10],data[8],bot)
-    else:
-        _del_game(data[0])
+    if data[0] in bot.clan_roster:
+        if data[1] == ID.HON_STATUS_INGAME:
+            _add_game(data[0],data[9],data[10],data[8],bot)
+        else:
+            _del_game(data[0])
 status_update.event = [ID.HON_SC_UPDATE_STATUS]
 
 def initiall_statuses(bot,packet_id,data):
