@@ -7,14 +7,6 @@ stringtablefiles = [ 'game/resources0.s2z/stringtables/entities_en.str' ]
 re_entry = re.compile(r'(.+?)[\t\ ]+(.+)')
 re_hero_name = re.compile(r'(Hero_[a-zA-z]+)_name')
 
-def getVerInfo(os,arch,masterserver):
-    details = urlencode().encode('utf8')
-    url = Request('http://{0}/patcher/patcher.php'.format(masterserver),details)
-    url.add_header("User-Agent",USER_AGENT)
-    data = urlopen(url).read().decode("utf8", 'ignore')
-    d = unserialize(data)
-    return d
-
 def setup(bot):
     if not hasattr(bot,'stringtables'):
         bot.stringtable_version = None
