@@ -26,7 +26,7 @@ def request(query,path = None,decode = True):
     if path is None:
         path = 'client_requester.php'
     details = urlencode(query,True).encode('utf8')
-    url = Request('http://{0}/{1}'.format(MASTERSERVER, path),details)
+    url = Request('http://{0}/{1}'.format(MASTERSERVER, path),details, headers = {'X-Forwarded-For': 'unknown'})
     url.add_header("User-Agent",USER_AGENT)
     data = urlopen(url).read().decode("utf8", 'ignore')
     if decode:
