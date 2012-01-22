@@ -1,7 +1,7 @@
 from datetime import timedelta
 
-MATCH_FORMAT_STRING = '{nick} {hero}[{lvl}] {rating}MMR {outcome} ^g{K}^*/^r{D}^*/^b{A}^* {name}{mode} {len} ^:|^; CK:{ck} CD:{cd} ^:|^; XPM:{xpm:.2f} GPM:{gpm:.2f} ^:|^; WARDS:{wards} ^:|^; {mdt}'
-PLAYER_STATS_FORMAT = '{nick} {hero} ^g{rating}^*MMR WIN^g{win_percent:.2%}^*({matches} played) ^:|^; Average stats ^r^:=>^*^; len: {avg_len} ^:|^; CK:{avg_ck:.2f} CD:{avg_cd:.2f} ^:|^; XPM:{xpm:.2f} GPM:{gpm:.2f} APM:{apm:.2f} ^:|^; K/D/A ^g{avg_K:.2f}^*/^r{avg_D:.2f}^*/^b{avg_A:.2f}^* ^:|^; WARDS {avg_wards:.2f}'
+MATCH_FORMAT_STRING = '{nick} {hero}[{lvl}] {rating}{rating_type} {outcome} ^g{K}^*/^r{D}^*/^b{A}^* {name}{mode} {len} ^:|^; CK:{ck}+{ckn} CD:{cd} ^:|^; XPM:{xpm:.2f} GPM:{gpm:.2f} ^:|^; WARDS:{wards} ^:|^; {mdt}'
+PLAYER_STATS_FORMAT = '{nick} {hero} ^g{rating}^*{rating_type} WIN^g{win_percent:.2%}^*({wins}/{matches}) ^:|^; Average stats ^r^:=>^*^; len: {avg_len} ^:|^; CK:{avg_ck:.2f}+{avg_ckn:.2f} CD:{avg_cd:.2f} ^:|^; XPM:{xpm:.2f} GPM:{gpm:.2f} APM:{apm:.2f} ^:|^; K/D/A ^g{avg_K:.2f}^*/^r{avg_D:.2f}^*/^b{avg_A:.2f}^* ^:|^; WARDS {avg_wards:.2f}'
 
 depend = ['honstringtables']
 
@@ -61,12 +61,18 @@ def match(bot,input):
                 match_stats['ck'] = player_stats['teamcreepkills']
                 match_stats['cd'] = player_stats['denies']
                 match_stats['lvl'] = player_stats['level']
+                match_stats['ckn'] = player_stats['neutralcreepkills']
 
                 if player_stats['wins'] == '1':
                     match_stats['outcome'] = 'WIN'
                 else:
                     match_stats['outcome'] = 'LOSS'
-                
+
+                if match_stats['name'].startswith('TMM'):
+                    match_stats['rating_type'] = 'MMR'
+                else:
+                    match_stats['rating_type'] = 'PSR'
+
                 match_stats['wards'] = player_stats['wards']
                 time = float(summary['time_played']) / 60.0
                 match_stats['xpm'] = float(player_stats['exp'])/time
@@ -84,7 +90,7 @@ match.commands = ['match']
 def rstats(bot,input):
     """Get ranked (mm) stats for [player] .. nick is optional"""
     get_stats(bot,input,'ranked')
-rstats.commands = ['rstats']
+rstats.commands = ['rstats','stats']
 def cstats(bot,input):
     """Get casual (mm) stats for [player] .. nick is optional"""
     get_stats(bot,input,'casual')
@@ -92,7 +98,7 @@ cstats.commands = ['cstats']
 def player_stats(bot,input):
     """Get public stats for [player] .. nick is optional"""
     get_stats(bot,input,'player')
-player_stats.commands = ['stats']
+player_stats.commands = ['pstats']
 
 
 def get_stats(bot,input,table,hero=None):
@@ -126,6 +132,7 @@ def get_stats(bot,input,table,hero=None):
                 'D'     : 'rnk_deaths',
                 'A'     : 'rnk_heroassists',
                 'wards' : 'rnk_wards',
+                'neuts' : 'rnk_neutralcreepkills',
                 },
             'casual' :
             { 
@@ -143,6 +150,7 @@ def get_stats(bot,input,table,hero=None):
                 'D'     : 'cs_deaths',
                 'A'     : 'cs_heroassists',
                 'wards' : 'cs_wards',
+                'neuts' : 'cs_neutralcreepkills',
                 },
             'player' :
             { 
@@ -160,6 +168,7 @@ def get_stats(bot,input,table,hero=None):
                 'D'     : 'acc_deaths',
                 'A'     : 'acc_heroassists',
                 'wards' : 'acc_wards',
+                'neuts' : 'acc_neutralcreepkills',
                 },
             'hero_ranked':
                 {
@@ -177,6 +186,7 @@ def get_stats(bot,input,table,hero=None):
                 'D'     : 'rnk_ph_deaths',
                 'A'     : 'rnk_ph_heroassists',
                 'wards' : 'rnk_ph_wards',
+                'neuts' : 'rnk_ph_neutralcreepkills',
                 },
         }
     for k,v in mapping[table].iteritems():
@@ -189,7 +199,7 @@ def get_stats(bot,input,table,hero=None):
         stats['win_percent'] = wins/total
     #averages per game
     for stat in [('K','avg_K'), ('D','avg_D'), ('A','avg_A'), ('ck','avg_ck'),
-            ('cd','avg_cd'), ('wards','avg_wards'),
+            ('cd','avg_cd'), ('wards','avg_wards'),('neuts','avg_ckn'),
             ('exp_time','avg_len')]:
         if stats['matches'] > 0:
             stats[stat[1]] = float(stats[stat[0]])/float(stats['matches'])
@@ -207,6 +217,12 @@ def get_stats(bot,input,table,hero=None):
         stats['hero'] = ''
     else:
         stats['hero'] = bot.stringtables[hero + '_name']
+
+    if table == 'player':
+        stats['rating_type'] = 'PSR'
+    else:
+        stats['rating_type'] = 'MMR'
+
     bot.say(PLAYER_STATS_FORMAT.format(**stats))
 
 def hero_stats(bot,input):
