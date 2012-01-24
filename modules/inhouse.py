@@ -69,3 +69,9 @@ def ih(bot,input):
             players = [bot.id2nick[id] for id in game.players]
             bot.say('{0} [{1}]'.format(game.name,','.join(players)))
 ih.commands = ['ih']
+
+
+def setup(bot):
+    if hasattr(bot.config,'inhouse_min_players'):
+        global _ih_threshold
+        _ih_threshold = bot.config.inhouse_min_players
