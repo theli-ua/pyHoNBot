@@ -38,6 +38,7 @@ class Bot( asynchat.async_chat ):
         self.setup()
         self.sending = threading.Lock()
         self.cooldowns = {}
+        self.channel_cooldowns = {}
         #self.writelock = threading.Lock()
         #self.sleep = time.time() - 10
         #self.send_threshold = 1
@@ -274,11 +275,13 @@ class Bot( asynchat.async_chat ):
             if not hasattr(func,'commands') and not hasattr(func,'rule'):
                 bind(self,func.priority,None,func)
 
-    def wrapped(self, origin, data, match): 
+    def wrapped(self, origin, input, data, match): 
         class PhennyWrapper(object): 
             def __init__(self, phenny): 
                 self.bot = phenny
 
+            def send_msg(self,input,origin):
+                pass
             def __getattr__(self, attr): 
                 #sender = origin.sender or text
                 #if attr == 'reply': 
@@ -286,23 +289,40 @@ class Bot( asynchat.async_chat ):
                         #self.bot.msg(sender, origin.nick + ': ' + msg))
                 #elif attr == 'say': 
                     #return lambda msg: self.bot.msg(sender, msg)
-                if origin[0] == packets.ID.HON_SC_CHANNEL_MSG:
-                    origin[0] = packets.ID.HON_SC_CHANNEL_EMOTE
-                if attr == 'reply':
+
+
+                if attr in ['reply','say']:
+                    #emote instead of channel message
+                    if origin[0] == packets.ID.HON_SC_CHANNEL_MSG:
+                        origin[0] = packets.ID.HON_SC_CHANNEL_EMOTE
+
                     if origin[0] in [packets.ID.HON_SC_CHANNEL_MSG,packets.ID.HON_SC_CHANNEL_EMOTE]:
-                        return (lambda msg:
-                                self.bot.write_packet(origin[0],self.id2nick[origin[1]] + ': ' + msg,
-                                    origin[2]))
-                    else:
-                        return (lambda msg:
-                                self.bot.write_packet(origin[0],origin[1],msg))
-                elif attr == 'say':
-                    if origin[0] in [packets.ID.HON_SC_CHANNEL_MSG,packets.ID.HON_SC_CHANNEL_EMOTE]:
-                        return (lambda msg:
-                                self.bot.write_packet(origin[0],msg,origin[2]))
-                    else:
-                        return (lambda msg:
-                                self.bot.write_packet(origin[0],origin[1],msg))
+                        #prevent channel overspam
+                        t = time.time()
+                        if origin[2] not in self.bot.channel_cooldowns or \
+                                ( origin[2] in self.bot.channel_cooldowns and \
+                                t - self.bot.channel_cooldowns[origin[2]]\
+                                >= self.bot.config.channel_cooldown):
+                            self.bot.channel_cooldowns[origin[2]] = t
+                        else:
+                            origin[0] = packets.ID.HON_SC_WHISPER
+                            origin[1] = input.nick
+
+                    if attr == 'reply':
+                        if origin[0] in [packets.ID.HON_SC_CHANNEL_MSG,packets.ID.HON_SC_CHANNEL_EMOTE]:
+                            return (lambda msg:
+                                    self.bot.write_packet(origin[0],self.id2nick[origin[1]] + ': ' + msg,
+                                        origin[2]))
+                        else:
+                            return (lambda msg:
+                                    self.bot.write_packet(origin[0],origin[1],msg))
+                    elif attr == 'say':
+                        if origin[0] in [packets.ID.HON_SC_CHANNEL_MSG,packets.ID.HON_SC_CHANNEL_EMOTE]:
+                            return (lambda msg:
+                                    self.bot.write_packet(origin[0],msg,origin[2]))
+                        else:
+                            return (lambda msg:
+                                    self.bot.write_packet(origin[0],origin[1],msg))
 
                 return getattr(self.bot, attr)
 
@@ -360,8 +380,8 @@ class Bot( asynchat.async_chat ):
                             #not sure what that limit is about
                             #if self.limit(origin, func): continue
 
-                            phenny = self.wrapped(origin, text, match)
                             input = self.input(origin, text, data, match)
+                            phenny = self.wrapped(origin, input, text, match)
                             t = time.time()
                             if input.admin or input.nick not in self.cooldowns or\
                                     (input.nick in self.cooldowns \

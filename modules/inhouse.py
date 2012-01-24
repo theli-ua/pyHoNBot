@@ -16,7 +16,7 @@ class Game:
 _games = {}
 _id2game = {}
 _min_players = 2
-_ih_keywords = set(['inhouse','ih','funhouse'])
+_ih_keywords = set(['inhouse','ih','funhouse','learnhouse'])
 _ih_threshold = 1
 def _check_ih(game_name):
     keywords = set([w.strip('^;;"').lower() for w in game_name.split(' ')])
