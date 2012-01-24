@@ -70,13 +70,13 @@ def ih(bot,input):
             players = [bot.id2nick[id] for id in game.players]
             #bot.say('{0} [{1}]'.format(game.name,','.join(players)))
             inhouses[game.name] = '{0} [{1}]'.format(game.name,','.join(players))
-    real_inhouses = set()
-    tmm = set()
+    real_inhouses = []
+    tmm = []
     for name in inhouses:
         if name.startswith('TMM'):
-            tmm += name
+            tmm.append(name)
         else:
-            real_inhouses += name
+            real_inhouses.append(name)
     for s in [real_inhouses,tmm]:
         for name in s:
             bot.say(inhouses[name])
