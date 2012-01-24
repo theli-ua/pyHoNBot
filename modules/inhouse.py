@@ -64,10 +64,23 @@ initiall_statuses.event = [ID.HON_SC_INITIAL_STATUS]
 
 def ih(bot,input):
     """List inhouses"""
+    inhouses = {}
     for game in _games.values():
         if len(game.players) >= _min_players or _check_ih(game.name):
             players = [bot.id2nick[id] for id in game.players]
-            bot.say('{0} [{1}]'.format(game.name,','.join(players)))
+            #bot.say('{0} [{1}]'.format(game.name,','.join(players)))
+            inhouses[game.name] = '{0} [{1}]'.format(game.name,','.join(players))
+    real_inhouses = set()
+    tmm = set()
+    for name in inhouses:
+        if name.startswith('TMM'):
+            tmm += name
+        else:
+            real_inhouses += name
+    for s in [real_inhouses,tmm]:
+        for name in s:
+            bot.say(inhouses[name])
+
 ih.commands = ['ih']
 
 
