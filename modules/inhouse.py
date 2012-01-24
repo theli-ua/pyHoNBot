@@ -86,5 +86,5 @@ ih.commands = ['ih']
 
 def setup(bot):
     if hasattr(bot.config,'inhouse_min_players'):
-        global _ih_threshold
-        _ih_threshold = bot.config.inhouse_min_players
+        global _min_players
+        _min_players = bot.config.inhouse_min_players
