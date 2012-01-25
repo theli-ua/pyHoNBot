@@ -31,7 +31,7 @@ def _add_game(account_id,game_name,matchid,server,bot):
         if _check_ih(game_name):
             bot.write_packet(ID.HON_CS_CLAN_MESSAGE,'^:{0} ^;was started,join up!'.format(game_name))  
             if hasattr(bot,'mumbleannounce'):
-                bot.mumbleannounce('"{0}" was started,join up!'.format(game_name))
+                bot.mumbleannounce('"{0}^*" was started,join up!'.format(game_name))
             _games[key].announced = True
     _games[key].players |= set([account_id])
     _id2game[account_id] = key
@@ -68,8 +68,7 @@ def ih(bot,input):
     for game in _games.values():
         if len(game.players) >= _min_players or _check_ih(game.name):
             players = [bot.id2nick[id] for id in game.players]
-            #bot.say('{0} [{1}]'.format(game.name,','.join(players)))
-            inhouses[game.name] = '{0} [{1}]'.format(game.name,','.join(players))
+            inhouses[game.name] = '{0}^* [{1}]'.format(game.name,','.join(players))
     real_inhouses = []
     tmm = []
     for name in inhouses:
