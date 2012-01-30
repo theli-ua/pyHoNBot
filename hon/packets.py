@@ -49,6 +49,8 @@ class ID:
     HON_CS_CLAN_ADD_MEMBER = 0x47
     HON_CS_CHANNEL_EMOTE = 0x65
     HON_CS_BUDDY_ACCEPT = 0xB3
+    HON_CS_START_MM_GROUP = 0x0C0A
+    HON_CS_INVITE_TO_MM = 0x0C0D
 
     #- Server -> Client
     HON_SC_AUTH_ACCEPTED = 0x1c00
@@ -167,6 +169,8 @@ cs_structs = {
         ID.HON_CS_CLAN_MESSAGE : 's',
         ID.HON_CS_JOIN_CHANNEL : 's',
         ID.HON_CS_LEAVE_CHANNEL : 's',
+        ID.HON_CS_START_MM_GROUP : 'sHsssH',
+        ID.HON_CS_INVITE_TO_MM : 's',
         }
 sc_structs = {
         ID.HON_SC_PING : '',
