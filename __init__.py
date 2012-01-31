@@ -49,6 +49,7 @@ def run_honbot(config):
       try: connect(config)
       except KeyboardInterrupt: 
          sys.exit()
+      except:pass
 
       if not isinstance(delay, int): 
          break
