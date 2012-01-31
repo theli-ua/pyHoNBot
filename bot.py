@@ -45,6 +45,13 @@ class Bot( asynchat.async_chat ):
 
         self.ac_in_buffer_size = 2
         #self.ac_out_buffer_size = 2
+        self.connection_timeout_threshold = 60
+        self.connection_timeout = time.time() + 5
+    def readable(self):
+        if time.time() - self.connection_timeout >= self.connection_timeout_threshold:
+            self.close()
+            return False
+        return True
         
 
     def write_packet(self,packet_id,*args):
@@ -360,6 +367,8 @@ class Bot( asynchat.async_chat ):
         return CommandInput(text, origin, data, match)
 
     def dispatch(self,data):
+        self.connection_timeout = time.time()
+
         origin,data = packets.parse_packet(data)
         packet_id = origin[0]
         #print 'trying to dispatch',hex(packet_id)
