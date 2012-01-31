@@ -122,7 +122,10 @@ player_stats.commands = ['pstats']
 
 
 def get_stats(bot,input,table,hero=None):
-    player = input.group(2)
+    if hero is None:
+        player = input.group(2)
+    else:
+        player = input.group(3)
     if player is None:
         player = input.nick
     query = {'nickname' : player}
@@ -208,6 +211,42 @@ def get_stats(bot,input,table,hero=None):
                 'wards' : 'rnk_ph_wards',
                 'neuts' : 'rnk_ph_neutralcreepkills',
                 },
+            'hero_pub' :
+                {
+                'rating' : 'ph_pub_skill',
+                'matches' : 'ph_used',
+                'wins' : 'ph_wins',
+                'gold' : 'ph_gold',
+                'exp_time' : 'ph_time_earning_exp',
+                'secs' : 'ph_secs',
+                'xp'    : 'ph_exp',
+                'ck'    : 'ph_teamcreepkills',
+                'cd'    : 'ph_denies',
+                'actions':'ph_actions',
+                'K'     : 'ph_herokills',
+                'D'     : 'ph_deaths',
+                'A'     : 'ph_heroassists',
+                'wards' : 'ph_wards',
+                'neuts' : 'ph_neutralcreepkills',
+                },
+            'hero_casual':
+                {
+                'rating' : 'cs_ph_amm_team_rating',
+                'matches' : 'cs_ph_used',
+                'wins' : 'cs_ph_wins',
+                'gold' : 'cs_ph_gold',
+                'exp_time' : 'cs_ph_time_earning_exp',
+                'secs' : 'cs_ph_secs',
+                'xp'    : 'cs_ph_exp',
+                'ck'    : 'cs_ph_teamcreepkills',
+                'cd'    : 'cs_ph_denies',
+                'actions':'cs_ph_actions',
+                'K'     : 'cs_ph_herokills',
+                'D'     : 'cs_ph_deaths',
+                'A'     : 'cs_ph_heroassists',
+                'wards' : 'cs_ph_wards',
+                'neuts' : 'cs_ph_neutralcreepkills',
+                },
         }
     for k,v in mapping[table].iteritems():
         stats[k] = stats_data[v]
@@ -238,7 +277,7 @@ def get_stats(bot,input,table,hero=None):
     else:
         stats['hero'] = bot.stringtables[hero + '_name']
 
-    if table == 'player':
+    if table == 'player' or table == 'hero_pub':
         stats['rating_type'] = 'PSR'
     else:
         stats['rating_type'] = 'MMR'
@@ -246,7 +285,12 @@ def get_stats(bot,input,table,hero=None):
     bot.say(PLAYER_STATS_FORMAT.format(**stats))
 
 def hero_stats(bot,input):
-    get_stats(bot,input,table='hero_ranked',hero=bot.heroshorts[input.group(1).lower()])
+    table = 'hero_ranked'
+    if input.group(2) == 'p':
+        table = 'hero_pub'
+    elif input.group(2) == 'c':
+        table = 'hero_casual'
+    get_stats(bot,input,table=table,hero=bot.heroshorts[input.group(1).lower()])
 
 def setup(bot):
     global MATCH_FORMAT_STRING,PLAYER_STATS_FORMAT
@@ -255,4 +299,4 @@ def setup(bot):
     if hasattr(bot.config,'PLAYER_STATS_FORMAT'):
         PLAYER_STATS_FORMAT = bot.config.PLAYER_STATS_FORMAT
     if hasattr(bot,'heroshorts'):
-        hero_stats.rule = '(?i)' + bot.config.prefix + r'({0})(?:[^\ ]*\ +(.+))?'.format('|'.join(bot.heroshorts.keys()))
+        hero_stats.rule = '(?i)' + bot.config.prefix + r'({0})(?:[^\ ]*\ +(?:(p|c)\ +)?(.+))?'.format('|'.join(bot.heroshorts.keys()))
