@@ -8,6 +8,5 @@ startgroup.event = [ID.HON_SC_INITIAL_STATUS]
 
 
 def fixmm(bot,input):
-    print(input.nick)
     bot.write_packet(ID.HON_CS_INVITE_TO_MM,input.nick)
 fixmm.commands = ['fixmm']
