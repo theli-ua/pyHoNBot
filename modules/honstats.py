@@ -1,10 +1,24 @@
 from datetime import timedelta
 
-MATCH_FORMAT_STRING = '{nick} {hero}[{lvl}] {rating}{rating_type} {outcome} ^g{K}^*/^r{D}^*/^b{A}^* {name}{mode} {len} ^:|^; CK:{ck}+{ckn} CD:{cd} ^:|^; XPM:{xpm:.2f} GPM:{gpm:.2f} ^:|^; WARDS:{wards} ^:|^; {mdt}'
-PLAYER_STATS_FORMAT = '{nick} {hero} ^g{rating}^*{rating_type} WIN^g{win_percent:.2%}^*({wins}/{matches}) ^:|^; Average stats ^r^:=>^*^; len: {avg_len} ^:|^; CK:{avg_ck:.2f}+{avg_ckn:.2f} CD:{avg_cd:.2f} ^:|^; XPM:{xpm:.2f} GPM:{gpm:.2f} APM:{apm:.2f} ^:|^; K/D/A ^g{avg_K:.2f}^*/^r{avg_D:.2f}^*/^b{avg_A:.2f}^* ^:|^; WARDS {avg_wards:.2f}'
+MATCH_FORMAT_STRING = '{nick} {hero}[{lvl}] {rating}{rating_type} {outcome} ^g{K}^*/^r{D}^*/^b{A}^* {name}{mode} {len}^:|^;CK:{ck}+{ckn} CD:{cd}^:|^;X:{xpm:.2f} G:{gpm:.2f} A:{apm:.2f}^:|^;W:{wards}^:|^;{mdt}'
+PLAYER_STATS_FORMAT = '{nick} {hero} ^g{rating}^*{rating_type} ^g{win_percent:.2%}^*({wins}/{matches})^:|^;^g{avg_K:.2f}^*/^r{avg_D:.2f}^*/^b{avg_A:.2f}^*^:|^;X:{xpm:.2f} G:{gpm:.2f} A:{apm:.2f}^:|^;CK:{avg_ck:.2f}+{avg_ckn:.2f} CD:{avg_cd:.2f}^:|^;{avg_len}^:|^;W {avg_wards:.2f}'
 
 depend = ['honstringtables']
-
+GAME_MODES = [("nm","ap"),"sd","rd","dm","bd","bp","cd","cm","ar","league"]
+#'smackdown'
+#'bloodlust'
+#'annihilation'
+#'doublekill'
+#'quadkill'
+#'ks3'
+#'ks4'
+#'ks5'
+#'ks6'
+#'ks7'
+#'ks8'
+#'ks9'
+#'ks10'
+#'ks15'
 def match(bot,input):
     """Show last match info for player (or command sender if unspecified)"""
     player = input.group(2)
@@ -29,10 +43,15 @@ def match(bot,input):
                 match_stats = {}
                 #game settings
                 mode = []
-                for i in ["nm","sd","rd","dm","bd","bp","cd","cm","league"]:
+                for i in GAME_MODES:
+                    if isinstance(i,tuple):
+                        key = i[0]
+                        val = i[1]
+                    else:
+                        key = val = i
                     try:
-                        if summary[i] == "1":
-                            mode.append(i)
+                        if summary[key] == "1":
+                            mode.append(val)
                     except:pass
                 match_stats['mode'] = '[' + ','.join(mode) + ']'
                 match_stats['name'] = summary['mname']
@@ -77,6 +96,7 @@ def match(bot,input):
                 time = float(summary['time_played']) / 60.0
                 match_stats['xpm'] = float(player_stats['exp'])/time
                 match_stats['gpm'] = float(player_stats['gold'])/time
+                match_stats['apm'] = float(player_stats['actions'])/time
                 match_stats['nick'] = player_stats['nickname']
 
                 if match_stats['hero'] + '_name' in bot.stringtables:
