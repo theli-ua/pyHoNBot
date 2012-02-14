@@ -89,3 +89,9 @@ def setup(bot):
     if hasattr(bot.config,'inhouse_min_players'):
         global _min_players
         _min_players = bot.config.inhouse_min_players
+    if hasattr(bot.config,'inhouse_keywords'):
+        global _ih_keywords
+        _ih_keywords = set(bot.config.inhouse_keywords)
+    if hasattr(bot.config,'inhouse_keywords_threshold'):
+        global _ih_threshold
+        _ih_threshold = bot.config.inhouse_keywords_threshold
