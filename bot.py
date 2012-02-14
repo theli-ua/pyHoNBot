@@ -93,13 +93,15 @@ class Bot( asynchat.async_chat ):
     def masterserver_request(self,query, path = None,decode = True, cookie = False):
         if cookie:
             query['cookie'] = self.cookie
-        return masterserver.request(query,path = path,decode = decode)
+        response = masterserver.request(query,path = path,decode = decode)
+        if response and 'cookie' in response and response[0] == False:
+            print('cookie expired, renewing')
+            self.auth()
+            return self.masterserver_request(query,path,decode,cookie)
+        return response
 
-    def run(self):
+    def auth(self):
         auth_data = masterserver.auth(self.config.nick,self.config.password)
-        print ('got auth data')
-        #print auth_data,self.config.nick,self.config.password
-        self.create_socket( socket.AF_INET, socket.SOCK_STREAM )
         self.ip = auth_data['ip']
         self.cookie = auth_data['cookie']
         self.account_id = int(auth_data['account_id'])
@@ -130,6 +132,11 @@ class Bot( asynchat.async_chat ):
                 self.id2nick[id] = nick
                 self.nick2id[nick] = id
                 self.buddy_list[id] = buddy
+        return auth_data
+
+    def run(self):
+        auth_data = self.auth()
+        self.create_socket( socket.AF_INET, socket.SOCK_STREAM )
         self.connect( ( auth_data['chat_url'], packets.ID.HON_CHAT_PORT ) )
         asyncore.loop()
     def setup(self): 
