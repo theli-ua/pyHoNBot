@@ -34,8 +34,8 @@ class ID:
     HON_CS_USER_INFO = 0x2A
     HON_CS_UPDATE_TOPIC = 0x30
     HON_CS_CHANNEL_KICK = 0x31
-    HON_CS_CHANNEL_BAN = 0x33
-    HON_CS_CHANNEL_UNBAN = 0x32
+    HON_CS_CHANNEL_BAN = 0x32
+    HON_CS_CHANNEL_UNBAN = 0x33
     HON_CS_CHANNEL_SILENCE_USER = 0x38
     HON_CS_CHANNEL_PROMOTE = 0x3A
     HON_CS_CHANNEL_DEMOTE = 0x3B
@@ -194,7 +194,9 @@ def pack(packet_id, *args):
                 args[i] = args[i].encode('utf-8')
             fmt[i] = '{0}s'.format(1 + len(args[i]))
     fmt = ''.join(fmt)
-    return struct.pack('<H' + fmt,packet_id,*args)
+    packet = struct.pack('<H' + fmt,packet_id,*args)
+    #print(dump(packet))
+    return packet
 def parse_part(data,fmt):
     res = []
     for f in fmt:
