@@ -171,6 +171,8 @@ cs_structs = {
         ID.HON_CS_LEAVE_CHANNEL : 's',
         ID.HON_CS_START_MM_GROUP : 'sHsssH',
         ID.HON_CS_INVITE_TO_MM : 's',
+        ID.HON_CS_CHANNEL_KICK : 'II',
+        ID.HON_CS_CHANNEL_BAN : 'Is',
         }
 sc_structs = {
         ID.HON_SC_PING : '',
