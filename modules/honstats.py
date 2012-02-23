@@ -4,7 +4,7 @@ MATCH_FORMAT_STRING = '{nick} {hero}[{lvl}] {rating}{rating_type} {outcome} ^g{K
 PLAYER_STATS_FORMAT = '{nick} {hero} ^g{rating}^*{rating_type} ^g{win_percent:.2%}^*({wins}/{matches})^:|^;^g{avg_K:.2f}^*/^r{avg_D:.2f}^*/^b{avg_A:.2f}^*^:|^;X:{xpm:.2f} G:{gpm:.2f} A:{apm:.2f}^:|^;CK:{avg_ck:.2f}+{avg_ckn:.2f} CD:{avg_cd:.2f}^:|^;{avg_len}^:|^;W {avg_wards:.2f}'
 
 depend = ['honstringtables']
-GAME_MODES = [("nm","ap"),"sd","rd","dm","bd","bp","cd","cm","ar","league"]
+GAME_MODES = [("nm","ap"),"sd","rd","dm","bd","bp","cd","cm","ar","league",("cas","casual")]
 #'smackdown'
 #'bloodlust'
 #'annihilation'
@@ -36,6 +36,7 @@ def match(bot,input):
             matchid = matches[-1]
             match = bot.masterserver_request({'f':'get_match_stats','match_id[]':[matchid]},cookie = True)
             summary = match['match_summ']
+            print(summary)
             if matchid not in summary:
                 bot.reply('Couldn''t grab info on latest match for {0}'.format(player))
             else:
