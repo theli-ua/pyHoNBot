@@ -173,6 +173,15 @@ cs_structs = {
         ID.HON_CS_INVITE_TO_MM : 's',
         ID.HON_CS_CHANNEL_KICK : 'II',
         ID.HON_CS_CHANNEL_BAN : 'Is',
+        ID.HON_CS_CHANNEL_UNBAN : 'Is',
+        ID.HON_CS_CHANNEL_SILENCE_USER : 'IsI',
+        ID.HON_CS_CHANNEL_AUTH_ENABLE : 'I',
+        ID.HON_CS_CHANNEL_AUTH_DISABLE : 'I',
+        ID.HON_CS_CHANNEL_AUTH_ADD : 'Is',
+        ID.HON_CS_CHANNEL_AUTH_DELETE : 'Is',
+        ID.HON_CS_CHANNEL_PROMOTE : 'II',
+        ID.HON_CS_CHANNEL_DEMOTE : 'II',
+        ID.HON_CS_CLAN_ADD_MEMBER : 's',
         }
 sc_structs = {
         ID.HON_SC_PING : '',
