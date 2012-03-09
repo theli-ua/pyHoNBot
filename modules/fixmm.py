@@ -1,6 +1,6 @@
 from hon.packets import ID
 
-VERSION = '2.5.13'
+VERSION = '2.5.14'
 
 def startgroup(bot,packet_id,data):
     bot.write_packet(ID.HON_CS_START_MM_GROUP,VERSION,0x0102,'caldavar','sd|bd|bp|','EU|',0x0001)
