@@ -5,6 +5,7 @@ and track games people play together
 
 from hon.packets import ID
 import re
+from hon.honutils import normalize_nick
 
 
 class Game:
@@ -83,6 +84,15 @@ def ih(bot,input):
             bot.say(inhouses[name])
 
 ih.commands = ['ih']
+
+def add_member(bot,packet_id,data):
+    id = data[0]
+    bot.clan_roster[id] = {"rank":"Member"}
+    if id in bot.id2nick:
+        nick = bot.id2nick[id]
+        bot.write_packet(ID.HON_CS_CLAN_MESSAGE,'Welcome, {0}!'.format(nick))
+add_member.event = [ID.HON_SC_CLAN_MEMBER_ADDED]
+        
 
 
 def setup(bot):
