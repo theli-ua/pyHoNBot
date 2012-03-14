@@ -12,6 +12,10 @@ def channel_user_joined_channel(bot,packet_id,data):
     channel_channels[data[2]] = channel_channels[data[2]] | set([data[1]])
 channel_user_joined_channel.event = [ID.HON_SC_JOINED_CHANNEL]
 
+def channel_user_left_channel(bot,packet_id,data):
+    channel_channels[data[1]] = channel_channels[data[1]] - set([data[0]])
+channel_user_left_channel.event = [ID.HON_SC_LEFT_CHANNEL]
+
 def kickall(bot,input):
     if not input.admin and \
         (input.account_id not in bot.clan_roster or bot.clan_roster[input.account_id] == 'Member'):
