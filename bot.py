@@ -361,10 +361,16 @@ class Bot( asynchat.async_chat ):
                 if isinstance(origin[1],unicode):
                     origin[1] = normalize_nick(origin[1])
                     s.nick = origin[1]
-                    s.account_id = self.nick2id[s.nick]
+                    try:
+                        s.account_id = self.nick2id[s.nick]
+                    except:
+                        s.account_id = -1
                 elif isinstance(origin[1],int):
                     s.account_id = origin[1]
-                    s.nick = self.id2nick[origin[1]]
+                    try:
+                        s.nick = self.id2nick[origin[1]]
+                    except:
+                        s.nick = ''
                 else:
                     s.nick = None
                     s.account_id = None
