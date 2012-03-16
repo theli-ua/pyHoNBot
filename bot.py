@@ -384,7 +384,6 @@ class Bot( asynchat.async_chat ):
 
         origin,data = packets.parse_packet(data)
         packet_id = origin[0]
-        #print 'trying to dispatch',hex(packet_id)
 
         for priority in ('high', 'medium', 'low'): 
             items = self.commands[priority].items()
@@ -395,15 +394,11 @@ class Bot( asynchat.async_chat ):
                         func(self,list(origin),data)
                     elif isinstance(data,unicode):
                         text = data
-                        #print (origin, text)
-                        #print (regexp.pattern)
                         match = regexp.match(text)
                         if match: 
-                            #not sure what that limit is about
-                            #if self.limit(origin, func): continue
 
-                            input = self.input(origin, text, data, match)
-                            phenny = self.wrapped(origin, input, text, match)
+                            input = self.input(list(origin), text, data, match)
+                            phenny = self.wrapped(list(origin), input, text, match)
                             t = time.time()
                             if input.admin or input.nick not in self.cooldowns or\
                                     (input.nick in self.cooldowns \
@@ -417,10 +412,6 @@ class Bot( asynchat.async_chat ):
                                     t.start()
                                 else: self.call(func, list(origin), phenny, input)
 
-                                #for source in [origin.sender, origin.nick]: 
-                                    #try: self.stats[(func.name, source)] += 1
-                                    #except KeyError: 
-                                        #self.stats[(func.name, source)] = 1
 
 
 
