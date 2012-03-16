@@ -386,7 +386,7 @@ class Bot( asynchat.async_chat ):
                 for func in funcs: 
                     if packet_id not in func.event: continue
                     if regexp is None:
-                        func(self,origin,data)
+                        func(self,list(origin),data)
                     elif isinstance(data,unicode):
                         text = data
                         #print (origin, text)
@@ -406,10 +406,10 @@ class Bot( asynchat.async_chat ):
                                     >= self.config.cooldown):
                                 self.cooldowns[input.nick] = t
                                 if func.thread: 
-                                    targs = (func, origin, phenny, input)
+                                    targs = (func, list(origin), phenny, input)
                                     t = threading.Thread(target=self.call, args=targs)
                                     t.start()
-                                else: self.call(func, origin, phenny, input)
+                                else: self.call(func, list(origin), phenny, input)
 
                                 #for source in [origin.sender, origin.nick]: 
                                     #try: self.stats[(func.name, source)] += 1
