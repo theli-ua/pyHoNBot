@@ -4,7 +4,7 @@ from time import sleep
 from datetime import datetime
 
 channel_channels = {}
-CHANNEL_MAX = 190
+CHANNEL_MAX = 165
 
 def channel_joined_channel(bot,origin,data):
     channel_channels[data[1]] = dict([[m[1],[m[1],m[0],datetime.now()]] for m in data[-1]])
