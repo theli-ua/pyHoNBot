@@ -47,7 +47,7 @@ def _del_game(account_id):
             del _games[key]
         del _id2game[account_id]
 
-def status_update(bot,packet_id,data):
+def status_update(bot,origin,data):
     #id,status,flags,clan_id,clan_name,chatsymbol,shield,icon
     #if ingame -> server,game name, matchid
     if data[0] in bot.clan_roster:
@@ -57,7 +57,7 @@ def status_update(bot,packet_id,data):
             _del_game(data[0])
 status_update.event = [ID.HON_SC_UPDATE_STATUS]
 
-def initiall_statuses(bot,packet_id,data):
+def initiall_statuses(bot,origin,data):
     #id,status,flags
     #server, gamename
     for u in data[1]:
@@ -85,7 +85,7 @@ def ih(bot,input):
 
 ih.commands = ['ih']
 
-def add_member(bot,packet_id,data):
+def add_member(bot,origin,data):
     id = data[0]
     bot.clan_roster[id] = {"rank":"Member"}
     if id in bot.id2nick:
@@ -93,7 +93,7 @@ def add_member(bot,packet_id,data):
         bot.write_packet(ID.HON_CS_CLAN_MESSAGE,'Welcome, {0}!'.format(nick))
 add_member.event = [ID.HON_SC_CLAN_MEMBER_ADDED]
         
-def del_member(bot,packet_id,data):
+def del_member(bot,origin,data):
     del(bot.clan_roster[data[0]])
 del_member.event = [ID.HON_SC_CLAN_MEMBER_LEFT]
 

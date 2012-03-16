@@ -3,7 +3,7 @@
 from hon.packets import ID
 from hon.honutils import normalize_nick
 
-def joined_channel(bot,packet_id,data):
+def joined_channel(bot,origin,data):
     bot.chan2id[data[0]] = data[1]
     bot.id2chan[data[1]] = data[0]
     for m in data[-1]:
@@ -12,13 +12,13 @@ def joined_channel(bot,packet_id,data):
         bot.id2nick[m[1]] = m[0]
 joined_channel.event = [ID.HON_SC_CHANGED_CHANNEL]
 
-def user_joined_channel(bot,packet_id,data):
+def user_joined_channel(bot,origin,data):
     nick = normalize_nick(data[0])
     bot.nick2id[nick] = data[1]
     bot.id2nick[data[1]] = nick
 user_joined_channel.event = [ID.HON_SC_JOINED_CHANNEL]
 
-def name_change(bot,packet_id,data):
+def name_change(bot,origin,data):
     nick = normalize_nick(data[1])
     bot.nick2id[nick] = data[0]
     bot.id2nick[data[0]] = nick

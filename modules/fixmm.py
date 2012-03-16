@@ -1,7 +1,7 @@
 from hon.packets import ID
 
 
-def startgroup(bot,packet_id,data):
+def startgroup(bot,origin,data):
     VERSION = '.'.join(bot.stringtable_version.split('.')[:3])
     bot.write_packet(ID.HON_CS_START_MM_GROUP,VERSION,0x0102,'caldavar','sd|bd|bp|','EU|',0x0001)
 startgroup.event = [ID.HON_SC_INITIAL_STATUS]

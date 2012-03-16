@@ -386,7 +386,7 @@ class Bot( asynchat.async_chat ):
                 for func in funcs: 
                     if packet_id not in func.event: continue
                     if regexp is None:
-                        func(self,packet_id,data)
+                        func(self,origin,data)
                     elif isinstance(data,unicode):
                         text = data
                         #print (origin, text)
