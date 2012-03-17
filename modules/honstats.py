@@ -36,7 +36,6 @@ def match(bot,input):
             matchid = matches[-1]
             match = bot.masterserver_request({'f':'get_match_stats','match_id[]':[matchid]},cookie = True)
             summary = match['match_summ']
-            print(summary)
             if matchid not in summary:
                 bot.reply('Couldn''t grab info on latest match for {0}'.format(player))
             else:
