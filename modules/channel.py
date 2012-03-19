@@ -4,7 +4,7 @@ from time import sleep
 from datetime import datetime
 
 channel_channels = {}
-CHANNEL_MAX = 165
+CHANNEL_MAX = 180
 
 def channel_joined_channel(bot,origin,data):
     channel_channels[data[1]] = dict([[m[1],[m[1],m[0],datetime.now()]] for m in data[-1]])
@@ -41,7 +41,7 @@ def kickall(bot,input):
         return
     if input.origin[2] in channel_channels:
         for i in channel_channels[input.origin[2]]:
-            if i[0] not in bot.clan_roster and i[1].split(']')[0] not in ['[GM','[S2']:
+            if i[0] not in bot.clan_roster and i[1].split(']')[0] not in ['[GM','[S2','[TECH']:
                 bot.write_packet(ID.HON_CS_CHANNEL_KICK,input.origin[2],i[0])
                 sleep(0.5)
 kickall.commands = ['kickall']
