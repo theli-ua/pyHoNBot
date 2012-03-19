@@ -70,7 +70,7 @@ def ih(bot,input):
     """List inhouses"""
     inhouses = {}
     for game in _games.values():
-        if len(game.players) >= bot.config.ih_min_players or _check_ih(game.name,bot.config.ih_keywords,bot.ih_threshold):
+        if len(game.players) >= bot.config.ih_min_players or _check_ih(game.name,bot.config.ih_keywords,bot.config.ih_threshold):
             players = [bot.id2nick[id] for id in game.players]
             inhouses[game.name] = '{0}^* [{1}]'.format(game.name,','.join(players))
     real_inhouses = []
