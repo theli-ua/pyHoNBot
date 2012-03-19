@@ -18,7 +18,6 @@ class ConfigClass(object):
         return self.defaults[item][1]
 
     def __getattr__(self,item):
-        print(item)
         if item in ['config','disk_config','defaults','disk_config_path']:
             raise AttributeError, item
         if hasattr(self.config,item):

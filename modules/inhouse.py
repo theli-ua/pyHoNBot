@@ -21,7 +21,7 @@ _id2game = {}
 _re_split_color = re.compile(r'\^([0-9]{3}|[a-zA-Z\*\;\:])')
 _re_split = re.compile(r'\w+')
 def _check_ih(game_name,_ih_keywords,_ih_threshold):
-    keywords = _re_split_color.sub('',keywords)
+    game_name = _re_split_color.sub('',game_name)
     keywords = set([w.lower() for w in _re_split.findall(game_name)])
     if len(keywords & _ih_keywords) >= _ih_threshold:
         return True
