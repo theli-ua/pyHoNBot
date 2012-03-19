@@ -177,6 +177,9 @@ class Bot( asynchat.async_chat ):
                     deps[name] = module.depend
                 else:
                     deps[name] = []
+                #make every module depend on config
+                if 'config' not in deps[name] and name != 'config':
+                    deps[name].append('config')
                 imp_modules[name] = module
         deps = dep(deps)
         for s in deps:
@@ -403,6 +406,8 @@ class Bot( asynchat.async_chat ):
                         if match: 
 
                             input = self.input(list(origin), text, data, match)
+                            if input.nick in self.config.ignore:
+                                continue
                             phenny = self.wrapped(list(origin), input, text, match)
                             t = time.time()
                             if input.admin or input.nick not in self.cooldowns or\

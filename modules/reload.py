@@ -9,7 +9,7 @@ http://inamidst.com/phenny/
 
 import sys, os.path, time, imp
 
-def f_reload(phenny, input): 
+def reload(phenny, input): 
    """Reloads a module, for use by admins only.""" 
    if not input.admin: return
 
@@ -45,11 +45,9 @@ def f_reload(phenny, input):
    phenny.bind_commands()
 
    phenny.reply('%r (version: %s)' % (module, modified))
-#f_reload.name = 'reload'
-f_reload.commands = ['reload']
-#f_reload.rule = ('$nick', ['reload'], r'(\S+)?')
-f_reload.priority = 'low'
-f_reload.thread = False
+reload.commands = ['reload']
+reload.priority = 'low'
+reload.thread = False
 
 if __name__ == '__main__': 
    print __doc__.strip()

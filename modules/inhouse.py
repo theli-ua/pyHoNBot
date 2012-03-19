@@ -18,11 +18,11 @@ class Game:
         self.players = set()
 _games = {}
 _id2game = {}
-_min_players = 2
-_ih_keywords = set(['inhouse','ih','funhouse','learnhouse'])
-_ih_threshold = 1
-def _check_ih(game_name):
-    keywords = set([w.strip('^;;"').lower() for w in re.findall(r'\w+', game_name)])
+_re_split_color = re.compile(r'\^([0-9]{3}|[a-zA-Z\*\;\:])')
+_re_split = re.compile(r'\w+')
+def _check_ih(game_name,_ih_keywords,_ih_threshold):
+    keywords = _re_split_color.sub('',keywords)
+    keywords = set([w.lower() for w in _re_split.findall(game_name)])
     if len(keywords & _ih_keywords) >= _ih_threshold:
         return True
     return False
@@ -31,7 +31,7 @@ def _add_game(account_id,game_name,matchid,server,bot):
     key = (matchid,game_name)
     if key not in _games:
         _games[key] = Game(game_name,matchid,server)
-        if _check_ih(game_name):
+        if _check_ih(game_name,bot.config.ih_keywords,bot.config.ih_threshold):
             bot.write_packet(ID.HON_CS_CLAN_MESSAGE,'{0}^* was started by ^r{1}^*,join up!'.format(game_name,bot.id2nick[account_id]))  
             if hasattr(bot,'mumbleannounce'):
                 bot.mumbleannounce('"{0}" was started,join up!'.format(game_name))
@@ -69,7 +69,7 @@ def ih(bot,input):
     """List inhouses"""
     inhouses = {}
     for game in _games.values():
-        if len(game.players) >= _min_players or _check_ih(game.name):
+        if len(game.players) >= bot.config.ih_min_players or _check_ih(game.name,bot.config.ih_keywords,bot.ih_threshold):
             players = [bot.id2nick[id] for id in game.players]
             inhouses[game.name] = '{0}^* [{1}]'.format(game.name,','.join(players))
     real_inhouses = []
@@ -85,26 +85,21 @@ def ih(bot,input):
 
 ih.commands = ['ih']
 
-def add_member(bot,origin,data):
-    id = data[0]
-    bot.clan_roster[id] = {"rank":"Member"}
-    if id in bot.id2nick:
-        nick = bot.id2nick[id]
-        bot.write_packet(ID.HON_CS_CLAN_MESSAGE,'Welcome, {0}!'.format(nick))
-add_member.event = [ID.HON_SC_CLAN_MEMBER_ADDED]
-        
-def del_member(bot,origin,data):
-    del(bot.clan_roster[data[0]])
-del_member.event = [ID.HON_SC_CLAN_MEMBER_LEFT]
+def ihadd(bot,input):
+    """Add a keyword on match inhouse name"""
+    if not input.admin:
+        return
+    bot.config.set_add('ih_keywords',input.group(2))
+ihadd.commands = ['ihadd']
 
+def ihdel(bot,input):
+    """Add a keyword on match inhouse name"""
+    if not input.admin:
+        return
+    bot.config.set_del('ih_keywords',input.group(2))
+ihadd.commands = ['ihdel']
 
 def setup(bot):
-    if hasattr(bot.config,'inhouse_min_players'):
-        global _min_players
-        _min_players = bot.config.inhouse_min_players
-    if hasattr(bot.config,'inhouse_keywords'):
-        global _ih_keywords
-        _ih_keywords = set(bot.config.inhouse_keywords)
-    if hasattr(bot.config,'inhouse_keywords_threshold'):
-        global _ih_threshold
-        _ih_threshold = bot.config.inhouse_keywords_threshold
+    bot.config.module_config('ih_min_players',[3,'Minimum players number to consider game an "inhouse"'])
+    bot.config.module_config('ih_threshold',[1,'Minimum players number to consider game an "inhouse"'])
+    bot.config.module_config('ih_keywords',[['ih','inhouse'],'Minimum players number to consider game an "inhouse"'])

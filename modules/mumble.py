@@ -13,7 +13,11 @@ _server = None
 _meta = None
 def setup(bot):
     global _server,_meta
-    if not hasattr(bot.config,'mumble_host') or not hasattr(bot.config,"mumble_port"):
+    bot.config.module_config('mumble_host',[None,'Host for mumble server'])
+    bot.config.module_config('mumble_port',[0,'Port for mumble server'])
+    bot.config.module_config('mumble_secret',[None,'Secret for mumble server'])
+
+    if not bot.config.mumble_host or not bot.config.mumble_port:
         return
     prxstr = "s/1 -t:tcp -h %s -p %d -t 1000" % (bot.config.mumble_host,bot.config.mumble_port)
     meta_prxstr = "Meta:tcp -h %s -p %d -t 1000" % (bot.config.mumble_host,bot.config.mumble_port)
@@ -35,7 +39,7 @@ def setup(bot):
         os.remove(dynslicefilepath)
 
         import Murmur
-        if hasattr(bot.config,'mumble_secret'):
+        if bot.config.mumble_secret:
             ice.getImplicitContext().put("secret", bot.config.mumble_secret)
         _server = Murmur.ServerPrx.checkedCast(prx)
         _meta = Murmur.MetaPrx.checkedCast(prx_meta)
@@ -44,10 +48,10 @@ def setup(bot):
         print str(e)
 
 def mumble(bot,input):
-    if input.account_id not in bot.clan_roster:
-        return
     global _server,_meta
     if not _meta or not _server:
+        return
+    if not input.admin and input.account_id not in bot.clan_roster:
         return
     command = input.group(2)
     if not command:

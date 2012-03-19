@@ -4,7 +4,9 @@ from time import sleep
 from datetime import datetime
 
 channel_channels = {}
-CHANNEL_MAX = 0
+
+def setup(bot):
+    bot.config.module_config('channel_limit',[0,'Will try to keep channel at this limit kicking afk non-clanmates'])
 
 def channel_joined_channel(bot,origin,data):
     channel_channels[data[1]] = dict([[m[1],[m[1],m[0],datetime.now()]] for m in data[-1]])
@@ -13,6 +15,9 @@ channel_joined_channel.event = [ID.HON_SC_CHANGED_CHANNEL]
 def channel_user_joined_channel(bot,origin,data):
     channel_channels[data[2]][data[1]] = [data[1],data[0],datetime.now()]
     l = len(channel_channels[data[2]])
+    CHANNEL_MAX = bot.config.channel_limit
+    if CHANNEL_MAX == 0:
+        return
     if l > CHANNEL_MAX:
         l -= CHANNEL_MAX
         for i in sorted(channel_channels[data[2]].values(), key=lambda x:x[2]):

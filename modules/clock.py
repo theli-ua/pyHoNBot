@@ -197,16 +197,6 @@ def f_time(self, input):
    match = input.match
    tz = match.group(2) or 'GMT'
 
-   # Personal time zones, because they're rad
-   if hasattr(self.config, 'timezones'): 
-      People = self.config.timezones
-   else: People = {}
-
-   if People.has_key(tz): 
-      tz = People[tz]
-   elif (not match.group(2)) and People.has_key(input.origin[1]): 
-      tz = People[origin.nick]
-
    TZ = tz.upper()
    if len(tz) > 30: return
 
