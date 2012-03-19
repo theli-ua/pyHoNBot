@@ -33,7 +33,6 @@ class ConfigClass(object):
         self.defaults[key] = value
 
     def set(self,item,value):
-        print(item,value)
         if isinstance(self.defaults[item][0],int):
             value = int(value)
         elif isinstance(self.defaults[item][0],list) and not isinstance(value,list):
