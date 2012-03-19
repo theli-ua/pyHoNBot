@@ -26,8 +26,8 @@ def setup(bot):
     idata = Ice.InitializationData()
     idata.properties = props
     ice = Ice.initialize(idata)
-    prx = ice.stringToProxy(prxstr)
-    prx_meta = ice.stringToProxy(meta_prxstr)
+    prx = ice.stringToProxy(str(prxstr))
+    prx_meta = ice.stringToProxy(str(meta_prxstr))
     try:
         slice = IcePy.Operation('getSlice', Ice.OperationMode.Idempotent, Ice.OperationMode.Idempotent, True, (), (), (), IcePy._t_string, ()).invoke(prx_meta, ((), None))
         (dynslicefiledesc, dynslicefilepath)  = tempfile.mkstemp(suffix = '.ice')
@@ -40,7 +40,7 @@ def setup(bot):
 
         import Murmur
         if bot.config.mumble_secret:
-            ice.getImplicitContext().put("secret", bot.config.mumble_secret)
+            ice.getImplicitContext().put("secret", str(bot.config.mumble_secret))
         _server = Murmur.ServerPrx.checkedCast(prx)
         _meta = Murmur.MetaPrx.checkedCast(prx_meta)
         bot.mumbleannounce = lambda msg: _server.sendMessageChannel(0,True,msg)
