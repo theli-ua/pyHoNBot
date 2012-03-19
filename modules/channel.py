@@ -4,7 +4,7 @@ from time import sleep
 from datetime import datetime
 
 channel_channels = {}
-CHANNEL_MAX = 180
+CHANNEL_MAX = 0
 
 def channel_joined_channel(bot,origin,data):
     channel_channels[data[1]] = dict([[m[1],[m[1],m[0],datetime.now()]] for m in data[-1]])
@@ -36,8 +36,7 @@ def update_stats(bot,origin,data):
 update_stats.event = [ID.HON_SC_CHANNEL_MSG]
 
 def kickall(bot,input):
-    if not input.admin and \
-        (input.account_id not in bot.clan_roster or bot.clan_roster[input.account_id] == 'Member'):
+    if not input.admin:
         return
     if input.origin[2] in channel_channels:
         for i in channel_channels[input.origin[2]]:

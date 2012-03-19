@@ -375,6 +375,10 @@ class Bot( asynchat.async_chat ):
                     s.nick = None
                     s.account_id = None
                 s.admin = s.nick in self.config.admins
+                if self.config.officer_admin and s.account_id is not None and\
+                        s.account_id in self.clan_roster and
+                        self.clan_roster[s.account_id] != 'Member':
+                        a.admin = True
                 s.owner = s.nick == self.config.owner
                 return s
         return CommandInput(text, origin, data, match)

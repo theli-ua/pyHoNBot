@@ -29,12 +29,14 @@ def create_default_config(fn):
    f = open(fn, 'w')
    print >> f, trim("""\
    nick = 'honbot'
+   password = 'example'
    channels = ['example', 'Linux']
    owner = 'yournickname'
 
-   password = 'example'
    # These are people who will be able to use admin.py's functions...
    admins = [owner, 'someoneyoutrust']
+   # Change this to True to treat bot's clanmates officers/leaders as admins
+   officer_admin = False
    # But admin.py is disabled by default, as follows:
    exclude = ['admin','mumble','fixmm']
 
@@ -59,12 +61,6 @@ def create_default_config(fn):
    # e.g. /path/to/my/modules
    extra = []
 
-   # Services to load: maps channel names to white or black lists
-   external = { 
-      'liberal': ['!'], # allow all
-      'conservative': [], # allow none
-      '*': ['!'] # default whitelist, allow all
-   }
 
    # EOF
    """)
