@@ -406,7 +406,7 @@ class Bot( asynchat.async_chat ):
                         if match: 
 
                             input = self.input(list(origin), text, data, match)
-                            if input.nick in self.config.ignore:
+                            if input.nick.lower() in self.config.ignore:
                                 continue
                             phenny = self.wrapped(list(origin), input, text, match)
                             t = time.time()

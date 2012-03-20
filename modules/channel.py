@@ -2,6 +2,7 @@
 from hon.packets import ID
 from time import sleep
 from datetime import datetime
+from hon.honutils import normalize_nick
 
 channel_channels = {}
 
@@ -28,6 +29,10 @@ def channel_user_joined_channel(bot,origin,data):
                 bot.write_packet(ID.HON_CS_WHISPER,i[1],'Sorry, too many people in channel, we need some place for clan members')
                 l -= 1
                 sleep(0.5)
+    #banlist management
+    nick = normalize_nick(data[0]).lower()
+    if data[0] in bot.config.banlist:
+        bot.write_packet(ID.HON_CS_CHANNEL_BAN,data[2],data[0])
 
 channel_user_joined_channel.event = [ID.HON_SC_JOINED_CHANNEL]
 #channel_user_joined_channel.thread = False
