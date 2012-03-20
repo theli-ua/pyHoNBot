@@ -11,6 +11,13 @@ def setup(bot):
 
 def channel_joined_channel(bot,origin,data):
     channel_channels[data[1]] = dict([[m[1],[m[1],m[0],datetime.now()]] for m in data[-1]])
+
+    #banlist management
+    for m in data[-1]:
+        nick = normalize_nick(m[0]).lower()
+        if nick in bot.config.banlist:
+            bot.write_packet(ID.HON_CS_CHANNEL_BAN,data[1],nick)
+
 channel_joined_channel.event = [ID.HON_SC_CHANGED_CHANNEL]
 
 def channel_user_joined_channel(bot,origin,data):
