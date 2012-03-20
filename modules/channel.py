@@ -17,6 +17,12 @@ def channel_user_joined_channel(bot,origin,data):
     channel_channels[data[2]][data[1]] = [data[1],data[0],datetime.now()]
     l = len(channel_channels[data[2]])
     CHANNEL_MAX = bot.config.channel_limit
+
+    #banlist management
+    nick = normalize_nick(data[0]).lower()
+    if nick in bot.config.banlist:
+        bot.write_packet(ID.HON_CS_CHANNEL_BAN,data[2],data[0])
+
     if CHANNEL_MAX == 0:
         return
     if l > CHANNEL_MAX:
@@ -29,10 +35,6 @@ def channel_user_joined_channel(bot,origin,data):
                 bot.write_packet(ID.HON_CS_WHISPER,i[1],'Sorry, too many people in channel, we need some place for clan members')
                 l -= 1
                 sleep(0.5)
-    #banlist management
-    nick = normalize_nick(data[0]).lower()
-    if data[0] in bot.config.banlist:
-        bot.write_packet(ID.HON_CS_CHANNEL_BAN,data[2],data[0])
 
 channel_user_joined_channel.event = [ID.HON_SC_JOINED_CHANNEL]
 #channel_user_joined_channel.thread = False
