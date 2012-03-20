@@ -257,7 +257,7 @@ def get_stats(bot,input,table,hero=None):
     for stat in [('K','avg_K'), ('D','avg_D'), ('A','avg_A'), ('ck','avg_ck'),
             ('cd','avg_cd'), ('wards','avg_wards'),('neuts','avg_ckn'),
             ('exp_time','avg_len')]:
-        if stats['matches'] > 0:
+        if int(stats['matches']) > 0:
             stats[stat[1]] = float(stats[stat[0]])/float(stats['matches'])
         else:
             stats[stat[1]] = 0.0
