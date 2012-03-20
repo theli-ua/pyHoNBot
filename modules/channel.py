@@ -33,7 +33,10 @@ channel_user_joined_channel.event = [ID.HON_SC_JOINED_CHANNEL]
 #channel_user_joined_channel.thread = False
 
 def channel_user_left_channel(bot,origin,data):
-    del(channel_channels[data[1]][data[0]])
+    try:
+        del(channel_channels[data[1]][data[0]])
+    except:
+        pass
 channel_user_left_channel.event = [ID.HON_SC_LEFT_CHANNEL]
 
 def update_stats(bot,origin,data):
