@@ -42,3 +42,15 @@ def unban(bot, input):
     if input.origin[0] == ID.HON_SC_CHANNEL_MSG:
         bot.write_packet(ID.HON_CS_CHANNEL_UNBAN,input.origin[2],input.group(2))
 unban.commands = ['unban']
+
+def admin(bot, input): 
+    """Adds person to admin list, owner only""" 
+    if not input.owner: return
+    bot.config.set_add('admins',input.group(2).lower())
+admin.commands = ['admin']
+
+def unadmin(bot, input): 
+    """Removes person from admins list, owner only""" 
+    if not input.admin: return
+    bot.config.set_del('admins',input.group(2).lower())
+unadmin.commands = ['unadmin']
