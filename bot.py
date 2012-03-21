@@ -381,7 +381,7 @@ class Bot( asynchat.async_chat ):
                 if hasattr(self.config,'officer_admin') and \
                         self.config.officer_admin and s.account_id is not None and\
                         s.account_id in self.clan_roster and\
-                        self.clan_roster[s.account_id] != 'Member':
+                        self.clan_roster[s.account_id]['rank'] != 'Member':
                         s.admin = True
                 s.owner = s.nick == self.config.owner
                 return s
