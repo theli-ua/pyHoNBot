@@ -83,7 +83,9 @@ def config(bot,input):
             bot.reply('OK')
         except:
             key = input.group(2)
-            bot.say('{0},{1}'.format(bot.config.doc(key),bot.config.__getattr__(key)))
+            msg = '{0},{1}'.format(bot.config.doc(key),bot.config.__getattr__(key))
+            for line in [msg[i:i+245] for i in range(0, len(msg), 245)]:
+                bot.say(line)
     
 config.commands = ['config']
             
