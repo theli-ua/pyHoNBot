@@ -377,7 +377,7 @@ class Bot( asynchat.async_chat ):
                 else:
                     s.nick = None
                     s.account_id = None
-                s.admin = s.nick in self.config.admins
+                s.admin = s.nick.lower() in self.config.admins
                 if hasattr(self.config,'officer_admin') and \
                         self.config.officer_admin and s.account_id is not None and\
                         s.account_id in self.clan_roster and\
