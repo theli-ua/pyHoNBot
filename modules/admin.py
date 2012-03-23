@@ -30,17 +30,27 @@ unignore.commands = ['unignore']
 def ban(bot, input): 
     """makes bot ban user, bot will try to reban user on each occasion""" 
     if not input.admin: return
-    bot.config.set_add('banlist',input.group(2).lower())
+    nick = input.group(2).lower()
     if input.origin[0] == ID.HON_SC_CHANNEL_MSG:
-        bot.write_packet(ID.HON_CS_CHANNEL_BAN,input.origin[2],input.group(2))
+        bot.write_packet(ID.HON_CS_CHANNEL_BAN,input.origin[2],nick)
+    if nick in bot.config.banlist:
+        bot.reply('"{0}" was already in my banlist"'.format(nick))
+    else:
+        bot.config.set_add('banlist',nick)
+        bot.reply('{0} added to banlist'.format(nick))
 ban.commands = ['ban']
 
 def unban(bot, input): 
     """makes bot stop banning user, admins only""" 
     if not input.admin: return
-    bot.config.set_del('banlist',input.group(2).lower())
+    nick = input.group(2).lower()
     if input.origin[0] == ID.HON_SC_CHANNEL_MSG:
-        bot.write_packet(ID.HON_CS_CHANNEL_UNBAN,input.origin[2],input.group(2))
+        bot.write_packet(ID.HON_CS_CHANNEL_UNBAN,input.origin[2],nick)
+    if nick in bot.config.banlist:
+        bot.config.set_del('banlist',nick)
+        bot.reply('{0} removed from banlist'.format(nick))
+    else:
+        bot.reply('Sorry, there was no "{0}" in my banlist"'.format(nick))
 unban.commands = ['unban']
 
 def admin(bot, input): 
