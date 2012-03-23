@@ -94,8 +94,8 @@ class ID:
     HON_SC_CHANNEL_ADD_AUTH_FAIL = 0x44
     HON_SC_CHANNEL_DEL_AUTH_FAIL = 0x45
     HON_SC_JOIN_CHANNEL_PASSWORD = 0x46
-    HON_SC_CLAN_MEMBER_ADDED = 0x4E
-    HON_SC_CLAN_MEMBER_LEFT = 0x50
+    HON_SC_CLAN_MEMBER_ADDED = 0x4E #not sure about that
+    HON_SC_CLAN_MEMBER_CHANGE = 0x50
     HON_SC_NAME_CHANGE = 0x5A
     HON_SC_CHANNEL_EMOTE = 0x65
     HON_SC_TOTAL_ONLINE = 0x68
@@ -196,7 +196,7 @@ sc_structs = {
         ID.HON_SC_UPDATE_STATUS : parse_user_status,
         ID.HON_SC_JOINED_CHANNEL : 'sIIBBsss', #nick,id,chat_id,status,flags,chatsymbol,shield,icon
         ID.HON_SC_CLAN_MEMBER_ADDED : 'I',
-        ID.HON_SC_CLAN_MEMBER_LEFT : 'I',
+        ID.HON_SC_CLAN_MEMBER_CHANGE : 'IBI', #whom,wat,who (theli, promoted to officer, by visions)
         ID.HON_SC_NAME_CHANGE : 'Is',
         ID.HON_SC_LEFT_CHANNEL : 'II',
         }
