@@ -102,5 +102,5 @@ ihdel.commands = ['ihdel']
 
 def setup(bot):
     bot.config.module_config('ih_min_players',[3,'Minimum players number to consider game an "inhouse"'])
-    bot.config.module_config('ih_threshold',[1,'Minimum players number to consider game an "inhouse"'])
+    bot.config.module_config('ih_threshold',[1,'Minimum number of keywords found in game''s name to announce it'])
     bot.config.module_config('ih_keywords',[['ih','inhouse'],'Key words to be found in game name to consider game an "inhouse"'])
