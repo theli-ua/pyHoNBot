@@ -8,6 +8,7 @@ channel_channels = {}
 
 def setup(bot):
     bot.config.module_config('channel_limit',[0,'Will try to keep channel at this limit kicking afk non-clanmates'])
+    bot.config.module_config('spam_threshold',[3,'number of seconds, if user repeats his message in channel with delay lower than this he will be considered spamming and banned'])
 
 def channel_joined_channel(bot,origin,data):
     channel_channels[data[1]] = dict([[m[1],[m[1],m[0],datetime.now(),None]] for m in data[-1]])
@@ -39,7 +40,7 @@ def channel_user_joined_channel(bot,origin,data):
             if i[0] not in bot.clan_roster and i[1].split(']')[0] not in ['[GM','[S2']:
                 bot.write_packet(ID.HON_CS_CHANNEL_KICK,data[2],i[0])
                 sleep(0.5)
-                bot.write_packet(ID.HON_CS_WHISPER,i[1],'Sorry, too many people in channel, we need some place for clan members')
+                bot.write_packet(ID.HON_CS_WHISPER,i[1],'Sorry, too many people in channel, we need some place for active members')
                 l -= 1
                 sleep(0.5)
 
@@ -55,7 +56,7 @@ channel_user_left_channel.event = [ID.HON_SC_LEFT_CHANNEL]
 
 def update_stats(bot,origin,data):
     time = datetime.now()
-    if (time - channel_channels[origin[2]][origin[1]][2]).seconds < 3 and data[2] == channel_channels[origin[2]][origin[1]][3]:
+    if (time - channel_channels[origin[2]][origin[1]][2]).seconds < bot.config.spam_threshold and data[2] == channel_channels[origin[2]][origin[1]][3]:
         nick = bot.id2nick[origin[1]].lower()
         bot.write_packet(ID.HON_CS_CHANNEL_BAN,origin[2],nick)
         bot.config.set_add('banlist',nick)
