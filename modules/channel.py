@@ -55,7 +55,7 @@ channel_user_left_channel.event = [ID.HON_SC_LEFT_CHANNEL]
 
 def update_stats(bot,origin,data):
     time = datetime.now()
-    if (time - channel_channels[origin[2]][origin[1]][2]).seconds < 10 and data[2] == channel_channels[origin[2]][origin[1]][3]:
+    if (time - channel_channels[origin[2]][origin[1]][2]).seconds < 3 and data[2] == channel_channels[origin[2]][origin[1]][3]:
         nick = bot.id2nick[origin[1]].lower()
         bot.write_packet(ID.HON_CS_CHANNEL_BAN,origin[2],nick)
         bot.config.set_add('banlist',nick)
