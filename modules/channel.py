@@ -54,7 +54,12 @@ def channel_user_left_channel(bot,origin,data):
 channel_user_left_channel.event = [ID.HON_SC_LEFT_CHANNEL]
 
 def update_stats(bot,origin,data):
-    channel_channels[origin[2]][origin[1]][2] = datetime.now()
+    time = datetime.now()
+    if (time - channel_channels[origin[2]][origin[1]][2]).seconds < 1:
+        nick = bot.id2nick[origin[1]].lower()
+        bot.write_packet(ID.HON_CS_CHANNEL_BAN,origin[2],nick)
+        bot.config.set_add('banlist',nick)
+    channel_channels[origin[2]][origin[1]][2] = time
 update_stats.event = [ID.HON_SC_CHANNEL_MSG]
 
 def kickall(bot,input):
