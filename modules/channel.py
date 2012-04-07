@@ -22,7 +22,7 @@ def channel_joined_channel(bot,origin,data):
 channel_joined_channel.event = [ID.HON_SC_CHANGED_CHANNEL]
 
 def channel_user_joined_channel(bot,origin,data):
-    channel_channels[data[2]][data[1]] = [data[1],data[0],datetime.now()]
+    channel_channels[data[2]][data[1]] = [data[1],data[0],datetime.now(),None]
     l = len(channel_channels[data[2]])
     CHANNEL_MAX = bot.config.channel_limit
 
