@@ -10,7 +10,7 @@ def setup(bot):
     bot.config.module_config('channel_limit',[0,'Will try to keep channel at this limit kicking afk non-clanmates'])
 
 def channel_joined_channel(bot,origin,data):
-    channel_channels[data[1]] = dict([[m[1],[m[1],m[0],datetime.now()]] for m in data[-1]])
+    channel_channels[data[1]] = dict([[m[1],[m[1],m[0],datetime.now(),None]] for m in data[-1]])
 
     #banlist management
     for m in data[-1]:
@@ -55,11 +55,12 @@ channel_user_left_channel.event = [ID.HON_SC_LEFT_CHANNEL]
 
 def update_stats(bot,origin,data):
     time = datetime.now()
-    if (time - channel_channels[origin[2]][origin[1]][2]).seconds < 1:
+    if (time - channel_channels[origin[2]][origin[1]][2]).seconds < 10 and data[2] == channel_channels[origin[2]][origin[1]][3]:
         nick = bot.id2nick[origin[1]].lower()
         bot.write_packet(ID.HON_CS_CHANNEL_BAN,origin[2],nick)
         bot.config.set_add('banlist',nick)
     channel_channels[origin[2]][origin[1]][2] = time
+    channel_channels[origin[2]][origin[1]][3] = data[2]
 update_stats.event = [ID.HON_SC_CHANNEL_MSG]
 
 def kickall(bot,input):
