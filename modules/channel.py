@@ -59,7 +59,7 @@ def update_stats(bot,origin,data):
     if (time - channel_channels[origin[2]][origin[1]][2]).seconds < bot.config.spam_threshold and data == channel_channels[origin[2]][origin[1]][3]:
         nick = bot.id2nick[origin[1]].lower()
         bot.write_packet(ID.HON_CS_CHANNEL_BAN,origin[2],nick)
-        #bot.config.set_add('banlist',nick)
+        bot.config.set_add('banlist',nick)
     channel_channels[origin[2]][origin[1]][2] = time
     channel_channels[origin[2]][origin[1]][3] = data
 update_stats.event = [ID.HON_SC_CHANNEL_MSG]
