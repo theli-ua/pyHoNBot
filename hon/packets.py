@@ -51,6 +51,7 @@ class ID:
     HON_CS_BUDDY_ACCEPT = 0xB3
     HON_CS_START_MM_GROUP = 0x0C0A
     HON_CS_INVITE_TO_MM = 0x0C0D
+    HON_CS_KICK_FROM_MM = 0x0D00
 
     #- Server -> Client
     HON_SC_AUTH_ACCEPTED = 0x1c00
@@ -101,6 +102,8 @@ class ID:
     HON_SC_TOTAL_ONLINE = 0x68
     HON_SC_REQUEST_NOTIFICATION = 0xB2
     HON_SC_NOTIFICATION = 0xB4
+    HON_SC_TMM_GROUP_JOIN = 0xC0E
+    HON_SC_TMM_GROUP_CHANGE = 0xD03
 
 
 FILTER=''.join([(len(repr(chr(x)))==3) and chr(x) or '.' for x in range(256)])
@@ -185,6 +188,7 @@ cs_structs = {
         ID.HON_CS_CHANNEL_PROMOTE : 'II',
         ID.HON_CS_CHANNEL_DEMOTE : 'II',
         ID.HON_CS_CLAN_ADD_MEMBER : 's',
+        ID.HON_CS_KICK_FROM_MM : 'B',
         }
 sc_structs = {
         ID.HON_SC_PING : '',
@@ -247,4 +251,8 @@ def parse_packet(data):
                 data = data[2]
             else:
                 data = data[1]
+    #try:
+        #print(origin)
+        #print(dump(data))
+    #except:pass
     return origin,data
