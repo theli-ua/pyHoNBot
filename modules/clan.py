@@ -20,3 +20,10 @@ def change_member(bot,origin,data):
 
 change_member.event = [ID.HON_SC_CLAN_MEMBER_CHANGE]
 
+def add_member(bot,origin,data):
+    id = data[0]
+    bot.clan_roster[id] = {"rank":"Member"}
+    if bot.config.welcome_members > 0 and id in bot.id2nick:
+        nick = bot.id2nick[id]
+        bot.write_packet(ID.HON_CS_CLAN_MESSAGE,'Welcome, {0}!'.format(nick))
+add_member.event = [ID.HON_SC_CLAN_MEMBER_ADDED]
