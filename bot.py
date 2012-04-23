@@ -97,7 +97,7 @@ class Bot( asynchat.async_chat ):
         if response and 'cookie' in response and response[0] == False:
             print('cookie expired, renewing')
             self.auth()
-            return self.masterserver_request(query,path,decode,cookie)
+            #return self.masterserver_request(query,path,decode,cookie)
         return response
 
     def auth(self):

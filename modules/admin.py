@@ -1,4 +1,5 @@
 from hon.packets import ID
+import re
 
 
 def join(bot, input): 
@@ -27,6 +28,9 @@ def unignore(bot, input):
     bot.config.set_del('ignore',input.group(2).lower())
 unignore.commands = ['unignore']
 
+def regen_ban_re(bot):
+    bot.banlist_re = re.compile('({0}$)'.format('$|'.join(bot.config.banlist)))
+
 def ban(bot, input): 
     """makes bot ban user, bot will try to reban user on each occasion""" 
     if not input.admin: return
@@ -37,6 +41,7 @@ def ban(bot, input):
         bot.reply('"{0}" was already in my banlist"'.format(nick))
     else:
         bot.config.set_add('banlist',nick)
+        regen_ban_re(bot)
         bot.reply('{0} added to banlist'.format(nick))
 ban.commands = ['ban']
 
@@ -48,6 +53,7 @@ def unban(bot, input):
         bot.write_packet(ID.HON_CS_CHANNEL_UNBAN,input.origin[2],nick)
     if nick in bot.config.banlist:
         bot.config.set_del('banlist',nick)
+        regen_ban_re(bot)
         bot.reply('{0} removed from banlist'.format(nick))
     else:
         bot.reply('Sorry, there was no "{0}" in my banlist"'.format(nick))
@@ -64,3 +70,6 @@ def unadmin(bot, input):
     if not input.admin: return
     bot.config.set_del('admins',input.group(2).lower())
 unadmin.commands = ['unadmin']
+
+def setup(bot):
+    regen_ban_re(bot)
