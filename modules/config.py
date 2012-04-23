@@ -1,5 +1,6 @@
 import os
 import pickle
+from time import sleep
 
 class ConfigClass(object):
     def __init__(self,config,defaults,disk_config_path):
@@ -86,6 +87,7 @@ def config(bot,input):
             msg = '{0},{1}'.format(bot.config.doc(key),bot.config.__getattr__(key))
             for line in [msg[i:i+245] for i in range(0, len(msg), 245)]:
                 bot.say(line)
+                sleep(1)
     
 config.commands = ['config']
             
