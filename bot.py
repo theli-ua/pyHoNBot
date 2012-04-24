@@ -122,7 +122,7 @@ class Bot( asynchat.async_chat ):
             buddy_list = {}
         self.buddy_list = {}
         for id in self.clan_roster:
-            nick = normalize_nick(self.clan_roster[id]['nickname'])
+            nick = normalize_nick(self.clan_roster[id]['nickname']).lower()
             self.id2nick[id] = nick
             self.nick2id[nick] = id
         for buddies in buddy_list.values():
@@ -365,7 +365,7 @@ class Bot( asynchat.async_chat ):
                     origin[1] = normalize_nick(origin[1])
                     s.nick = origin[1]
                     try:
-                        s.account_id = self.nick2id[s.nick]
+                        s.account_id = self.nick2id[s.nick.lower()]
                     except:
                         s.account_id = -1
                 elif isinstance(origin[1],int):

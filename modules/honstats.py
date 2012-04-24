@@ -59,8 +59,8 @@ def match(bot,input):
 
                 #player stats
                 player_stats = match['match_player_stats'].values()[0]
-                if player in bot.nick2id:
-                    player_stats = player_stats[bot.nick2id[player]]
+                if player.lower() in bot.nick2id:
+                    player_stats = player_stats[bot.nick2id[player.lower()]]
                 else:
                     for id in player_stats.keys():
                         if player_stats[id]['nickname'].lower() == player.lower():
