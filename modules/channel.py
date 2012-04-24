@@ -6,6 +6,7 @@ from hon.honutils import normalize_nick
 
 def setup(bot):
     bot.channel_channels = {}
+    bot.not_smurfs = []
     bot.config.module_config('channel_limit',[0,'Will try to keep channel at this limit kicking afk non-clanmates'])
     bot.config.module_config('silence_smurfs',[0,'Will silence anyone with normal mode tmm wins equal or lower than this'])
     bot.config.module_config('spam_threshold',[0,'number of seconds, if user repeats his message in channel with delay lower than this he will be considered spamming and banned'])
@@ -15,10 +16,14 @@ def silence_smurfs(bot,chanid,nick):
         return
     if nick in bot.nick2id and bot.nick2id[nick] in bot.clan_roster:
         return
+    if nick in bot.not_smurfs:
+        return
     query = {'nickname' : nick,'f': 'show_stats','table': 'ranked'}
     stats_data = bot.masterserver_request(query,cookie=True)
-    if int(stats_data['rnk_wins'] <= bot.config.silence_smurfs):
+    if int(stats_data['rnk_wins']) <= bot.config.silence_smurfs:
         bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER,chanid,nick,0xffffffff)
+    else:
+        bot.not_smurfs.append(nick)
 
     
 
