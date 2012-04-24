@@ -7,7 +7,20 @@ from hon.honutils import normalize_nick
 def setup(bot):
     bot.channel_channels = {}
     bot.config.module_config('channel_limit',[0,'Will try to keep channel at this limit kicking afk non-clanmates'])
+    bot.config.module_config('silence_smurfs',[0,'Will silence anyone with normal mode tmm wins equal or lower than this'])
     bot.config.module_config('spam_threshold',[0,'number of seconds, if user repeats his message in channel with delay lower than this he will be considered spamming and banned'])
+
+def silence_smurfs(bot,chanid,nick):
+    if bot.config.silence_smurfs < 0:
+        return
+    if nick in bot.nick2id and bot.nick2id[nick] in bot.clan_roster:
+        return
+    query = {'nickname' : nick,'f': 'show_stats','table': 'ranked'}
+    stats_data = bot.masterserver_request(query,cookie=True)
+    if int(stats_data['rnk_wins'] <= bot.silence_smurfs):
+        bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER,chanid,nick,0xffffffff)
+
+    
 
 def channel_joined_channel(bot,origin,data):
     bot.channel_channels[data[1]] = dict([[m[1],[m[1],m[0],datetime.now(),None]] for m in data[-1]])
@@ -18,6 +31,8 @@ def channel_joined_channel(bot,origin,data):
         #if nick in bot.config.banlist:
         if bot.banlist_re.match(nick):
             bot.write_packet(ID.HON_CS_CHANNEL_BAN,data[1],nick)
+        else:
+            silence_smurfs(bot,data[1],nick)
 
 channel_joined_channel.event = [ID.HON_SC_CHANGED_CHANNEL]
 
@@ -31,6 +46,8 @@ def channel_user_joined_channel(bot,origin,data):
     #if nick in bot.config.banlist:
     if bot.banlist_re.match(nick):
         bot.write_packet(ID.HON_CS_CHANNEL_BAN,data[2],data[0])
+    else:
+        silence_smurfs(bot,data[2],nick)
 
     if CHANNEL_MAX == 0:
         return
