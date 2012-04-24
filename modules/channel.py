@@ -17,7 +17,7 @@ def silence_smurfs(bot,chanid,nick):
         return
     query = {'nickname' : nick,'f': 'show_stats','table': 'ranked'}
     stats_data = bot.masterserver_request(query,cookie=True)
-    if int(stats_data['rnk_wins'] <= bot.silence_smurfs):
+    if int(stats_data['rnk_wins'] <= bot.config.silence_smurfs):
         bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER,chanid,nick,0xffffffff)
 
     
