@@ -181,6 +181,7 @@ cs_structs = {
         ID.HON_CS_CHANNEL_BAN : 'Is',
         ID.HON_CS_CHANNEL_UNBAN : 'Is',
         ID.HON_CS_CHANNEL_SILENCE_USER : 'IsI',
+        ID.HON_CS_UPDATE_TOPIC : 'Is',
         ID.HON_CS_CHANNEL_AUTH_ENABLE : 'I',
         ID.HON_CS_CHANNEL_AUTH_DISABLE : 'I',
         ID.HON_CS_CHANNEL_AUTH_ADD : 'Is',

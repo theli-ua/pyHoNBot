@@ -8,15 +8,16 @@ def setup(bot):
     bot.channel_channels = {}
     bot.not_smurfs = []
     bot.config.module_config('channel_limit',[0,'Will try to keep channel at this limit kicking afk non-clanmates'])
-    bot.config.module_config('silence_smurfs',[0,'Will silence anyone with normal mode tmm wins equal or lower than this'])
+    bot.config.module_config('silence_smurfs',[-1,'Will silence anyone with normal mode tmm wins equal or lower than this'])
     bot.config.module_config('spam_threshold',[0,'number of seconds, if user repeats his message in channel with delay lower than this he will be considered spamming and banned'])
+    bot.config.module_config('whitelist',[[],'whitelist for antispam etc'])
 
 def silence_smurfs(bot,chanid,nick):
     if bot.config.silence_smurfs < 0:
         return
     if nick in bot.nick2id and bot.nick2id[nick] in bot.clan_roster:
         return
-    if nick in bot.not_smurfs:
+    if nick in bot.not_smurfs or nick in bot.config.whitelist:
         return
     query = {'nickname' : nick,'f': 'show_stats','table': 'ranked'}
     stats_data = bot.masterserver_request(query,cookie=True)
@@ -98,3 +99,22 @@ def kickall(bot,input):
 kickall.commands = ['kickall']
 kickall.event = [ID.HON_SC_CHANNEL_MSG]
 kickall.thread = False
+
+def unwhitelist(bot,input):
+    if not input.admin:
+        return
+    bot.config.set_del('whitelist',input.group(2).lower())
+unwhitelist.commands = ['unwhitelist']
+def whitelist(bot,input):
+    if not input.admin:
+        return
+    bot.config.set_add('whitelist',input.group(2).lower())
+whitelist.commands = ['whitelist']
+
+def topic(bot,input):
+    """Sets topic on channel issued"""
+    if not input.admin:
+        return
+    bot.write_packet(ID.HON_CS_UPDATE_TOPIC,input.origin[2],input.group(2))
+topic.commands = ['topic']
+topic.event = [ID.HON_SC_CHANNEL_MSG]
