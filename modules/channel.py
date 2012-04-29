@@ -37,8 +37,8 @@ def channel_joined_channel(bot,origin,data):
         #if nick in bot.config.banlist:
         if bot.banlist_re.match(nick):
             bot.write_packet(ID.HON_CS_CHANNEL_BAN,data[1],nick)
-        else:
-            silence_smurfs(bot,data[1],nick)
+        #else:
+            #silence_smurfs(bot,data[1],nick)
 
 channel_joined_channel.event = [ID.HON_SC_CHANGED_CHANNEL]
 
