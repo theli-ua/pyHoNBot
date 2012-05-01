@@ -345,8 +345,8 @@ class Bot( asynchat.async_chat ):
 
         return PhennyWrapper(self)
 
-    def call(self, func, origin, phenny, input): 
-        try: func(phenny, input)
+    def call(self, func, origin, phenny, *input): 
+        try: func(phenny, *input)
         except Exception, e: 
             self.error(origin)
 
@@ -399,7 +399,11 @@ class Bot( asynchat.async_chat ):
                 for func in funcs: 
                     if packet_id not in func.event: continue
                     if regexp is None:
-                        func(self,list(origin),data)
+                        if func.thread: 
+                            targs = (func, list(origin), self,list(origin), data)
+                            t = threading.Thread(target=self.call, args=targs)
+                            t.start()
+                        else: self.call(func, list(origin), self, list(origin),data)
                     elif isinstance(data,unicode):
                         text = data
                         match = regexp.match(text)
