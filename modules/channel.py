@@ -61,7 +61,7 @@ def channel_user_joined_channel(bot,origin,data):
         l -= CHANNEL_MAX
         for i in sorted(bot.channel_channels[data[2]].values(), key=lambda x:x[2]):
             if l <= 0:break
-            if i[0] not in bot.clan_roster and i[1].split(']')[0] not in ['[GM','[S2']:
+            if i[0] not in bot.clan_roster and i[1].lower() not in bot.config.whitelist and i[1].split(']')[0] not in ['[GM','[S2']:
                 bot.write_packet(ID.HON_CS_CHANNEL_KICK,data[2],i[0])
                 sleep(0.5)
                 bot.write_packet(ID.HON_CS_WHISPER,i[1],'Sorry, too many people in channel, we need some place for active members')
