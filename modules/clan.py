@@ -38,7 +38,7 @@ def remove(bot,input):
     """remove from clan, admins only""" 
     if not input.admin: return
     nick = input.group(2).lower()
-    if nick not in self.nick2id:
+    if nick not in bot.nick2id:
         bot.reply('Sorry, I don''t know ' + nick)
     else:
         id = bot.nick2id[nick]
