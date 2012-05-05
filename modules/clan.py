@@ -27,3 +27,20 @@ def add_member(bot,origin,data):
         nick = bot.id2nick[id]
         bot.write_packet(ID.HON_CS_CLAN_MESSAGE,'Welcome, {0}!'.format(nick))
 add_member.event = [ID.HON_SC_CLAN_MEMBER_ADDED]
+
+def invite(bot,input):
+    """invites to clan, admins only""" 
+    if not input.admin: return
+    bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER,input.group(2))
+invite.commands = ['invite']
+
+def remove(bot,input):
+    """remove from clan, admins only""" 
+    if not input.admin: return
+    nick = input.group(2).lower()
+    if nick not in self.nick2id:
+        bot.reply('Sorry, I don''t know ' + nick)
+    else:
+        id = bot.nick2id[nick]
+        bot.write_packet(ID.HON_CS_CLAN_REMOVE_MEMBER,id)
+invite.commands = ['remove']
