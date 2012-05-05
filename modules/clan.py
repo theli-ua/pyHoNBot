@@ -43,4 +43,4 @@ def remove(bot,input):
     else:
         id = bot.nick2id[nick]
         bot.write_packet(ID.HON_CS_CLAN_REMOVE_MEMBER,id)
-invite.commands = ['remove']
+remove.commands = ['remove']
