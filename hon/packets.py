@@ -100,6 +100,7 @@ class ID:
     HON_SC_CLAN_MEMBER_CHANGE = 0x50
     HON_SC_NAME_CHANGE = 0x5A
     HON_SC_CHANNEL_EMOTE = 0x65
+    HON_SC_CHANNEL_ROLL = 0x66
     HON_SC_TOTAL_ONLINE = 0x68
     HON_SC_REQUEST_NOTIFICATION = 0xB2
     HON_SC_NOTIFICATION = 0xB4
@@ -163,7 +164,7 @@ def parse_user_status(packet_id,data):
     return origin,res
 
 
-chat_packets = [ID.HON_SC_PM,ID.HON_SC_WHISPER,ID.HON_SC_CHANNEL_MSG]
+chat_packets = [ID.HON_SC_PM,ID.HON_SC_WHISPER,ID.HON_SC_CHANNEL_MSG,ID.HON_SC_CHANNEL_ROLL,ID.HON_SC_CHANNEL_EMOTE]
 cs_structs = {
         ID.HON_CS_AUTH_INFO : 'IsssIIB',
         ID.HON_CS_PONG      : '',
@@ -198,6 +199,8 @@ sc_structs = {
         ID.HON_SC_PM    : 'ss',
         ID.HON_SC_WHISPER : 'ss',
         ID.HON_SC_CHANNEL_MSG : 'IIs',
+        ID.HON_SC_CHANNEL_EMOTE : 'IIs',
+        ID.HON_SC_CHANNEL_ROLL : 'IIs',
         ID.HON_SC_CHANGED_CHANNEL : parse_channel_join,
         ID.HON_SC_INITIAL_STATUS  : parse_initiall_statuses,
         ID.HON_SC_UPDATE_STATUS : parse_user_status,
@@ -205,6 +208,7 @@ sc_structs = {
         ID.HON_SC_CLAN_MEMBER_ADDED : 'I',
         ID.HON_SC_CLAN_MEMBER_CHANGE : 'IBI', #whom,wat,who (theli, promoted to officer, by visions)
         ID.HON_SC_NAME_CHANGE : 'Is',
+        ID.HON_SC_CLAN_MESSAGE : 'Is',
         ID.HON_SC_LEFT_CHANNEL : 'II',
         }
 def pack(packet_id, *args):
@@ -249,7 +253,7 @@ def parse_packet(data):
         data = res
         if packet_id in chat_packets:
             origin[1] = data[0]
-            if packet_id == ID.HON_SC_CHANNEL_MSG:
+            if packet_id in [ID.HON_SC_CHANNEL_MSG,ID.HON_SC_CHANNEL_EMOTE,ID.HON_SC_CHANNEL_ROLL]:
                 origin[2] = data[1]
                 data = data[2]
             else:
