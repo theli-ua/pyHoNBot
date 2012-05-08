@@ -16,15 +16,12 @@ import logging.handlers
 
 import os
 
-logger = None
-
 CM_PSEUDO_CHANNEL = 'clan messages'
 CLAN_EVENTS_PSEUDO_CHANNEL = 'clan events'
 
-def get_logger(filename):
-    global logger
-    if logger:
-        return logger
+def get_logger(bot,filename):
+    if filename in bot.loggers:
+        return bot.loggers[filename]
     my_logger = logging.getLogger('ircbot')
     my_logger.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s - %(message)s')
@@ -38,8 +35,8 @@ def get_logger(filename):
     )
     handler.setFormatter(formatter)
     my_logger.addHandler(handler)
-    logger = my_logger
-    return logger
+    bot.loggers[filename] = my_logger
+    return my_logger
 
 
 def get_file(phenny, chan):
@@ -56,13 +53,15 @@ def setup(bot):
     if not os.path.exists(logdir):
         os.mkdir(logdir)
 
+    bot.loggers = {}
+
 
 def log_message(phenny, teller, chan, msg):
     # only log the channels we care about
     if chan.lower() in phenny.config.logchannels or chan.decode('utf-8').lower() in phenny.config.logchannels:
         #line = "\t".join((chan, teller, msg))
         line = u"<{0}>\t{1}".format(teller,msg).encode('utf-8')
-        logger = get_logger(os.path.join(phenny.config.logdir, get_file(phenny, chan)))
+        logger = get_logger(phenny, os.path.join(phenny.config.logdir, get_file(phenny, chan)))
         logger.info(line)
 
 def log(bot, input): 
