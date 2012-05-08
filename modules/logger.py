@@ -18,6 +18,9 @@ import os
 
 logger = None
 
+CM_PSEUDO_CHANNEL = 'clan messages'
+CLAN_EVENTS_PSEUDO_CHANNEL = 'clan events'
+
 def get_logger(filename):
     global logger
     if logger:
@@ -45,7 +48,7 @@ def get_file(phenny, chan):
 
 def setup(bot):
 
-    bot.config.module_config('logchannels',[['clan^messages','clan^events'],'list of channels to log, use log/unlog commands to add/del to this list'])
+    bot.config.module_config('logchannels',[[CM_PSEUDO_CHANNEL,CLAN_EVENTS_PSEUDO_CHANNEL],'list of channels to log, use log/unlog commands to add/del to this list'])
     bot.config.module_config('logdir',['/tmp/','path to store channel logs in'])
 
     # make the logdir path if not there
@@ -55,6 +58,7 @@ def setup(bot):
 
 
 def log_message(phenny, teller, chan, msg):
+    print [teller,chan,msg]
     # only log the channels we care about
     if chan.lower() in phenny.config.logchannels or chan.decode('utf-8').lower() in phenny.config.logchannels:
         #line = "\t".join((chan, teller, msg))
@@ -102,6 +106,7 @@ def log_change_member(bot,origin,data):
         msg += ' ' + bot.id2nick[whodid]
     else:
         msg += ' user ' + str(whodid)
+    msg = '[EVENT]' + msg
     log_message(bot, nick, 'clan^events', msg)
 log_change_member.event = [ID.HON_SC_CLAN_MEMBER_CHANGE]
 
