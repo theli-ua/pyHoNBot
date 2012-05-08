@@ -22,7 +22,7 @@ CLAN_EVENTS_PSEUDO_CHANNEL = 'clan events'
 def get_logger(bot,filename):
     if filename in bot.loggers:
         return bot.loggers[filename]
-    my_logger = logging.getLogger('ircbot')
+    my_logger = logging.getLogger(filename)
     my_logger.setLevel(logging.INFO)
     formatter = logging.Formatter('%(asctime)s - %(message)s')
     #Add the log message handler to the logger
