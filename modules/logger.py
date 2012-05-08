@@ -58,7 +58,6 @@ def setup(bot):
 
 
 def log_message(phenny, teller, chan, msg):
-    print [teller,chan,msg]
     # only log the channels we care about
     if chan.lower() in phenny.config.logchannels or chan.decode('utf-8').lower() in phenny.config.logchannels:
         #line = "\t".join((chan, teller, msg))
@@ -86,7 +85,7 @@ def loggit(bot, origin,data):
             data = '[ROLL]\t'+ data
         log_message(bot, bot.id2nick[origin[1]], bot.id2chan[origin[2]], data)
     elif origin[0] == ID.HON_SC_CLAN_MESSAGE:
-        log_message(bot, bot.id2nick[data[0]], 'clan^messages', data[1])
+        log_message(bot, bot.id2nick[data[0]], CM_PSEUDO_CHANNEL, data[1])
 
 loggit.event = [ID.HON_SC_CHANNEL_MSG,ID.HON_SC_CHANNEL_EMOTE,ID.HON_SC_CHANNEL_ROLL,ID.HON_SC_CLAN_MESSAGE]
 loggit.priority = 'high'
@@ -106,8 +105,7 @@ def log_change_member(bot,origin,data):
         msg += ' ' + bot.id2nick[whodid]
     else:
         msg += ' user ' + str(whodid)
-    msg = '[EVENT]' + msg
-    log_message(bot, nick, 'clan^events', msg)
+    log_message(bot, nick, CLAN_EVENTS_PSEUDO_CHANNEL, msg)
 log_change_member.event = [ID.HON_SC_CLAN_MEMBER_CHANGE]
 
 def log_add_member(bot,origin,data):
