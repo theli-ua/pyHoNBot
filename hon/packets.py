@@ -258,7 +258,6 @@ def parse_packet(data):
                 data = data[2]
             else:
                 data = data[1]
-            data = data.decode('utf-8')
     #try:
         #print(origin)
         #print(dump(data))
