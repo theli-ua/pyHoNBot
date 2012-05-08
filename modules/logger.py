@@ -113,7 +113,7 @@ def log_add_member(bot,origin,data):
         nick = bot.id2nick[data[0]]
     else:
         nick = 'User ' + str(data[0])
-    log_message(bot, nick, 'clan^events', 'joined the clan')
+    log_message(bot, nick, CLAN_EVENTS_PSEUDO_CHANNEL, 'joined the clan')
 log_add_member.event = [ID.HON_SC_CLAN_MEMBER_ADDED]
 
 if __name__ == '__main__':
