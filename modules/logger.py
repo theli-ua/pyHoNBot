@@ -56,9 +56,6 @@ def setup(bot):
 
 def log_message(phenny, teller, chan, msg):
     # only log the channels we care about
-    print chan,phenny.config.logchannels
-    print chan.lower()
-    print chan.lower() in phenny.config.logchannels
     if chan.lower() in phenny.config.logchannels or chan.decode('utf8').lower() in phenny.config.logchannels:
         #line = "\t".join((chan, teller, msg))
         line = "<{0}>\t{1}".format(teller,msg)

@@ -33,7 +33,7 @@ def create_default_config(fn):
    owner = 'yournickname'
 
    # exclude modules from loading
-   exclude = ['mumble','fixmm']
+   exclude = ['mumble','fixmm','logger']
 
    # prefix for commands
    prefix = '[\.\!]'
