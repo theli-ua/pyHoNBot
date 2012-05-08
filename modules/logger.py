@@ -58,7 +58,7 @@ def log_message(phenny, teller, chan, msg):
     # only log the channels we care about
     if chan.lower() in phenny.config.logchannels or chan.decode('utf-8').lower() in phenny.config.logchannels:
         #line = "\t".join((chan, teller, msg))
-        line = u"<{0}>\t{1}".format(teller,msg)
+        line = u"<{0}>\t{1}".format(teller,msg).encode('utf-8')
         logger = get_logger(os.path.join(phenny.config.logdir, get_file(phenny, chan)))
         logger.info(line)
 
