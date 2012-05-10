@@ -88,6 +88,7 @@ def loggit(bot, origin,data):
 
 loggit.event = [ID.HON_SC_CHANNEL_MSG,ID.HON_SC_CHANNEL_EMOTE,ID.HON_SC_CHANNEL_ROLL,ID.HON_SC_CLAN_MESSAGE]
 loggit.priority = 'high'
+loggit.thread = False
 
 def log_change_member(bot,origin,data):
     who,status,whodid = data[0],data[1],data[2]
@@ -106,6 +107,7 @@ def log_change_member(bot,origin,data):
         msg += ' user ' + str(whodid)
     log_message(bot, nick, CLAN_EVENTS_PSEUDO_CHANNEL, msg)
 log_change_member.event = [ID.HON_SC_CLAN_MEMBER_CHANGE]
+log_change_member.thread = False
 
 def log_add_member(bot,origin,data):
     id = data[0]
@@ -115,6 +117,7 @@ def log_add_member(bot,origin,data):
         nick = 'User ' + str(data[0])
     log_message(bot, nick, CLAN_EVENTS_PSEUDO_CHANNEL, 'joined the clan')
 log_add_member.event = [ID.HON_SC_CLAN_MEMBER_ADDED]
+log_add_member.thread = False
 
 if __name__ == '__main__':
     print __doc__.strip()
