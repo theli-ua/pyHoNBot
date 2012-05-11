@@ -23,18 +23,19 @@ def get_logger(bot,filename):
     if filename in bot.loggers:
         return bot.loggers[filename]
     my_logger = logging.getLogger(filename)
-    my_logger.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s - %(message)s')
-    #Add the log message handler to the logger
-    handler = logging.handlers.TimedRotatingFileHandler(
-        filename=filename,
-        #when='W5', # caturday
-        when='Midnight',
-        backupCount = 14,
-        utc = True,
-    )
-    handler.setFormatter(formatter)
-    my_logger.addHandler(handler)
+    if len(my_logger.handlers) == 0:
+        my_logger.setLevel(logging.INFO)
+        formatter = logging.Formatter('%(asctime)s - %(message)s')
+        #Add the log message handler to the logger
+        handler = logging.handlers.TimedRotatingFileHandler(
+            filename=filename,
+            #when='W5', # caturday
+            when='Midnight',
+            backupCount = 14,
+            utc = True,
+        )
+        handler.setFormatter(formatter)
+        my_logger.addHandler(handler)
     bot.loggers[filename] = my_logger
     return my_logger
 
