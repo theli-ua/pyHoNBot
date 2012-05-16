@@ -34,7 +34,6 @@ def channel_joined_channel(bot,origin,data):
     #banlist management
     for m in data[-1]:
         nick = normalize_nick(m[0]).lower()
-        #if nick in bot.config.banlist:
         if bot.banlist_re.match(nick):
             bot.write_packet(ID.HON_CS_CHANNEL_BAN,data[1],nick)
         #else:
@@ -42,33 +41,34 @@ def channel_joined_channel(bot,origin,data):
 
 channel_joined_channel.event = [ID.HON_SC_CHANGED_CHANNEL]
 
+def channel_user_joined_channel_smurfs(bot,origin,data):
+    nick = normalize_nick(data[0]).lower()
+    silence_smurfs(bot,data[2],nick)
+channel_user_joined_channel_smurfs.event = [ID.HON_SC_JOINED_CHANNEL]
+channel_user_joined_channel_smurfs.thread = True
+
 def channel_user_joined_channel(bot,origin,data):
     bot.channel_channels[data[2]][data[1]] = [data[1],data[0],datetime.now(),None]
     l = len(bot.channel_channels[data[2]])
     CHANNEL_MAX = bot.config.channel_limit
-
     #banlist management
     nick = normalize_nick(data[0]).lower()
-    #if nick in bot.config.banlist:
     if bot.banlist_re.match(nick):
         bot.write_packet(ID.HON_CS_CHANNEL_BAN,data[2],data[0])
     else:
-        silence_smurfs(bot,data[2],nick)
-
-    if CHANNEL_MAX == 0:
-        return
-    if l > CHANNEL_MAX:
-        l -= CHANNEL_MAX
-        for i in sorted(bot.channel_channels[data[2]].values(), key=lambda x:x[2]):
-            if l <= 0:break
-            nick = normalize_nick(i[1])
-            if i[0] not in bot.clan_roster and nick not in bot.config.whitelist and i[1].split(']')[0] not in ['[GM','[S2']:
-                bot.write_packet(ID.HON_CS_CHANNEL_KICK,data[2],i[0])
-                sleep(0.5)
-                bot.write_packet(ID.HON_CS_WHISPER,i[1],'Sorry, too many people in channel, we need some place for active members')
-                l -= 1
-                sleep(0.5)
-
+        if CHANNEL_MAX == 0:
+            return
+        if l > CHANNEL_MAX:
+            l -= CHANNEL_MAX
+            for i in sorted(bot.channel_channels[data[2]].values(), key=lambda x:x[2]):
+                if l <= 0:break
+                nick = normalize_nick(i[1])
+                if i[0] not in bot.clan_roster and nick not in bot.config.whitelist and i[1].split(']')[0] not in ['[GM','[S2']:
+                    bot.write_packet(ID.HON_CS_CHANNEL_KICK,data[2],i[0])
+                    sleep(0.5)
+                    bot.write_packet(ID.HON_CS_WHISPER,i[1],'Sorry, too many people in channel, we need some place for active members')
+                    l -= 1
+                    sleep(0.5)
 channel_user_joined_channel.event = [ID.HON_SC_JOINED_CHANNEL]
 channel_user_joined_channel.thread = False
 
