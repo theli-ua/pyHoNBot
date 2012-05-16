@@ -20,8 +20,6 @@ CM_PSEUDO_CHANNEL = 'clan messages'
 CLAN_EVENTS_PSEUDO_CHANNEL = 'clan events'
 
 def get_logger(bot,filename):
-    if filename in bot.loggers:
-        return bot.loggers[filename]
     my_logger = logging.getLogger(filename)
     if len(my_logger.handlers) == 0:
         my_logger.setLevel(logging.INFO)
@@ -29,14 +27,12 @@ def get_logger(bot,filename):
         #Add the log message handler to the logger
         handler = logging.handlers.TimedRotatingFileHandler(
             filename=filename,
-            #when='W5', # caturday
             when='Midnight',
             backupCount = 14,
             utc = True,
         )
         handler.setFormatter(formatter)
         my_logger.addHandler(handler)
-    bot.loggers[filename] = my_logger
     return my_logger
 
 
@@ -53,9 +49,6 @@ def setup(bot):
     logdir = bot.config.logdir
     if not os.path.exists(logdir):
         os.mkdir(logdir)
-
-    bot.loggers = {}
-
 
 def log_message(phenny, teller, chan, msg):
     # only log the channels we care about
