@@ -70,7 +70,7 @@ def channel_user_joined_channel(bot,origin,data):
                 sleep(0.5)
 
 channel_user_joined_channel.event = [ID.HON_SC_JOINED_CHANNEL]
-#channel_user_joined_channel.thread = False
+channel_user_joined_channel.thread = False
 
 def channel_user_left_channel(bot,origin,data):
     try:
