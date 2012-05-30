@@ -2,6 +2,12 @@ from hon.packets import ID
 import re
 
 
+def restart(bot, input): 
+    """Reloads and reconnects, admins only""" 
+    if not input.admin: return
+    bot.close()
+restart.commands = ['restart']
+
 def join(bot, input): 
     """Joins a channel, admins only""" 
     if not input.admin: return
