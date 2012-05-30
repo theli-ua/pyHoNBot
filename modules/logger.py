@@ -18,6 +18,7 @@ import os
 
 CM_PSEUDO_CHANNEL = 'clan messages'
 CLAN_EVENTS_PSEUDO_CHANNEL = 'clan events'
+ONLINE_PSEUDO_CHANNEL = 'online count'
 
 def get_logger(bot,filename):
     my_logger = logging.getLogger(filename)
@@ -42,7 +43,7 @@ def get_file(phenny, chan):
 
 def setup(bot):
 
-    bot.config.module_config('logchannels',[[CM_PSEUDO_CHANNEL,CLAN_EVENTS_PSEUDO_CHANNEL],'list of channels to log, use log/unlog commands to add/del to this list'])
+    bot.config.module_config('logchannels',[[CM_PSEUDO_CHANNEL,CLAN_EVENTS_PSEUDO_CHANNEL,ONLINE_PSEUDO_CHANNEL],'list of channels to log, use log/unlog commands to add/del to this list'])
     bot.config.module_config('logdir',['/tmp/','path to store channel logs in'])
 
     # make the logdir path if not there
@@ -83,6 +84,10 @@ def loggit(bot, origin,data):
 loggit.event = [ID.HON_SC_CHANNEL_MSG,ID.HON_SC_CHANNEL_EMOTE,ID.HON_SC_CHANNEL_ROLL,ID.HON_SC_CLAN_MESSAGE]
 loggit.priority = 'high'
 loggit.thread = False
+
+def logonline(bot,origin,data):
+    log_message(bot,ONLINE_PSEUDO_CHANNEL,ONLINE_PSEUDO_CHANNEL,data[1])
+logonline.event = [ID.HON_SC_TOTAL_ONLINE]
 
 def log_change_member(bot,origin,data):
     who,status,whodid = data[0],data[1],data[2]

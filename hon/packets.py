@@ -210,6 +210,7 @@ sc_structs = {
         ID.HON_SC_NAME_CHANGE : 'Is',
         ID.HON_SC_CLAN_MESSAGE : 'Is',
         ID.HON_SC_LEFT_CHANNEL : 'II',
+        ID.HON_SC_TOTAL_ONLINE : 'Is',
         }
 def pack(packet_id, *args):
     args = list(args)
@@ -258,7 +259,8 @@ def parse_packet(data):
                 data = data[2]
             else:
                 data = data[1]
-    #try:
+    #else:
+        #print 'unknown packet'
         #print(origin)
         #print(dump(data))
     #except:pass
