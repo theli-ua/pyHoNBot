@@ -279,6 +279,15 @@ def get_stats(bot,input,table,hero=None):
     else:
         stats['rating_type'] = 'MMR'
 
+    stats['TSR'] = ((float(stats['K'])/float(stats['D'])/1.15)*0.65)+\
+            ((float(stats['A'])/float(stats['D'])/1.55)*1.20)+\
+            (((float(stats['wins'])/(float(stats['matches'])))/0.55)*0.9)+\
+            (((float(stats['gold'])/float(stats['exp_time'])*60)/230)*(1-((230/195)*((0.0/float(stats['matches'])))))*0.35)+\
+            ((((float(stats['xp'])/float(stats['exp_time'])*60)/380)*(1-((380/565)*(0.0/float(stats['matches'])))))*0.40)+\
+            ((((((float(stats['cd'])/float(stats['matches']))/12)*(1-((4.5/8.5)*(0.0/float(stats['matches'])))))*0.70)+\
+            ((((float(stats['ck'])/float(stats['matches']))/93)*(1-((63/81)*(0.0/float(stats['matches'])))))*0.50)+\
+            ((float(stats['wards'])/float(stats['matches']))/1.45*0.30))*(37.5/(float(stats['exp_time'])/float(stats['matches'])/60)))
+
     bot.say(bot.config.honstats_player.format(**stats))
 
 def hero_stats(bot,input):
@@ -291,6 +300,6 @@ def hero_stats(bot,input):
 
 def setup(bot):
     bot.config.module_config('honstats_match',['{nick} {hero}[{lvl}] {rating}{rating_type} {outcome} ^g{K}^*/^r{D}^*/^b{A}^* {name}{mode} {len}^:|^;CK:{ck}+{ckn} CD:{cd}^:|^;X:{xpm:.2f} G:{gpm:.2f} A:{apm:.2f}^:|^;W:{wards}^:|^;{mdt}','Python format string for match stats output'])
-    bot.config.module_config('honstats_player',['{nick} {hero} ^g{rating}^*{rating_type} ^g{win_percent:.2%}^*({wins}/{matches})^:|^;^g{avg_K:.2f}^*/^r{avg_D:.2f}^*/^b{avg_A:.2f}^*^:|^;X:{xpm:.2f} G:{gpm:.2f} A:{apm:.2f}^:|^;CK:{avg_ck:.2f}+{avg_ckn:.2f} CD:{avg_cd:.2f}^:|^;{avg_len}^:|^;W {avg_wards:.2f}','Python format string for player stats output'])
+    bot.config.module_config('honstats_player',['{nick} {hero} ^g{rating}^*{rating_type} ^g{win_percent:.2%}^*({wins}/{matches})^:|^;^g{avg_K:.2f}^*/^r{avg_D:.2f}^*/^b{avg_A:.2f}^*^:|^;X:{xpm:.2f} G:{gpm:.2f} A:{apm:.2f}^:|^;CK:{avg_ck:.2f}+{avg_ckn:.2f} CD:{avg_cd:.2f}^:|^;{avg_len}^:|^;W {avg_wards:.2f}^:|^;TSR: {TSR:.2f}','Python format string for player stats output'])
     if hasattr(bot,'heroshorts'):
         hero_stats.rule = '(?i)' + bot.config.prefix + r'({0})(?:[^\ ]*\ +(?:(p|c)\ +)?(.+))?'.format('|'.join(bot.heroshorts.keys()))
