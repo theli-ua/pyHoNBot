@@ -43,7 +43,7 @@ def get_file(phenny, chan):
 
 def setup(bot):
 
-    bot.config.module_config('logchannels',[[CM_PSEUDO_CHANNEL,CLAN_EVENTS_PSEUDO_CHANNEL,ONLINE_PSEUDO_CHANNEL],'list of channels to log, use log/unlog commands to add/del to this list'])
+    bot.config.module_config('logchannels',[[CM_PSEUDO_CHANNEL,CLAN_EVENTS_PSEUDO_CHANNEL],'list of channels to log, use log/unlog commands to add/del to this list'])
     bot.config.module_config('logdir',['/tmp/','path to store channel logs in'])
 
     # make the logdir path if not there
