@@ -112,6 +112,33 @@ def whitelist(bot,input):
     bot.config.set_add('whitelist',input.group(2).lower())
 whitelist.commands = ['whitelist']
 
+def kick(bot, input): 
+    """makes bot kick user""" 
+    if not input.admin: return
+    bot.write_packet(ID.HON_CS_CHANNEL_KICK,input.origin[2],bot.nick2id[input.group(2).lower()])
+kick.commands = ['kick']
+kick.event = [ID.HON_SC_CHANNEL_MSG]
+
+def promote(bot, input): 
+    """makes bot promote user""" 
+    if not input.admin: return
+    if not input.group(2):
+        bot.write_packet(ID.HON_CS_CHANNEL_PROMOTE,input.origin[2],input.account_id)
+    else:
+        bot.write_packet(ID.HON_CS_CHANNEL_PROMOTE,input.origin[2],bot.nick2id[input.group(2).lower()])
+promote.commands = ['promote']
+promote.event = [ID.HON_SC_CHANNEL_MSG]
+
+def demote(bot, input): 
+    """makes bot demote user""" 
+    if not input.admin: return
+    if not input.group(2):
+        bot.write_packet(ID.HON_CS_CHANNEL_DEMOTE,input.origin[2],input.account_id)
+    else:
+        bot.write_packet(ID.HON_CS_CHANNEL_DEMOTE,input.origin[2],bot.nick2id[input.group(2).lower()])
+demote.commands = ['demote']
+demote.event = [ID.HON_SC_CHANNEL_MSG]
+
 def topic(bot,input):
     """Sets topic on channel issued"""
     if not input.admin:
@@ -119,3 +146,11 @@ def topic(bot,input):
     bot.write_packet(ID.HON_CS_UPDATE_TOPIC,input.origin[2],input.group(2))
 topic.commands = ['topic']
 topic.event = [ID.HON_SC_CHANNEL_MSG]
+
+def silence(bot, input): 
+    """makes bot silence user""" 
+    if not input.admin: return
+    nick,time = input.group(2).split(' ') 
+    bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER,input.origin[2],nick,int(time))
+silence.commands = ['silence']
+silence.event = [ID.HON_SC_CHANNEL_MSG]
