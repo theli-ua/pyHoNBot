@@ -18,7 +18,9 @@ from utils.dep import dep
 home = os.getcwd() 
 
 
+class Store:pass
 class Bot( asynchat.async_chat ):
+    store = Store()
     #thread-safety, kinda
     def initiate_send(self):
         self.sending.acquire()

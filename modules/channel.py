@@ -34,7 +34,7 @@ def channel_joined_channel(bot,origin,data):
     #banlist management
     for m in data[-1]:
         nick = normalize_nick(m[0]).lower()
-        if bot.banlist_re.match(nick):
+        if bot.store.banlist_re.match(nick):
             bot.write_packet(ID.HON_CS_CHANNEL_BAN,data[1],nick)
         #else:
             #silence_smurfs(bot,data[1],nick)
@@ -53,7 +53,7 @@ def channel_user_joined_channel(bot,origin,data):
     CHANNEL_MAX = bot.config.channel_limit
     #banlist management
     nick = normalize_nick(data[0]).lower()
-    if bot.banlist_re.match(nick):
+    if bot.store.banlist_re.match(nick):
         bot.write_packet(ID.HON_CS_CHANNEL_BAN,data[2],data[0])
     else:
         if CHANNEL_MAX == 0:

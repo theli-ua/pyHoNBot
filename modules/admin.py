@@ -35,7 +35,7 @@ def unignore(bot, input):
 unignore.commands = ['unignore']
 
 def regen_ban_re(bot):
-    bot.banlist_re = re.compile('({0}$)'.format('$|'.join(bot.config.banlist)))
+    bot.store.banlist_re = re.compile('({0}$)'.format('$|'.join(bot.config.banlist)))
 
 def ban(bot, input): 
     """makes bot ban user, bot will try to reban user on each occasion""" 
