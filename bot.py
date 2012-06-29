@@ -129,11 +129,13 @@ class Bot( asynchat.async_chat ):
             self.nick2id[nick] = id
         for buddies in buddy_list.values():
             for buddy in buddies.values():
-                id = int(buddy['buddy_id'])
-                nick = normalize_nick(buddy['nickname'])
-                self.id2nick[id] = nick
-                self.nick2id[nick] = id
-                self.buddy_list[id] = buddy
+                try:
+                    id = int(buddy['buddy_id'])
+                    self.buddy_list[id] = buddy
+                    nick = normalize_nick(buddy['nickname'])
+                    self.id2nick[id] = nick
+                    self.nick2id[nick] = id
+                except:pass
         return auth_data
 
     def run(self):
