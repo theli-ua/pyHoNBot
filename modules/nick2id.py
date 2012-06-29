@@ -4,7 +4,7 @@ from hon.packets import ID
 from hon.honutils import normalize_nick
 
 def joined_channel(bot,origin,data):
-    bot.chan2id[data[0]] = data[1]
+    bot.chan2id[data[0].lower()] = data[1]
     bot.id2chan[data[1]] = data[0]
     for m in data[-1]:
         m[0] = normalize_nick(m[0])

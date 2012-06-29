@@ -114,30 +114,51 @@ whitelist.commands = ['whitelist']
 
 def kick(bot, input): 
     """makes bot kick user""" 
-    if not input.admin: return
-    bot.write_packet(ID.HON_CS_CHANNEL_KICK,input.origin[2],bot.nick2id[input.group(2).lower()])
-kick.commands = ['kick']
-kick.event = [ID.HON_SC_CHANNEL_MSG]
+    if not input.admin or not input.group(2): return
+    if not input.group(3) and input.origin[0] == ID.HON_SC_CHANNEL_MSG:
+        bot.write_packet(ID.HON_CS_CHANNEL_KICK,input.origin[2],bot.nick2id[input.group(2).lower()])
+    else:
+        nick = input.group(2)
+        chan = input.group(3)
+        if chan is not None:
+            chan = bot.chan2id[chan.lower()]
+        elif input.origin[0] == ID.HON_SC_CHANNEL_MSG:
+            chan = input.origin[2]
+        if chan is not None:
+            bot.write_packet(ID.HON_CS_CHANNEL_KICK,chan,bot.nick2id[nick.lower()])
+kick.rule = (['kick'],'([^\ ]+)(?:\ +(.+))?')
 
 def promote(bot, input): 
     """makes bot promote user""" 
     if not input.admin: return
-    if not input.group(2):
+    if not input.group(2) and input.origin[0] == ID.HON_SC_CHANNEL_MSG:
         bot.write_packet(ID.HON_CS_CHANNEL_PROMOTE,input.origin[2],input.account_id)
     else:
-        bot.write_packet(ID.HON_CS_CHANNEL_PROMOTE,input.origin[2],bot.nick2id[input.group(2).lower()])
-promote.commands = ['promote']
-promote.event = [ID.HON_SC_CHANNEL_MSG]
+        nick = input.group(2)
+        chan = input.group(3)
+        if chan is not None:
+            chan = bot.chan2id[chan.lower()]
+        elif input.origin[0] == ID.HON_SC_CHANNEL_MSG:
+            chan = input.origin[2]
+        if chan is not None:
+            bot.write_packet(ID.HON_CS_CHANNEL_PROMOTE,chan,bot.nick2id[nick.lower()])
+promote.rule = (['promote'],'([^\ ]+)?(?:\ +(.+))?')
 
 def demote(bot, input): 
     """makes bot demote user""" 
     if not input.admin: return
-    if not input.group(2):
+    if not input.group(2) and input.origin[0] == ID.HON_SC_CHANNEL_MSG:
         bot.write_packet(ID.HON_CS_CHANNEL_DEMOTE,input.origin[2],input.account_id)
     else:
-        bot.write_packet(ID.HON_CS_CHANNEL_DEMOTE,input.origin[2],bot.nick2id[input.group(2).lower()])
-demote.commands = ['demote']
-demote.event = [ID.HON_SC_CHANNEL_MSG]
+        nick = input.group(2)
+        chan = input.group(3)
+        if chan is not None:
+            chan = bot.chan2id[chan.lower()]
+        elif input.origin[0] == ID.HON_SC_CHANNEL_MSG:
+            chan = input.origin[2]
+        if chan is not None:
+            bot.write_packet(ID.HON_CS_CHANNEL_DEMOTE,chan,bot.nick2id[nick.lower()])
+demote.rule = (['demote'],'([^\ ]+)?(?:\ +(.+))?')
 
 def topic(bot,input):
     """Sets topic on channel issued"""
@@ -150,7 +171,13 @@ topic.event = [ID.HON_SC_CHANNEL_MSG]
 def silence(bot, input): 
     """makes bot silence user""" 
     if not input.admin: return
-    nick,time = input.group(2).split(' ') 
-    bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER,input.origin[2],nick,int(time))
-silence.commands = ['silence']
-silence.event = [ID.HON_SC_CHANNEL_MSG]
+    nick = input.group(2)
+    time = input.group(3)
+    chan = input.group(4)
+    if chan is not None:
+        chan = bot.chan2id[chan.lower()]
+    elif input.origin[0] == ID.HON_SC_CHANNEL_MSG:
+        chan = input.origin[2]
+    if chan is not None and time is not None and nick is not None:
+        bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER,chan,nick,int(time))
+silence.rule = (['silence'],'([^\ ]+) ([0-9]+)(?:\ +(.+))?')
