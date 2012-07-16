@@ -124,7 +124,8 @@ class Bot( asynchat.async_chat ):
             buddy_list = {}
         self.buddy_list = {}
         for id in self.clan_roster:
-            nick = normalize_nick(self.clan_roster[id]['nickname']).lower()
+            if (self.clan_roster[id]['nickname']:
+                nick = normalize_nick(self.clan_roster[id]['nickname']).lower()
             self.id2nick[id] = nick
             self.nick2id[nick] = id
         for buddies in buddy_list.values():
