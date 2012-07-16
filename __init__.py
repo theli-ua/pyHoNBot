@@ -12,7 +12,7 @@ Licensed under the Eiffel Forum License 2.
 
 """
 
-import sys, os, time, threading, signal
+import sys, os, time, threading, signal,traceback
 import bot
 
 class Watcher(object): 
@@ -53,6 +53,7 @@ def run_honbot(config):
           print(sys.exc_type,sys.exc_value)
           print(sys.exc_traceback)
           print(sys.exc_info())
+          traceback.print_exc(file=sys.stdout)
           pass
 
       if not isinstance(delay, int): 
