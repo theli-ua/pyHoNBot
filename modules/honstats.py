@@ -89,7 +89,106 @@ def match(bot,input):
                 else:
                     match_stats['rating_type'] = 'PSR'
 
-                match_stats['wards'] = player_stats['wards']
+                match_stats['wards'] = player_stats['wards']					<simpleemitter
+						life="800"
+						spawnrate="20"
+						minparticlelife="350"
+						maxparticlelife="500"
+						gravity="-15"
+						speed="30"
+						drag=".003"
+						material="/shared/effects/materials/flames_07.material"
+						offsetsphere="35 35 0"
+						angle="90"
+					>
+						<particle 
+							maxanglespeed="30"
+							maxangle="360"
+							color="1 .75 .5"
+							startsize="35"
+							endsize="50"
+							startalpha="0"
+							midalpha=".4"
+							endalpha="0"
+						/>
+						<particle 
+							maxanglespeed="50"
+							maxangle="360"
+							color="1"
+							startsize="25"
+							endsize="40"					<simpleemitter
+						life="800"
+						spawnrate="20"
+						minparticlelife="350"
+						maxparticlelife="500"
+						gravity="-15"
+						speed="30"
+						drag=".003"
+						material="/shared/effects/materials/flames_07.material"
+						offsetsphere="35 35 0"
+						angle="90"
+					>
+						<particle 
+							maxanglespeed="30"
+							maxangle="360"
+							color="1 .75 .5"
+							startsize="35"
+							endsize="50"
+							startalpha="0"
+							midalpha=".4"
+							endalpha="0"
+						/>
+						<particle 
+							maxanglespeed="50"
+							maxangle="360"
+							color="1"
+							startsize="25"
+							endsize="40"
+							startalpha="0"
+							midalpha=".4"
+							endalpha="0"
+						/>
+					</simpleemitter>
+
+							startalpha="0"
+							midalpha=".4"
+							endalpha="0"					<simpleemitter
+						life="800"
+						spawnrate="20"
+						minparticlelife="350"
+						maxparticlelife="500"
+						gravity="-15"
+						speed="30"
+						drag=".003"
+						material="/shared/effects/materials/flames_07.material"
+						offsetsphere="35 35 0"
+						angle="90"
+					>
+						<particle 
+							maxanglespeed="30"
+							maxangle="360"
+							color="1 .75 .5"
+							startsize="35"
+							endsize="50"
+							startalpha="0"
+							midalpha=".4"
+							endalpha="0"
+						/>
+						<particle 
+							maxanglespeed="50"
+							maxangle="360"
+							color="1"
+							startsize="25"
+							endsize="40"
+							startalpha="0"
+							midalpha=".4"
+							endalpha="0"
+						/>
+					</simpleemitter>
+
+						/>
+					</simpleemitter>
+
                 time = float(summary['time_played']) / 60.0
                 match_stats['xpm'] = float(player_stats['exp'])/time
                 match_stats['gpm'] = float(player_stats['gold'])/time
@@ -300,6 +399,6 @@ def hero_stats(bot,input):
 
 def setup(bot):
     bot.config.module_config('honstats_match',['{nick} {hero}[{lvl}] {rating}{rating_type} {outcome} ^g{K}^*/^r{D}^*/^b{A}^* {name}{mode} {len}^:|^;CK:{ck}+{ckn} CD:{cd}^:|^;X:{xpm:.2f} G:{gpm:.2f} A:{apm:.2f}^:|^;W:{wards}^:|^;{mdt}','Python format string for match stats output'])
-    bot.config.module_config('honstats_player',['{nick} {hero} ^g{rating}^*{rating_type} ^g{win_percent:.2%}^*({wins}/{matches})^:|^;^g{avg_K:.2f}^*/^r{avg_D:.2f}^*/^b{avg_A:.2f}^*^:|^;X:{xpm:.2f} G:{gpm:.2f} A:{apm:.2f}^:|^;CK:{avg_ck:.2f}+{avg_ckn:.2f} CD:{avg_cd:.2f}^:|^;{avg_len}^:|^;W {avg_wards:.2f}^:|^;TSR: {TSR:.2f}','Python format string for player stats output'])
+    bot.config.module_config('honstats_player',['{nick} {hero} ^g{rating}^*{rating_type} ^g{win_percent:.2%}^*({wins}/{matches})^:|^;^g{avg_K:.2f}^*/^r{avg_D:.2f}^*/^b{avg_A:.2f}^*^:|^;X:{xpm:.2f} G:{gpm:.2f} A:{apm:.2f}^:|^;CK:{avg_ck:.2f}+{avg_ckn:.2f} CD:{avg_cd:.2f}^:|^;{avg_len}^:|^;W {avg_wards:.2f}','Python format string for player stats output'])
     if hasattr(bot,'heroshorts'):
         hero_stats.rule = '(?i)' + bot.config.prefix + r'({0})(?:[^\ ]*\ +(?:(p|c)\ +)?(.+))?'.format('|'.join(bot.heroshorts.keys()))
