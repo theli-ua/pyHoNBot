@@ -11,7 +11,10 @@ def setup(bot):
     if not hasattr(bot,'stringtables'):
         bot.stringtable_version = None
 
-    verinfo = bot.masterserver_request({'version' : '0.0.0.0', 'os' : 'lac' ,'arch' : 'x86-biarch'},path = 'patcher/patcher.php')
+    if bot.config.region == 'na':
+        verinfo = bot.masterserver_request({'version' : '0.0.0.0', 'os' : 'lac' ,'arch' : 'x86-biarch'},path = 'patcher/patcher.php')
+    else:
+        verinfo = bot.masterserver_request({'version' : '0.0.0.0', 'os' : 'wgc' ,'arch' : 'i686'},path = 'patcher/patcher.php')
     verinfo = verinfo[0]
     if bot.stringtable_version == verinfo['version']:
         print("no need to update stringtables")

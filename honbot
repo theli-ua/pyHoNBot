@@ -28,6 +28,7 @@ def check_python_version():
 def create_default_config(fn): 
    f = open(fn, 'w')
    print >> f, trim("""\
+   region = 'na' # possible values - 'na' for na/eu/aus, 'sea' for garena sea and 'cis' for garena cis
    nick = 'honbot'
    password = 'example'
    owner = 'yournickname'

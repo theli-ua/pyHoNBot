@@ -142,9 +142,10 @@ class Bot( asynchat.async_chat ):
     def run(self):
         auth_data = self.auth()
         self.create_socket( socket.AF_INET, socket.SOCK_STREAM )
-        self.connect( ( auth_data['chat_url'], packets.ID.HON_CHAT_PORT ) )
+        self.connect( ( auth_data['chat_url'], int(auth_data['chat_port']) ) )
         asyncore.loop()
     def setup(self): 
+        masterserver.set_region(self.config.region)
         self.variables = {}
 
         filenames = []
