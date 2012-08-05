@@ -169,7 +169,7 @@ topic.commands = ['topic']
 topic.event = [ID.HON_SC_CHANNEL_MSG]
 
 def silence(bot, input): 
-    """makes bot silence user""" 
+    """makes bot silence user, seconds""" 
     if not input.admin: return
     nick = input.group(2)
     time = input.group(3)
@@ -179,5 +179,5 @@ def silence(bot, input):
     elif input.origin[0] == ID.HON_SC_CHANNEL_MSG:
         chan = input.origin[2]
     if chan is not None and time is not None and nick is not None:
-        bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER,chan,nick,int(time))
+        bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER,chan,nick,1000*int(time))
 silence.rule = (['silence'],'([^\ ]+) ([0-9]+)(?:\ +(.+))?')
