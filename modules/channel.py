@@ -12,8 +12,12 @@ def setup(bot):
     bot.config.module_config('spam_threshold',[0,'number of seconds, if user repeats his message in channel with delay lower than this he will be considered spamming and banned'])
     bot.config.module_config('whitelist',[[],'whitelist for antispam etc'])
 
+silenced = {}
+
 def silence_smurfs(bot,chanid,nick):
     if bot.config.silence_smurfs < 0:
+        return
+    if nick in silenced:
         return
     if nick in bot.nick2id and bot.nick2id[nick] in bot.clan_roster:
         return
@@ -23,6 +27,7 @@ def silence_smurfs(bot,chanid,nick):
     stats_data = bot.masterserver_request(query,cookie=True)
     if int(stats_data['rnk_wins']) <= bot.config.silence_smurfs:
         bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER,chanid,nick,0x7fffffff)
+        silenced[nick] = True
     else:
         bot.not_smurfs.append(nick)
 
