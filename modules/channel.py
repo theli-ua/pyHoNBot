@@ -17,7 +17,7 @@ silenced = {}
 def silence_smurfs(bot,chanid,nick):
     if bot.config.silence_smurfs < 0:
         return
-    if nick in silenced:
+    if (nick,chanid) in silenced:
         return
     if nick in bot.nick2id and bot.nick2id[nick] in bot.clan_roster:
         return
@@ -27,7 +27,7 @@ def silence_smurfs(bot,chanid,nick):
     stats_data = bot.masterserver_request(query,cookie=True)
     if int(stats_data['rnk_wins']) <= bot.config.silence_smurfs:
         bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER,chanid,nick,0x7fffffff)
-        silenced[nick] = True
+        silenced[(nick,chanid)] = True
     else:
         bot.not_smurfs.append(nick)
 
