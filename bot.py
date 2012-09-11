@@ -383,13 +383,13 @@ class Bot( asynchat.async_chat ):
                 else:
                     s.nick = None
                     s.account_id = None
-                s.admin = s.nick.lower() in self.config.admins
-                if hasattr(self.config,'officer_admin') and \
+                s.owner = s.nick == self.config.owner
+                s.admin = s.owner or s.nick.lower() in self.config.admins
+                if not s.admin and hasattr(self.config,'officer_admin') and \
                         self.config.officer_admin and s.account_id is not None and\
                         s.account_id in self.clan_roster and\
                         self.clan_roster[s.account_id]['rank'] != 'Member':
                         s.admin = True
-                s.owner = s.nick == self.config.owner
                 return s
         return CommandInput(text, origin, data, match)
 
