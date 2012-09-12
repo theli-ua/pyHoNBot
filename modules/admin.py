@@ -73,7 +73,7 @@ admin.commands = ['admin']
 
 def unadmin(bot, input): 
     """Removes person from admins list, owner only""" 
-    if not input.admin: return
+    if not input.owner: return
     bot.config.set_del('admins',input.group(2).lower())
 unadmin.commands = ['unadmin']
 

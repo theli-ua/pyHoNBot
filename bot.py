@@ -356,10 +356,6 @@ class Bot( asynchat.async_chat ):
         except Exception, e: 
             self.error(origin)
 
-    def noauth(input):
-        self.write_packet(packets.ID.HON_SC_WHISPER, input.nick,"You do not have access to this command.")
-        return False
-
     def input(self, origin, text, data, match): 
         class CommandInput(unicode): 
             def __new__(cls, text, origin, data, match): 
@@ -436,9 +432,6 @@ class Bot( asynchat.async_chat ):
                                     t.start()
                                 else: self.call(func, list(origin), phenny, input)
 
-
-
-
-
-
-
+    def noauth(input):
+            self.write_packet(packets.ID.HON_SC_WHISPER, input.nick,'You do not have access to this command.')
+            return False
