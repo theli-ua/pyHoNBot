@@ -14,11 +14,10 @@ def gitcheck(bot, input):
 	args = ['git', 'pull']
 	noUpStr = 'Already up-to-date.'
 	retStr = check_output(args)
-	if retStr != noUpStr:
-		bot.reply('(%s) Icbot updated. Restarting...' % retStr)
+	if retStr.strip() !=  noUpStr:
+		bot.reply('Icbot updated. Restarting...')
 		bot.close()
-		return True
+		return
 	bot.reply('Already up-to-date.')
-	return False
 
 gitcheck.commands = ['update']
