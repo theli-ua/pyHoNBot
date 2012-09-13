@@ -90,9 +90,9 @@ def officers(bot, input):
     """Find available officers"""
     avail_officers = []
     for ply in bot.clan_status:
+        if bot.id2nick[ply] == bot.nick: continue # It's us, silly!
         if not bot.clan_status[ply] in [ ID.HON_STATUS_INGAME, ID.HON_STATUS_OFFLINE ]:
             if bot.clan_roster[ply]['rank'] in ['Officer', 'Leader']:
-                print("Adding: " + bot.id2nick[ply] + "(" + str(ply) + ")")
                 avail_officers.append(bot.id2nick[ply])
     if len(avail_officers) > 0:
         outstr = ', '.join(avail_officers)
