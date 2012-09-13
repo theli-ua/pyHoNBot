@@ -74,12 +74,15 @@ def info(bot,input):
         bot.reply("Unknown Player")
     else:
         id = bot.nick2id[nick]
-        player = bot.clan_roster[id]
-        query = {'nickname' : nick}
-        query['f'] = 'show_stats'
-        query['table'] = 'player'
-        data = bot.masterserver_request(query,cookie=True)
-        bot.reply("{0} - Rank: {1}, Last Online: {2}".format(nick, player['rank'], data['last_activity']))
+        if id in bot.clan_roster:
+            player = bot.clan_roster[id]
+            query = {'nickname' : nick}
+            query['f'] = 'show_stats'
+            query['table'] = 'player'
+            data = bot.masterserver_request(query,cookie=True)
+            bot.reply("{0} - Rank: {1}, Last Online: {2}".format(nick, player['rank'], data['last_activity']))
+        else:
+            bot.reply("Not in clan")
 info.commands = ['info']
 
 def officers(bot, input):
