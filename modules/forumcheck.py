@@ -23,6 +23,7 @@ def applycheck(bot, input):
 			if thread['preview'].lower().find(input.nick.lower()) > 0:
 				bot.reply("Welcome to Project Epoch, %s! Inviting now." % input.nick)
 				return
+		bot.reply("Error: No application found for your username.")
 	except:
 		bot.reply('Error: Unable to check application at this time')
 applycheck.commands = ['apply']
