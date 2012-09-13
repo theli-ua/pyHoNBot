@@ -79,3 +79,14 @@ unadmin.commands = ['unadmin']
 
 def setup(bot):
     regen_ban_re(bot)
+
+def query(bot, input):
+    """Master server query"""
+    if not input.owner: return
+    query = {'nickname' : input.group(2)}
+    query['f'] = 'show_stats'
+    query['table'] = 'player'
+    data = bot.masterserver_request(query,cookie=True)
+    print(data)
+    bot.reply("Printed to stdout")
+query.commands = ['query']
