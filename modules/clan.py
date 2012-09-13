@@ -43,6 +43,6 @@ def remove(bot,input):
     else:
         id = bot.nick2id[nick]
         bot.write_packet(ID.HON_CS_CLAN_REMOVE_MEMBER,id)
-        query = { 'f' : 'set_rank', 'target_id' : id, 'member_ck': bot.cookie, 'rank' : 'Remove', 'clan_id' : self.clan_info['clan_id'] }
+        query = { 'f' : 'set_rank', 'target_id' : id, 'member_ck': bot.cookie, 'rank' : 'Remove', 'clan_id' : bot.clan_info['clan_id'] }
         bot.masterserver_request(query)
 remove.commands = ['remove']
