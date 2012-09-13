@@ -21,3 +21,9 @@ def update(bot, input):
 	bot.reply('Already up-to-date.')
 
 update.commands = ['update']
+
+def frestart(bot, inpu):
+	"""Full restart of the bot"""
+	if not input.owner: return
+	raise SystemExit
+frestart.commands = ['frestart']
