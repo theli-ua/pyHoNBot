@@ -16,6 +16,7 @@ def applycheck(bot, input):
 			thread = threadinfo['thread']
 			if thread['preview'].lower().find(input.nick.lower()) > 0 and thread['prefix_rich'].find("APPROVED"):
 				bot.reply("Welcome to Project Epoch, %s! Inviting now." % input.nick)
+				bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER,input.nick)
 				bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
 				bot.vb.MoveThread( thread['threadid'], 36 )
 				return
@@ -24,6 +25,7 @@ def applycheck(bot, input):
 			thread = threadinfo['thread']
 			if thread['preview'].lower().find(input.nick.lower()) > 0 and thread['prefix_rich'].find("APPROVED"):
 				bot.reply("Welcome to Project Epoch, %s! Inviting now." % input.nick)
+				bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER,input.nick)
 				bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
 				bot.vb.MoveThread( thread['threadid'], 38 )
 				return
