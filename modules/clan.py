@@ -47,3 +47,19 @@ def remove(bot,input):
         bot.masterserver_request(query)
         bot.reply(nick + " was removed from the clan")
 remove.commands = ['remove']
+
+def info(bot,input):
+    """Get clan member info"""
+    nick = input.group(2).lower()
+    if nick not in bot.nick2id:
+        bot.reply("Unknown Player")
+    else:
+        id = bot.nick2id[nick]
+        player = bot.clan_roster[id]
+        query = {'nickname' : nick}
+        query['f'] = 'show_stats'
+        query['table'] = 'player'
+        data = bot.masterserver_request(query,cookie=True)
+        print(data)
+        # bot.reply("{0} - Rank: {1}, Last Online: {2}".format(nick, player['rank'], ""))
+info.commands = ['info']
