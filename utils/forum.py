@@ -14,6 +14,8 @@ class VB:
 		self.url = url
 		self.apikey = apikey
 
+		self.allowed = ['redirect_inline_moved', 'redirect_login', 'redirect_postthanks']
+
 		if not self.InitAPI():
 			print("Error connecting to vB API")
 
@@ -27,7 +29,7 @@ class VB:
 	def IsError(self, ret):
 		try:
 			test = ret['response']['errormessage']
-			if test == "redirect_login" or test == "redirect_postthanks":
+			if test in self.allowed:
 				return False
 			print("Error:" + test)
 			return True
