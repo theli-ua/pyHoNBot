@@ -60,6 +60,5 @@ def info(bot,input):
         query['f'] = 'show_stats'
         query['table'] = 'player'
         data = bot.masterserver_request(query,cookie=True)
-        print(data)
-        # bot.reply("{0} - Rank: {1}, Last Online: {2}".format(nick, player['rank'], ""))
+        bot.reply("{0} - Rank: {1}, Last Online: {2}".format(nick, player['rank'], data['last_activity']))
 info.commands = ['info']
