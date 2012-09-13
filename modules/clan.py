@@ -89,7 +89,7 @@ def officers(bot, input):
     """Find available officers"""
     avail_officers = {}
     for ply in bot.clan_online:
-        if bot.clan_online[ply]['status'] in [ID.HON_STATUS_INLOBBY]:
+        if bot.clan_online[ply] and bot.clan_online[ply]['status'] in [ID.HON_STATUS_INLOBBY]:
             avail_officers[ply] = bot.id2nick[ply]
     outstr = ", ".join(avail_officers) if len(avail_officers) > 0 else "None"
     bot.reply( "Available officers: {0}".format( outstr ) )
