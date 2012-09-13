@@ -91,6 +91,7 @@ def officers(bot, input):
     avail_officers = {}
     for ply in bot.clan_status:
         if not bot.clan_status[ply] in [ ID.HON_STATUS_INGAME, ID.HON_STATUS_OFFLINE ]:
+            print("Adding: " + bot.id2nick[ply] + "(" + str(ply) + ")")
             avail_officers[ply] = bot.id2nick[ply]
     if len(avail_officers) > 0:
         outstr = ", ".join(avail_officers)
