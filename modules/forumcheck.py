@@ -3,6 +3,7 @@
 """
 
 def applyCheck(bot, input):
+	if not input.admin: return
 	bot.reply('Please wait, checking...')
 	if not bot.vb.Login(bot.config.forumuser,bot.config.forumpassword):
 		bot.reply('Error: Unable to check application')
@@ -20,3 +21,4 @@ def applyCheck(bot, input):
 		if thread['preview'].lower().find(input.nick.lower()) > 0:
 			bot.reply("Welcome to Project Epoch, %s! Inviting now." % input.nick)
 			return True
+applyCheck.commands = ['apply']
