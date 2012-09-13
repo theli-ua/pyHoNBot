@@ -6,7 +6,12 @@
 """
 
 import hashlib
-import urllib
+try: # Py32
+	from urllib.parse import urlencode
+	from urllib.request import urlopen
+except: # Py27
+	from urllib import urlopen
+	from urllib import urlencode
 import json
 
 class VB:
@@ -38,13 +43,13 @@ class VB:
 
 	def Sign(self, args):
 		args = sorted(args.items())
-		fullstr = ''.join([urllib.urlencode(args), self.init["apiaccesstoken"], self.init["apiclientid"], self.init["secret"], self.apikey])
+		fullstr = ''.join([urlencode(args), self.init["apiaccesstoken"], self.init["apiclientid"], self.init["secret"], self.apikey])
 		return hashlib.md5(fullstr).hexdigest()
 
 	def InitAPI(self):
-		params = urllib.urlencode({"api_m": "api_init", "clientname": "icbot", "clientversion": "1.0", "platformname": "Python", "platformversion": "1.0", "uniqueid": "icbot"})
+		params = urlencode({"api_m": "api_init", "clientname": "icbot", "clientversion": "1.0", "platformname": "Python", "platformversion": "1.0", "uniqueid": "icbot"})
 		try:
-			self.init = json.load(urllib.urlopen(self.url + "?%s" % params))
+			self.init = json.load(urlopen(self.url + "?%s" % params))
 			return True
 		except Exception as inst:
 			return False
@@ -52,10 +57,10 @@ class VB:
 	def Login(self, username, password):
 		if not self.IsInit(): return False
 		signed = self.Sign({"api_m": "login_login"})
-		get = urllib.urlencode({'api_m': 'login_login', 'api_c': self.init["apiclientid"], 'api_s': self.init["apiaccesstoken"], 'api_sig': signed})
-		post = urllib.urlencode({"vb_login_username": username, "vb_login_md5password": password})
+		get = urlencode({'api_m': 'login_login', 'api_c': self.init["apiclientid"], 'api_s': self.init["apiaccesstoken"], 'api_sig': signed})
+		post = urlencode({"vb_login_username": username, "vb_login_md5password": password})
 		try:
-			retval = json.load(urllib.urlopen(self.url + "?%s" % get, post))
+			retval = json.load(urlopen(self.url + "?%s" % get, post))
 			print("Forum: Logged in")
 			return not self.IsError(retval)
 		except:
@@ -72,9 +77,9 @@ class VB:
 	def GetThreads(self, forumid, limit):
 		if not self.IsInit(): return False
 		signed = self.Sign({"api_m": "forumdisplay", 'forumid': forumid, 'perpage': limit})
-		get = urllib.urlencode({'api_m': 'forumdisplay', 'forumid': forumid, 'perpage': limit, 'api_c': self.init["apiclientid"], 'api_s': self.init["apiaccesstoken"], 'api_sig': signed})
+		get = urlencode({'api_m': 'forumdisplay', 'forumid': forumid, 'perpage': limit, 'api_c': self.init["apiclientid"], 'api_s': self.init["apiaccesstoken"], 'api_sig': signed})
 		try:
-			retval = json.load(urllib.urlopen(self.url + "?%s" % get))
+			retval = json.load(urlopen(self.url + "?%s" % get))
 			if not self.IsError(retval):
 				print("Forum: Fetching Threads from " + str(forumid))
 				return retval['response']['threadbits']
@@ -87,10 +92,10 @@ class VB:
 	def NewThread(self, forumid, title, body):
 		if not self.IsInit(): return False
 		signed = self.Sign({"api_m": "newthread_postthread"})
-		get = urllib.urlencode({'api_m': 'newthread_postthread', 'api_c': self.init["apiclientid"], 'api_s': self.init["apiaccesstoken"], 'api_sig': signed})
-		post = urllib.urlencode({"subject": title, "message": body, "forumid": forumid})
+		get = urlencode({'api_m': 'newthread_postthread', 'api_c': self.init["apiclientid"], 'api_s': self.init["apiaccesstoken"], 'api_sig': signed})
+		post = urlencode({"subject": title, "message": body, "forumid": forumid})
 		try:
-			retval = json.load(urllib.urlopen(self.url + "?%s" % get, post))
+			retval = json.load(urlopen(self.url + "?%s" % get, post))
 			return not self.IsError(retval)
 		except:
 			return False
@@ -98,10 +103,10 @@ class VB:
 	def NewPost(self, threadid, title, body):
 		if not self.IsInit(): return False
 		signed = self.Sign({"api_m": "newreply_postreply"})
-		get = urllib.urlencode({'api_m': 'newreply_postreply', 'api_c': self.init["apiclientid"], 'api_s': self.init["apiaccesstoken"], 'api_sig': signed})
-		post = urllib.urlencode({"threadid": threadid, "subject": title, "message": body})
+		get = urlencode({'api_m': 'newreply_postreply', 'api_c': self.init["apiclientid"], 'api_s': self.init["apiaccesstoken"], 'api_sig': signed})
+		post = urlencode({"threadid": threadid, "subject": title, "message": body})
 		try:
-			retval = json.load(urllib.urlopen(self.url + "?%s" % get, post))
+			retval = json.load(urlopen(self.url + "?%s" % get, post))
 			return not self.IsError(retval)
 		except:
 			return False
@@ -109,10 +114,10 @@ class VB:
 	def MoveThread(self, threadid, forumid_to):
 		if not self.IsInit(): return False
 		signed = self.Sign({"api_m": "inlinemod_domovethreads"})
-		get = urllib.urlencode({'api_m': 'inlinemod_domovethreads', 'api_c': self.init["apiclientid"], 'api_s': self.init["apiaccesstoken"], 'api_sig': signed})
-		post = urllib.urlencode({"threadids": threadid, "destforumid": forumid_to})
+		get = urlencode({'api_m': 'inlinemod_domovethreads', 'api_c': self.init["apiclientid"], 'api_s': self.init["apiaccesstoken"], 'api_sig': signed})
+		post = urlencode({"threadids": threadid, "destforumid": forumid_to})
 		try:
-			retval = json.load(urllib.urlopen(self.url + "?%s" % get, post))
+			retval = json.load(urlopen(self.url + "?%s" % get, post))
 			return not self.IsError(retval)
 		except:
 			return False
