@@ -54,6 +54,7 @@ class VB:
 		post = urllib.urlencode({"vb_login_username": username, "vb_login_md5password": password})
 		try:
 			retval = json.load(urllib.urlopen(self.url + "?%s" % get, post))
+			print("Forum: Logged in")
 			return not self.IsError(retval)
 		except:
 			return False
@@ -73,6 +74,8 @@ class VB:
 		try:
 			retval = json.load(urllib.urlopen(self.url + "?%s" % get))
 			if not self.IsError(retval):
+				print("Forum: Fetching Threads from " + forumid)
+				print("Debug: " + json.dumps(retval, indent=4))
 				return retval['response']['threadbits']
 			else:
 				return False
@@ -83,12 +86,3 @@ class VB:
 	def Post(self, forumid, title, body):
 		if not self.IsInit(): return False
 		# todo
-
-	def Test(self, get, post):
-		if not self.IsInit(): return False
-		get = urllib.urlencode(get)
-		post = urllib.urlencode(post)
-		try:
-			return json.load(urllib.urlopen(self.url + "?%s" % get), post)
-		except:
-			return False
