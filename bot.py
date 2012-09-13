@@ -14,6 +14,7 @@ from hon.honutils import normalize_nick
 import time
 from hon.honutils import normalize_nick
 from utils.dep import dep
+from utils.forum import VB
 
 home = os.getcwd() 
 
@@ -44,6 +45,10 @@ class Bot( asynchat.async_chat ):
         #self.writelock = threading.Lock()
         #self.sleep = time.time() - 10
         #self.send_threshold = 1
+        try:
+            self.vb = VB(self.config.forumurl, self.config.forumapikey) # Forum Connect
+        except:
+            print("No forum credentials set or error occurred. Who knows?")
 
         self.ac_in_buffer_size = 2
         #self.ac_out_buffer_size = 2
@@ -432,9 +437,6 @@ class Bot( asynchat.async_chat ):
                                     t.start()
                                 else: self.call(func, list(origin), phenny, input)
 
-
-
-
-
-
-
+    def noauth(input):
+            self.write_packet(packets.ID.HON_SC_WHISPER, input.nick,'You do not have access to this command.')
+            return False

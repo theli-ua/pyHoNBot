@@ -33,7 +33,7 @@ def _add_game(account_id,game_name,matchid,server,bot):
     if key not in _games:
         _games[key] = Game(game_name,matchid,server)
         if _check_ih(game_name,bot.config.ih_keywords,bot.config.ih_threshold):
-            bot.write_packet(ID.HON_CS_CLAN_MESSAGE,'{0}^* was started by ^r{1}^*,join up!'.format(game_name,bot.id2nick[account_id]))  
+            bot.write_packet(ID.HON_CS_CLAN_MESSAGE,'{0}^* was started by ^r{1}^*, join up!'.format(game_name,bot.id2nick[account_id]))  
             if hasattr(bot,'mumbleannounce'):
                 bot.mumbleannounce('"{0}" was started,join up!'.format(game_name))
             _games[key].announced = True

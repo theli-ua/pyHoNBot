@@ -278,7 +278,7 @@ def get_stats(bot,input,table,hero=None):
         stats['rating_type'] = 'PSR'
     else:
         stats['rating_type'] = 'MMR'
-
+    print( "Debug: exp_time: %f, matches: %f" % (float(stats['exp_time']), float(stats['matches'])) )
     stats['TSR'] = ((float(stats['K'])/float(stats['D'])/1.15)*0.65)+\
             ((float(stats['A'])/float(stats['D'])/1.55)*1.20)+\
             (((float(stats['wins'])/(float(stats['matches'])))/0.55)*0.9)+\
