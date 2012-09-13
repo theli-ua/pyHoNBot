@@ -16,12 +16,14 @@ def applycheck(bot, input):
 			thread = threadinfo['thread']
 			if thread['preview'].lower().find(input.nick.lower()) > 0:
 				bot.reply("Welcome to Project Epoch, %s! Inviting now." % input.nick)
+				bot.vb.NewReply( thread['threadid'], "Invited", "Player has been invited to the clan.")
 				return
 		mentorApps = bot.vb.GetThreads(38, 30)
 		for threadinfo in mentorApps:
 			thread = threadinfo['thread']
 			if thread['preview'].lower().find(input.nick.lower()) > 0:
 				bot.reply("Welcome to Project Epoch, %s! Inviting now." % input.nick)
+				bot.vb.NewReply( thread['threadid'], "Invited", "Player has been invited to the clan.")
 				return
 		bot.reply("Error: No application found for your username.")
 	except:
