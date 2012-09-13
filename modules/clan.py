@@ -35,7 +35,7 @@ def member_changestatus(bot,origin,data):
             bot.clan_online[id] = {"status": data[1]}
         else:
             bot.clan_online[id] = False
-member_online.event = [ID.HON_SC_UPDATE_STATUS]
+member_changestatus.event = [ID.HON_SC_UPDATE_STATUS]
 
 def member_initstatus(bot,origin,data):
     info = data[1]
@@ -93,3 +93,4 @@ def officers(bot, input):
             avail_officers[ply] = bot.id2nick[ply]
     outstr = ", ".join(avail_officers) if len(avail_officers) > 0 else "None"
     bot.reply( "Available officers: {0}".format( outstr ) )
+officers.commands = ['officers']
