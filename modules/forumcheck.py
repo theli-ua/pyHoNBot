@@ -2,7 +2,8 @@
 """
 """
 
-def applyCheck(bot, input):
+def applycheck(bot, input):
+	"""Check if you application has been successful"""
 	if not input.admin: return
 	bot.reply('Please wait, checking...')
 	if not bot.vb.Login(bot.config.forumuser,bot.config.forumpassword):
@@ -21,4 +22,8 @@ def applyCheck(bot, input):
 		if thread['preview'].lower().find(input.nick.lower()) > 0:
 			bot.reply("Welcome to Project Epoch, %s! Inviting now." % input.nick)
 			return True
-applyCheck.commands = ['apply']
+
+applycheck.commands = ['apply']
+
+if __name__ == '__main__': 
+    print __doc__.strip()
