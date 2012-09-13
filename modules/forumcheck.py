@@ -4,7 +4,7 @@
 
 from hon.packets import ID
 
-def applycheck(bot, input):
+def apply(bot, input):
 	"""Check if you application has been successful"""
 	if not input.admin: return
 	try:
@@ -45,7 +45,7 @@ def applycheck(bot, input):
 	except Exception as inst:
 		print(inst)
 		bot.reply('Error: Unable to check application at this time')
-applycheck.commands = ['apply']
+apply.commands = ['apply']
 
 if __name__ == '__main__': 
     print __doc__.strip()

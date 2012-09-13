@@ -15,7 +15,7 @@ def gitcheck(bot, input):
 	noUpStr = 'Already up-to-date.'
 	retStr = check_output(args)
 	if retStr.strip() !=  noUpStr:
-		bot.reply('Icbot updated. Restarting...')
+		bot.reply('%s updated. Restarting...' % bot.config.nick)
 		bot.close()
 		return
 	bot.reply('Already up-to-date.')
