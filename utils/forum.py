@@ -74,7 +74,7 @@ class VB:
 		try:
 			retval = json.load(urllib.urlopen(self.url + "?%s" % get))
 			if not self.IsError(retval):
-				print("Forum: Fetching Threads from " + forumid)
+				print("Forum: Fetching Threads from " + str(forumid))
 				print("Debug: " + json.dumps(retval, indent=4))
 				return retval['response']['threadbits']
 			else:
