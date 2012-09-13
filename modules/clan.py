@@ -31,20 +31,14 @@ add_member.event = [ID.HON_SC_CLAN_MEMBER_ADDED]
 def member_changestatus(bot,origin,data):
     id = data[0]
     if id in bot.clan_roster:
-        if data[1] in [ ID.HON_STATUS_INLOBBY , ID.HON_STATUS_INGAME ]:
-            bot.clan_online[id] = {"status": data[1], "rank": bot.clan_roster[id]['rank']}
-        else:
-            bot.clan_online[id] = False
+        bot.clan_status[id] = data[1]
 member_changestatus.event = [ID.HON_SC_UPDATE_STATUS]
 
 def member_initstatus(bot,origin,data):
-    info = data[1]
-    id = info[0]
-    if id in bot.clan_roster:
-        if info[1] in [ ID.HON_STATUS_INLOBBY , ID.HON_STATUS_INGAME ]:
-            bot.clan_online[id] = {"status": info[1], "rank": bot.clan_roster[id]['rank']}
-        else:
-            bot.clan_online[id] = False
+    for u in data[1]:
+        id = u[0]
+        if id in bot.clan_roster:
+            bot.clan_status[id] = u[1]
 member_initstatus.event = [ID.HON_SC_INITIAL_STATUS]
 
 def invite(bot,input):
@@ -67,6 +61,13 @@ def remove(bot,input):
         bot.reply(nick + " was removed from the clan")
 remove.commands = ['remove']
 
+status = {
+    ID.HON_STATUS_OFFLINE: "Offline",
+    ID.HON_STATUS_ONLINE: "Online",
+    ID.HON_STATUS_INLOBBY: "In Lobby",
+    ID.HON_STATUS_INGAME: "In Game"
+}
+
 def info(bot,input):
     """Get clan member info"""
     nick = input.group(2).lower()
@@ -80,7 +81,7 @@ def info(bot,input):
             query['f'] = 'show_stats'
             query['table'] = 'player'
             data = bot.masterserver_request(query,cookie=True)
-            bot.reply("{0} - Rank: {1}, Last Online: {2}".format(nick, player['rank'], data['last_activity']))
+            bot.reply("{0} - Rank: {1}, Last Online: {2}, Status: {3}".format(nick, player['rank'], data['last_activity'], status[bot.clan_status[id]]))
         else:
             bot.reply("Not in clan")
 info.commands = ['info']
@@ -88,9 +89,8 @@ info.commands = ['info']
 def officers(bot, input):
     """Find available officers"""
     avail_officers = {}
-    print(bot.clan_online)
-    for ply in bot.clan_online:
-        if bot.clan_online[ply] and bot.clan_online[ply]['status'] in [ID.HON_STATUS_INLOBBY]:
+    for ply in bot.clan_status:
+        if not bot.clan_status[ply] in [ ID.HON_STATUS_INGAME, ID.HON_STATUS_OFFLINE ]:
             avail_officers[ply] = bot.id2nick[ply]
     if len(avail_officers) > 0:
         outstr = ", ".join(avail_officers)
