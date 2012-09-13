@@ -32,7 +32,7 @@ def member_changestatus(bot,origin,data):
     id = data[0]
     if id in bot.clan_roster:
         if data[1] in [ ID.HON_STATUS_INLOBBY , ID.HON_STATUS_INGAME ]:
-            bot.clan_online[id] = {"status": data[1]}
+            bot.clan_online[id] = {"status": data[1], "rank": bot.clan_roster[id]['rank']}
         else:
             bot.clan_online[id] = False
 member_changestatus.event = [ID.HON_SC_UPDATE_STATUS]
@@ -42,7 +42,7 @@ def member_initstatus(bot,origin,data):
     id = info[0]
     if id in bot.clan_roster:
         if info[1] in [ ID.HON_STATUS_INLOBBY , ID.HON_STATUS_INGAME ]:
-            bot.clan_online[id] = {"status": info[1]}
+            bot.clan_online[id] = {"status": info[1], "rank": bot.clan_roster[id]['rank']}
         else:
             bot.clan_online[id] = False
 member_initstatus.event = [ID.HON_SC_INITIAL_STATUS]
@@ -88,9 +88,13 @@ info.commands = ['info']
 def officers(bot, input):
     """Find available officers"""
     avail_officers = {}
+    print(bot.clan_online)
     for ply in bot.clan_online:
         if bot.clan_online[ply] and bot.clan_online[ply]['status'] in [ID.HON_STATUS_INLOBBY]:
             avail_officers[ply] = bot.id2nick[ply]
-    outstr = ", ".join(avail_officers) if len(avail_officers) > 0 else "None"
+    if len(avail_officers) > 0:
+        outstr = ", ".join(avail_officers)
+    else:
+        outstr = "None"
     bot.reply( "Available officers: {0}".format( outstr ) )
 officers.commands = ['officers']
