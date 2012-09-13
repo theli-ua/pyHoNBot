@@ -360,7 +360,7 @@ class Bot( asynchat.async_chat ):
     def call(self, func, origin, phenny, *input): 
         try: func(phenny, *input)
         except SystemExit, e:
-            sys.exit()
+            sys.exit() # Rawr, hax
         except Exception, e:
             self.error(origin)
 
