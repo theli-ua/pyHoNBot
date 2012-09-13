@@ -173,8 +173,6 @@ cs_structs = {
         ID.HON_CS_WHISPER : 'ss',
         ID.HON_CS_CHANNEL_MSG : 'sI',
         ID.HON_CS_CHANNEL_EMOTE : 'sI',
-        ID.HON_CS_CLAN_ADD_MEMBER : 's',
-        ID.HON_CS_CLAN_MESSAGE : 's',
         ID.HON_CS_JOIN_CHANNEL : 's',
         ID.HON_CS_LEAVE_CHANNEL : 's',
         ID.HON_CS_START_MM_GROUP : 'sHsssH',
@@ -191,6 +189,7 @@ cs_structs = {
         ID.HON_CS_CHANNEL_PROMOTE : 'II',
         ID.HON_CS_CHANNEL_DEMOTE : 'II',
         ID.HON_CS_CLAN_ADD_MEMBER : 's',
+        ID.HON_CS_CLAN_MESSAGE : 's',
         ID.HON_CS_CLAN_REMOVE_MEMBER : 'I',
         ID.HON_CS_KICK_FROM_MM : 'B',
         }
