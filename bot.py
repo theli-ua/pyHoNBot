@@ -14,6 +14,7 @@ from hon.honutils import normalize_nick
 import time
 from hon.honutils import normalize_nick
 from utils.dep import dep
+from utils.forum import VB
 
 home = os.getcwd() 
 
@@ -44,6 +45,8 @@ class Bot( asynchat.async_chat ):
         #self.writelock = threading.Lock()
         #self.sleep = time.time() - 10
         #self.send_threshold = 1
+        if 'forumurl' in self.config:
+            self.vb = VB(self.config.forumurl, self.config.forumapikey) # Forum Connect
 
         self.ac_in_buffer_size = 2
         #self.ac_out_buffer_size = 2
