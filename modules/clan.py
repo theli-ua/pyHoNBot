@@ -28,6 +28,25 @@ def add_member(bot,origin,data):
         bot.write_packet(ID.HON_CS_CLAN_MESSAGE,'Welcome, {0}!'.format(nick))
 add_member.event = [ID.HON_SC_CLAN_MEMBER_ADDED]
 
+def member_changestatus(bot,origin,data):
+    id = data[0]
+    if id in bot.clan_roster:
+        if data[1] in [ ID.HON_STATUS_INLOBBY , ID.HON_STATUS_INGAME ]:
+            bot.clan_online[id] = {"status": data[1]}
+        else:
+            bot.clan_online[id] = False
+member_online.event = [ID.HON_SC_UPDATE_STATUS]
+
+def member_initstatus(bot,origin,data):
+    info = data[1]
+    id = info[0]
+    if id in bot.clan_roster:
+        if info[1] in [ ID.HON_STATUS_INLOBBY , ID.HON_STATUS_INGAME ]:
+            bot.clan_online[id] = {"status": info[1]}
+        else:
+            bot.clan_online[id] = False
+member_initstatus.event = [ID.HON_SC_INITIAL_STATUS]
+
 def invite(bot,input):
     """invites to clan, admins only""" 
     if not input.admin: return
@@ -62,3 +81,12 @@ def info(bot,input):
         data = bot.masterserver_request(query,cookie=True)
         bot.reply("{0} - Rank: {1}, Last Online: {2}".format(nick, player['rank'], data['last_activity']))
 info.commands = ['info']
+
+def officers(bot, input):
+    """Find available officers"""
+    avail_officers = {}
+    for ply in bot.clan_online:
+        if bot.clan_online[ply]['status'] in [ID.HON_STATUS_INLOBBY]:
+            avail_officers[ply] = bot.id2nick[ply]
+    outstr = ", ".join(avail_officers) if len(avail_officers) > 0 else "None"
+    bot.reply( "Available officers: {0}".format( outstr ) )

@@ -42,6 +42,7 @@ class Bot( asynchat.async_chat ):
         self.sending = threading.Lock()
         self.cooldowns = {}
         self.channel_cooldowns = {}
+        self.clan_online = {}
         #self.writelock = threading.Lock()
         #self.sleep = time.time() - 10
         #self.send_threshold = 1
