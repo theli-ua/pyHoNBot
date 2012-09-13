@@ -103,3 +103,14 @@ class VB:
 			return not self.IsError(retval)
 		except:
 			return False
+
+	def MoveThread(self, threadid, forumid_to):
+		if not self.IsInit(): return False
+		signed = self.Sign({"api_m": "inlinemod_domovethreads"})
+		get = urllib.urlencode({'api_m': 'inlinemod_domovethreads', 'api_c': self.init["apiclientid"], 'api_s': self.init["apiaccesstoken"], 'api_sig': signed})
+		post = urllib.urlencode({"threadids": threadid, "destforumid": forumid_to})
+		try:
+			retval = json.load(urllib.urlopen(self.url + "?%s" % get, post))
+			return not self.IsError(retval)
+		except:
+			return False
