@@ -15,7 +15,7 @@ def update(bot, input):
 	noUpStr = 'Already up-to-date.'
 	retStr = check_output(args)
 	if retStr.strip() !=  noUpStr:
-		bot.reply('%s updated. Restarting...' % bot.config.nick)
+		bot.reply('{0} updated. Restarting...'.format(bot.config.nick))
 		bot.close()
 		return
 	bot.reply('Already up-to-date.')
