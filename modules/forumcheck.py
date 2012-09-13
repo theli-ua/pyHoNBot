@@ -8,9 +8,8 @@ def apply(bot, input):
 	"""Check if you application has been successful"""
 	if not input.admin: return
 	try:
-		bot.reply('Please wait, checking...')
 		if not bot.vb.Login(bot.config.forumuser,bot.config.forumpassword):
-			bot.reply('Error: Unable to check application at this time')
+			bot.reply('Unable to check application at this time')
 			print("Forum credentials are invaid")
 			return
 		traineeApps = bot.vb.GetThreads(34, 30)
@@ -47,10 +46,10 @@ def apply(bot, input):
 				else:
 					bot.reply("Your application is still pending.")
 				return
-		bot.reply("Error: No application found for your username.")
+		bot.reply("No application found for your username.")
 	except Exception as inst:
 		print(inst)
-		bot.reply('Error: Unable to check application at this time')
+		bot.reply('Unable to check application at this time')
 apply.commands = ['apply']
 
 if __name__ == '__main__': 
