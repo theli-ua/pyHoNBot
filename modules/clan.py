@@ -39,6 +39,8 @@ def member_initstatus(bot,origin,data):
         id = u[0]
         if id in bot.clan_roster:
             bot.clan_status[id] = u[1]
+            if id == bot.account_id:
+                print(data)
 member_initstatus.event = [ID.HON_SC_INITIAL_STATUS]
 
 def invite(bot,input):
