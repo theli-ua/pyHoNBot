@@ -20,7 +20,7 @@ def apply(bot, input):
 				if thread['prefix_rich'].find("APPROVED"):
 					bot.reply("Welcome to Project Epoch, %s! Inviting now." % input.nick)
 					if not input.account_id in bot.clan_roster:
-						bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER, input.account_id)
+						bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER, input.nick)
 						bot.reply("Invited!")
 						bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
 					else:
@@ -37,7 +37,7 @@ def apply(bot, input):
 				if thread['prefix_rich'].find("APPROVED"):
 					bot.reply("Welcome to Project Epoch, %s!" % input.nick)
 					if not input.account_id in bot.clan_roster:
-						bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER, input.account_id)
+						bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER, input.nick)
 						bot.reply("Invited!")
 						bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
 					else:
