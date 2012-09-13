@@ -5,7 +5,7 @@
 from subprocess import check_output
 from os import path
 
-def gitcheck(bot, input):
+def update(bot, input):
 	"""Am I up-to-date?"""
 	if not input.admin: return
 	if not path.exists('.git'):
@@ -20,4 +20,4 @@ def gitcheck(bot, input):
 		return
 	bot.reply('Already up-to-date.')
 
-gitcheck.commands = ['update']
+update.commands = ['update']
