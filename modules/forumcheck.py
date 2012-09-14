@@ -123,7 +123,6 @@ def apply(bot, input):
 				bot.reply("No application found for your username.")
 				return
 			for result in results:
-				print(result)
 				thread = result['thread']
 				if int(thread['forumid']) in appForums and thread['preview'].lower().find(nick) > 0:
 					state = appForums[ int(thread['forumid']) ]

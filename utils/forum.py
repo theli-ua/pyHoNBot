@@ -145,6 +145,10 @@ class VB:
 		try:
 			retval = json.load(urlopen(self.url + "?%s" % get, post))
 			if not self.IsError(retval):
+				if isinstance(retval['response']['searchbits'], dict):
+					out = []
+					out.append(retval['response']['searchbits'])
+					return out
 				return retval['response']['searchbits']
 			else:
 				return False
