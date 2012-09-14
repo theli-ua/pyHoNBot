@@ -118,8 +118,8 @@ def applybeta(bot, input):
 			print("Search results: {0}".format(len(results)))
 			for result in results:
 				thread = result['thread']
-				if thread['forumid'] in appForums:
-					state = appForum[ thread['forumid'] ]
+				if int(thread['forumid']) in appForums:
+					state = appForum[ int(thread['forumid']) ]
 					if state == "C":
 						if len(thread['prefix_rich']) > 0:
 							if thread['prefix_rich'].find("APPROVED") > 0:
