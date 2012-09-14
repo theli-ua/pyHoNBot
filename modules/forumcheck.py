@@ -113,7 +113,9 @@ def applybeta(bot, input):
 		bot.write_packet( ID.HON_SC_WHISPER, input.nick, "Fetching application status, please wait..." )
 		searchid = bot.vb.Search( 1, "in-game username?: {0}".format(nick) )
 		if searchid:
+			print("Search ID for {0} is {1}".format( nick, searchid ))
 			results = bot.vb.ProcessSearch(searchid)
+			print("Search results: {0}".format(len(results)))
 			for result in results:
 				thread = result['thread']
 				if thread['forumid'] in appForums:
