@@ -113,6 +113,9 @@ def apply(bot, input):
 			aid = input.account_id
 		if not input.admin and not __cooldown(aid):
 			return
+		if aid in bot.clan_roster:
+			bot.reply("You're already in {0}, silly.".format( bot.clan_info['name'] ))
+			return
 		bot.write_packet( ID.HON_SC_WHISPER, input.nick, "Fetching application status, please wait..." )
 		searchid = bot.vb.Search( 1, "in-game username?: {0}".format(nick) )
 		if searchid:
