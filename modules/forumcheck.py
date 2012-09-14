@@ -36,7 +36,7 @@ def apply(bot, input):
 						bot.reply("You're already in the clan?!")
 						# bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan. (By someone else)")
 					# bot.vb.MoveThread( thread['threadid'], 36 )
-				elif thread['prefix_rich'].find("DENIED"):
+				elif thread['prefix_rich'].find("DENIED") > 0:
 					bot.reply("Your application was denied.")
 				else:
 					bot.reply("Your application is still pending.")
@@ -56,7 +56,7 @@ def apply(bot, input):
 						bot.reply("You're already in the clan?!")
 						# bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan. (By someone else)")
 					# bot.vb.MoveThread( thread['threadid'], 38 )
-				elif thread['prefix_rich'].find("DENIED"):
+				elif thread['prefix_rich'].find("DENIED") > 0:
 					bot.reply("Your application was denied.")
 				else:
 					bot.reply("Your application is still pending.")
