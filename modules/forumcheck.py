@@ -123,6 +123,7 @@ def apply(bot, input):
 				bot.reply("No application found for your username.")
 				return
 			for result in results:
+				print(result)
 				thread = result['thread']
 				if int(thread['forumid']) in appForums and thread['preview'].lower().find(nick) > 0:
 					state = appForums[ int(thread['forumid']) ]
@@ -156,9 +157,6 @@ def apply(bot, input):
 			bot.reply('Unable to check application at this time')
 			print("SearchID not returned")
 	except Exception as inst:
-		print(sys.exc_type,sys.exc_value)
-		print(sys.exc_traceback)
-		print(sys.exc_info())
 		traceback.print_exc()
 		bot.reply('Unable to check application at this time')
 apply.commands = ['apply']
