@@ -4,9 +4,23 @@
 
 from hon.packets import ID
 import re
+from time import time
+
+check_time = {}
+
+def __cooldown(accountid):
+	if accountid in check_time:
+		if (check_time[accountid] + 60) > time():
+			return False
+		else:
+			check_time[accountid] = time()
+			return True
+	else:
+		check_time[accountid] = time()
+		return True
 
 def apply(bot, input):
-	"""Check if you application has been successful"""
+	"""Check if you application has been successful, Once every minute"""
 	try:
 		if not bot.vb.Login(bot.config.forumuser,bot.config.forumpassword):
 			bot.reply('Unable to check application at this time')
@@ -19,6 +33,8 @@ def apply(bot, input):
 		else:
 			nick = input.nick
 			aid = input.account_id
+		if not input.admin and not __cooldown(aid):
+			return
 		traineeApps = bot.vb.GetThreads(34, 30)
 		for threadinfo in traineeApps:
 			thread = threadinfo['thread']
