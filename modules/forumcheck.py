@@ -25,7 +25,7 @@ def apply(bot, input):
 		for threadinfo in traineeApps:
 			thread = threadinfo['thread']
 			match = toFind.match(thread['preview'].lower())
-			if not match is None and match.group(1) == nick:
+			if match is not None and match.group(1).lower() == nick:
 				if thread['prefix_rich'].find("APPROVED"):
 					bot.reply("Welcome to Project Epoch, %s! Inviting now." % nick)
 					if not aid in bot.clan_roster:
@@ -45,7 +45,7 @@ def apply(bot, input):
 		for threadinfo in mentorApps:
 			thread = threadinfo['thread']
 			match = toFind.match(thread['preview'].lower())
-			if not match is None and match.group(1) == nick:
+			if match is not None and match.group(1).lower() == nick:
 				if thread['prefix_rich'].find("APPROVED"):
 					bot.reply("Welcome to Project Epoch, %s!" % nick)
 					if not aid in bot.clan_roster:
