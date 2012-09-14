@@ -19,6 +19,7 @@ class VB:
 	def __init__(self, url, apikey):
 		self.url = url
 		self.apikey = apikey
+		self.loggedIn = False
 
 		self.allowed = ['redirect_inline_moved', 'redirect_login', 'redirect_postthanks']
 
