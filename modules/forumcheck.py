@@ -12,9 +12,9 @@ check_time = {}
 appForums = {
 	34: "C",
 	35: "C",
-	36: "A",
+	# 36: "A", # What if they got kicked out? They could use this to get back in. So accepted subforum is ignored
 	37: "D",
-	38: "A",
+	# 38: "A", # What if they got kicked out? They could use this to get back in. So accepted subforum is ignored
 	39: "D",
 	50: "H",
 	51: "D",
