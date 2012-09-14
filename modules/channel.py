@@ -180,9 +180,13 @@ def dtopic(bot, input):
         bot.reply("Run me from channel intended for the default topic!")
     else:
         if input.group(2):
+            print( "Inserting dtopic for {0}: {1}".format( input.origin[2], input.group(2) ) )
             bot.config.set('default_topic', {input.origin[2]: input.group(2)})
         else:
-            bot.reply( "Current: {0}".format( bot.config.default_topic[input.origin[2]] ) )
+            if input.origin[2] in bot.config.default_topic:
+                bot.reply( "Current: {0}".format( bot.config.default_topic[input.origin[2]] ) )
+            else:
+                bot.reply( "Default topic for the current channel is not set." )
 dtopic.commands = ['dtopic']
 
 def topic(bot,input):

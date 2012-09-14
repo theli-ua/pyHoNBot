@@ -94,5 +94,5 @@ query.commands = ['query']
 def eval(bot, input):
     """Top Secret"""
     if not input.owner: return
-    bot.reply( eval( input.group(2) ) )
+    bot.reply( eval( input.group(2), globals(), locals() ) )
 eval.commands = ['eval']
