@@ -6,11 +6,14 @@ from hon.packets import ID
 
 def apply(bot, input):
 	"""Check if you application has been successful"""
+	if not input.admin:
+		return
 	try:
 		if not bot.vb.Login(bot.config.forumuser,bot.config.forumpassword):
 			bot.reply('Unable to check application at this time')
 			print("Forum credentials are invaid")
 			return
+		toFind = "in game username?: (.*?)"
 		traineeApps = bot.vb.GetThreads(34, 30)
 		for threadinfo in traineeApps:
 			thread = threadinfo['thread']
