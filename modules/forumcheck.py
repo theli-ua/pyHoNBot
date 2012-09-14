@@ -7,15 +7,13 @@ import re
 
 def apply(bot, input):
 	"""Check if you application has been successful"""
-	if not input.admin:
-		return
 	try:
 		if not bot.vb.Login(bot.config.forumuser,bot.config.forumpassword):
 			bot.reply('Unable to check application at this time')
 			print("Forum credentials are invaid")
 			return
 		toFind = r'username\?: (\w+)'
-		if input.group(2):
+		if input.admin and input.group(2):
 			nick = input.group(2).lower()
 			aid = bot.nick2id[nick]
 		else:
@@ -31,11 +29,11 @@ def apply(bot, input):
 					if not aid in bot.clan_roster:
 						bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER, nick)
 						bot.reply("Invited!")
-						# bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
+						bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
 					else:
 						bot.reply("You're already in the clan?!")
-						# bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan. (By someone else)")
-					# bot.vb.MoveThread( thread['threadid'], 36 )
+						bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan. (By someone else)")
+					bot.vb.MoveThread( thread['threadid'], 36 )
 				elif thread['prefix_rich'].find("DENIED") > 0:
 					bot.reply("Your application was denied.")
 				else:
@@ -51,11 +49,11 @@ def apply(bot, input):
 					if not aid in bot.clan_roster:
 						bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER, nick)
 						bot.reply("Invited!")
-						# bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
+						bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
 					else:
 						bot.reply("You're already in the clan?!")
-						# bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan. (By someone else)")
-					# bot.vb.MoveThread( thread['threadid'], 38 )
+						bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan. (By someone else)")
+					bot.vb.MoveThread( thread['threadid'], 38 )
 				elif thread['prefix_rich'].find("DENIED") > 0:
 					bot.reply("Your application was denied.")
 				else:
