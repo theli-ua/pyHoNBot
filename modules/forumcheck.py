@@ -25,10 +25,8 @@ def apply(bot, input):
 		for threadinfo in traineeApps:
 			thread = threadinfo['thread']
 			match = re.search(toFind, thread['preview'].lower())
-			if match is not None:
-				print(match.group(1) + " : " + nick)
 			if match is not None and match.group(1) == nick:
-				if thread['prefix_rich'].find("APPROVED"):
+				if thread['prefix_rich'].find("APPROVED") > 0:
 					bot.reply("Welcome to Project Epoch, %s! Inviting now." % nick)
 					if not aid in bot.clan_roster:
 						bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER, nick)
@@ -47,10 +45,8 @@ def apply(bot, input):
 		for threadinfo in mentorApps:
 			thread = threadinfo['thread']
 			match = re.search(toFind, thread['preview'].lower())
-			if match is not None:
-				print(match.group(1) + " : " + nick)
 			if match is not None and match.group(1) == nick:
-				if thread['prefix_rich'].find("APPROVED"):
+				if thread['prefix_rich'].find("APPROVED") > 0:
 					bot.reply("Welcome to Project Epoch, %s!" % nick)
 					if not aid in bot.clan_roster:
 						bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER, nick)
