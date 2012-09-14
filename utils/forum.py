@@ -13,6 +13,7 @@ except: # Py27
 	from urllib import urlopen
 	from urllib import urlencode
 import json
+from time import time
 
 class VB:
 	def __init__(self, url, apikey):
@@ -56,12 +57,14 @@ class VB:
 
 	def Login(self, username, password):
 		if not self.IsInit(): return False
+		if self.loggedIn not False and (self.loggedIn+120) > time(): return True
 		signed = self.Sign({"api_m": "login_login"})
 		get = urlencode({'api_m': 'login_login', 'api_c': self.init["apiclientid"], 'api_s': self.init["apiaccesstoken"], 'api_sig': signed})
 		post = urlencode({"vb_login_username": username, "vb_login_md5password": password})
 		try:
 			retval = json.load(urlopen(self.url + "?%s" % get, post))
 			print("Forum: Logged in")
+			self.loggedIn = time()
 			return not self.IsError(retval)
 		except:
 			return False
