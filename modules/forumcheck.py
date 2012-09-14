@@ -5,6 +5,7 @@
 from hon.packets import ID
 import re
 from time import time
+import sys
 
 check_time = {}
 appForums = {
@@ -154,7 +155,10 @@ def apply(bot, input):
 			bot.reply('Unable to check application at this time')
 			print("SearchID not returned")
 	except Exception as inst:
-		print(inst)
+		print(sys.exc_type,sys.exc_value)
+		print(sys.exc_traceback)
+		print(sys.exc_info())
+		traceback.print_exc(file=sys.stdout)
 		bot.reply('Unable to check application at this time')
 apply.commands = ['apply']
 if __name__ == '__main__': 
