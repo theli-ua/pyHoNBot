@@ -6,6 +6,7 @@ from hon.packets import ID
 import re
 from time import time
 import sys
+import traceback
 
 check_time = {}
 appForums = {
@@ -158,7 +159,7 @@ def apply(bot, input):
 		print(sys.exc_type,sys.exc_value)
 		print(sys.exc_traceback)
 		print(sys.exc_info())
-		traceback.print_exc(file=sys.stdout)
+		traceback.print_exc()
 		bot.reply('Unable to check application at this time')
 apply.commands = ['apply']
 if __name__ == '__main__': 
