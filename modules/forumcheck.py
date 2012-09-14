@@ -31,6 +31,7 @@ def __cooldown(accountid):
 		check_time[accountid] = time()
 		return True
 
+''' # OLD METHOD - SLOWWWWWW
 def apply(bot, input):
 	"""Check if you application has been successful, Once every minute"""
 	try:
@@ -93,8 +94,9 @@ def apply(bot, input):
 		print(inst)
 		bot.reply('Unable to check application at this time')
 apply.commands = ['apply']
+'''
 
-def applybeta(bot, input):
+def apply(bot, input):
 	"""Check if you application has been successful, Once every minute"""
 	if not input.admin: return
 	try:
@@ -152,6 +154,6 @@ def applybeta(bot, input):
 	except Exception as inst:
 		print(inst)
 		bot.reply('Unable to check application at this time')
-applybeta.commands = ['applybeta']
+apply.commands = ['apply']
 if __name__ == '__main__': 
     print __doc__.strip()
