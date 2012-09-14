@@ -35,6 +35,7 @@ def apply(bot, input):
 			aid = input.account_id
 		if not input.admin and not __cooldown(aid):
 			return
+		bot.write_packet( ID.HON_SC_WHISPER, input.nick, "Fetching application status, please wait..." )
 		traineeApps = bot.vb.GetThreads(34, 30)
 		for threadinfo in traineeApps:
 			thread = threadinfo['thread']
