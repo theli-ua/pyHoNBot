@@ -123,7 +123,7 @@ def apply(bot, input):
 				return
 			for result in results:
 				thread = result['thread']
-				if int(thread['forumid']) in appForums:
+				if int(thread['forumid']) in appForums and thread['preview'].find("in-game username?: {0}".format(nick)) > 0:
 					state = appForums[ int(thread['forumid']) ]
 					if state == "C":
 						if len(thread['prefix_rich']) > 0:
