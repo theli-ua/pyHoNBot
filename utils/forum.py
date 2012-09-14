@@ -57,7 +57,7 @@ class VB:
 
 	def Login(self, username, password):
 		if not self.IsInit(): return False
-		if self.loggedIn not False and (self.loggedIn+120) > time(): return True
+		if self.loggedIn is not False and (self.loggedIn+120) > time(): return True
 		signed = self.Sign({"api_m": "login_login"})
 		get = urlencode({'api_m': 'login_login', 'api_c': self.init["apiclientid"], 'api_s': self.init["apiaccesstoken"], 'api_sig': signed})
 		post = urlencode({"vb_login_username": username, "vb_login_md5password": password})
