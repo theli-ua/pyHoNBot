@@ -64,7 +64,6 @@ class VB:
 		post = urlencode({"vb_login_username": username, "vb_login_md5password": password})
 		try:
 			retval = json.load(urlopen(self.url + "?%s" % get, post))
-			print("Forum: Logged in")
 			self.loggedIn = time()
 			return not self.IsError(retval)
 		except:
@@ -85,7 +84,6 @@ class VB:
 		try:
 			retval = json.load(urlopen(self.url + "?%s" % get))
 			if not self.IsError(retval):
-				print("Forum: Fetching Threads from " + str(forumid))
 				return retval['response']['threadbits']
 			else:
 				return False
