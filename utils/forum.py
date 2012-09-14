@@ -21,7 +21,7 @@ class VB:
 		self.apikey = apikey
 		self.loggedIn = False
 
-		self.allowed = ['redirect_inline_moved', 'redirect_login', 'redirect_postthanks']
+		self.allowed = ['redirect_inline_moved', 'redirect_login', 'redirect_postthanks', 'search']
 
 		if not self.InitAPI():
 			print("Error connecting to vB API")
@@ -38,7 +38,7 @@ class VB:
 			test = ret['response']['errormessage']
 			if test in self.allowed:
 				return False
-			print("Error:" + test)
+			print("Error: " + test)
 			return True
 		except:
 			return False
@@ -121,5 +121,32 @@ class VB:
 		try:
 			retval = json.load(urlopen(self.url + "?%s" % get, post))
 			return not self.IsError(retval)
+		except:
+			return False
+	def Search(self, contenttypeid, query, forumchoice='', prefixchoice='', titleonly=False, showposts=False):
+		if not self.IsInit(): return False
+		signed = self.Sign({"api_m": "search_process"})
+		get = urlencode({'api_m': 'search_process', 'api_c': self.init["apiclientid"], 'api_s': self.init["apiaccesstoken"], 'api_sig': signed})
+		post = urlencode({"type": contenttypeid, "query": query, "titleonly": titleonly and 1 or 0, "forumchoice": forumchoice, "prefixchoice": prefixchoice, "showposts": showposts and 1 or 0})
+		try:
+			retval = json.load(urlopen(self.url + "?%s" % get, post))
+			if not self.IsError(retval):
+				return retval['show']['searchid']
+			else:
+				return False
+		except Exception as inst:
+			print(inst)
+			return False
+	def ProcessSearch(self, searchid):
+		if not self.IsInit(): return False
+		signed = self.Sign({"api_m": "search_showresults"})
+		get = urlencode({'api_m': 'search_showresults', 'api_c': self.init["apiclientid"], 'api_s': self.init["apiaccesstoken"], 'api_sig': signed})
+		post = urlencode({"searchid": searchid})
+		try:
+			retval = json.load(urlopen(self.url + "?%s" % get, post))
+			if not self.IsError(retval):
+				return retval['response']['searchbits']
+			else:
+				return False
 		except:
 			return False

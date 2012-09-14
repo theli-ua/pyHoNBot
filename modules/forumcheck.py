@@ -7,6 +7,18 @@ import re
 from time import time
 
 check_time = {}
+appForums = {
+	34: "C",
+	35: "C",
+	36: "A",
+	37: "D",
+	38: "A",
+	39: "D",
+	50: "H",
+	51: "D",
+	52: "H",
+	53: "D"
+}
 
 def __cooldown(accountid):
 	if accountid in check_time:
@@ -82,5 +94,62 @@ def apply(bot, input):
 		bot.reply('Unable to check application at this time')
 apply.commands = ['apply']
 
+def applybeta(bot, input):
+	"""Check if you application has been successful, Once every minute"""
+	if not input.admin: return
+	try:
+		if not bot.vb.Login(bot.config.forumuser,bot.config.forumpassword):
+			bot.reply('Unable to check application at this time')
+			print("Forum credentials are invaid")
+			return
+		if input.admin and input.group(2):
+			nick = input.group(2).lower()
+			aid = bot.nick2id[nick]
+		else:
+			nick = input.nick
+			aid = input.account_id
+		if not input.admin and not __cooldown(aid):
+			return
+		bot.write_packet( ID.HON_SC_WHISPER, input.nick, "Fetching application status, please wait..." )
+		searchid = bot.vb.Search( 1, "in-game username?: {0}".format(nick) )
+		if searchid:
+			results = bot.vb.ProcessSearch(searchid)
+			for result in results:
+				thread = result['thread']
+				if thread['forumid'] in appForums:
+					state = appForum[ thread['forumid'] ]
+					if state == "C":
+						if len(thread['prefix_rich']) > 0:
+							if thread['prefix_rich'].find("APPROVED") > 0:
+								state = "A"
+							elif thread['prefix_rich'].find("DENIED") > 0:
+								state = "D"
+							elif thread['prefix_rich'].find("CHECK") > 0:
+								state = "H"
+						else:
+							state = "H"
+					if state == "A":
+						bot.reply("Welcome to Project Epoch, %s!" % nick)
+						bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER, nick)
+						bot.reply("Invited!")
+
+						if thread['threadid'] == 34:
+							bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
+							bot.vb.MoveThread( thread['threadid'], 36 )
+						elif thread['threadid'] == 35:
+							bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
+							bot.vb.MoveThread( thread['threadid'], 38 )
+					elif state == "D":
+						bot.reply("Sorry, your application was denied.")
+					elif state == "H":
+						bot.reply("Your application is pending.")
+					return
+		else:
+			bot.reply('Unable to check application at this time')
+			print("SearchID not returned")
+	except Exception as inst:
+		print(inst)
+		bot.reply('Unable to check application at this time')
+applybeta.commands = ['applybeta']
 if __name__ == '__main__': 
     print __doc__.strip()
