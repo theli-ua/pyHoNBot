@@ -118,6 +118,9 @@ def apply(bot, input):
 			print("Search ID for {0} is {1}".format( nick, searchid ))
 			results = bot.vb.ProcessSearch(searchid)
 			print("Search results: {0}".format(len(results)))
+			if len(results) == 0:
+				bot.reply("No application found for your username.")
+				return
 			for result in results:
 				thread = result['thread']
 				if int(thread['forumid']) in appForums:
