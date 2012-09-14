@@ -11,6 +11,7 @@ def setup(bot):
     bot.config.module_config('silence_smurfs',[-1,'Will silence anyone with normal mode tmm wins equal or lower than this'])
     bot.config.module_config('spam_threshold',[0,'number of seconds, if user repeats his message in channel with delay lower than this he will be considered spamming and banned'])
     bot.config.module_config('whitelist',[[],'whitelist for antispam etc'])
+    bot.config.module_config('default_topic', [{}, 'Set the channel default topic'])
 
 silenced = {}
 
@@ -35,6 +36,12 @@ def silence_smurfs(bot,chanid,nick):
 
 def channel_joined_channel(bot,origin,data):
     bot.channel_channels[data[1]] = dict([[m[1],[m[1],m[0],datetime.now(),None]] for m in data[-1]])
+
+    # Default topic setting
+    topic = data[3]
+    if ( len(topic) == 0 ) or ( topic == "Welcome to the {0} clan channel!".format( bot.clan_info['name'] ) ):
+        if data[1] in bot.config.default_topic:
+            bot.write_packet( ID.HON_CS_UPDATE_TOPIC, data[1], bot.config.default_topic[data[1]] )
 
     #banlist management
     for m in data[-1]:
@@ -164,6 +171,18 @@ def demote(bot, input):
         if chan is not None:
             bot.write_packet(ID.HON_CS_CHANNEL_DEMOTE,chan,bot.nick2id[nick.lower()])
 demote.rule = (['demote'],'([^\ ]+)?(?:\ +(.+))?')
+
+def dtopic(bot, input):
+    """Set default channel topic, run this from intended channel"""
+    if not input.admin:
+        return
+    if not input.origin[0] == ID.HON_SC_CHANNEL_MSG:
+        bot.reply("Run me from channel intended for the default topic!")
+    else:
+        if input.group(2):
+            bot.config.set('default_topic', {input.origin[2]: input.group(2)})
+        else:
+            bot.reply( "Current: {0}".format( bot.config.default_topic[input.origin[2]] ) )
 
 def topic(bot,input):
     """Sets topic on channel issued"""

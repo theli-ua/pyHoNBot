@@ -38,9 +38,12 @@ class ConfigClass(object):
             value = int(value)
         elif isinstance(self.defaults[item][0],list) and not isinstance(value,list):
             return
+        elif isinstance(self.defaults[item][0],dict) and isinstance(value,dict):
+            self.disk_config[item][0][value[0]] = value[1]
+            self.dump()
+            return
         self.disk_config[item] = value
         self.dump()
-
 
     def set_del(self,item,value):
         cur = set(self.__getattr__(item))
