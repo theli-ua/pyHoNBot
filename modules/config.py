@@ -38,9 +38,9 @@ class ConfigClass(object):
             value = int(value)
         elif isinstance(self.defaults[item][0],list) and not isinstance(value,list):
             return
-        elif isinstance(self.defaults[item][0],dict) and isinstance(value,dict):
+        elif isinstance(self.defaults[item],dict) and isinstance(value,dict):
             for key,item in value.iteritems():
-                self.disk_config[item][0][key] = item
+                self.disk_config[item][key] = item
             self.dump()
             return
         self.disk_config[item] = value

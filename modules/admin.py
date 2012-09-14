@@ -91,8 +91,9 @@ def query(bot, input):
     bot.reply("Printed to stdout")
 query.commands = ['query']
 
+_eval = eval
 def eval(bot, input):
     """Top Secret"""
     if not input.owner: return
-    bot.reply( eval( input.group(2), globals(), locals() ) )
+    bot.reply( _eval( input.group(2), globals(), locals() ) )
 eval.commands = ['eval']
