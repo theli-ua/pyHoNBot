@@ -3,6 +3,7 @@
 """
 
 from hon.packets import ID
+import re
 
 def apply(bot, input):
 	"""Check if you application has been successful"""
@@ -13,38 +14,50 @@ def apply(bot, input):
 			bot.reply('Unable to check application at this time')
 			print("Forum credentials are invaid")
 			return
-		toFind = "in game username?: (.*?)"
+		toFind = re.compile("in game username?: (\w*?)\n")
+		if input.group(2):
+			nick = input.group(2).lower()
+			aid = bot.nick2id[nick]
+		else:
+			nick = input.nick
+			aid = input.account_id
 		traineeApps = bot.vb.GetThreads(34, 30)
 		for threadinfo in traineeApps:
 			thread = threadinfo['thread']
-			if thread['preview'].lower().find(input.nick.lower()) > 0:
+			match = toFind.match(thread['preview'].lower())
+			if not match is None and match.group(1) == nick:
 				if thread['prefix_rich'].find("APPROVED"):
-					bot.reply("Welcome to Project Epoch, %s! Inviting now." % input.nick)
-					if not input.account_id in bot.clan_roster:
-						bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER, input.nick)
+					bot.reply("Welcome to Project Epoch, %s! Inviting now." % nick)
+					if not aid in bot.clan_roster:
+						bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER, nick)
 						bot.reply("Invited!")
-						bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
+						# bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
 					else:
 						bot.reply("You're already in the clan?!")
-						bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan. (By someone else)")
-					bot.vb.MoveThread( thread['threadid'], 36 )
+						# bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan. (By someone else)")
+					# bot.vb.MoveThread( thread['threadid'], 36 )
+				elif thread['prefix_rich'].find("DENIED"):
+					bot.reply("Your application was denied.")
 				else:
 					bot.reply("Your application is still pending.")
 				return
 		mentorApps = bot.vb.GetThreads(35, 30)
 		for threadinfo in mentorApps:
 			thread = threadinfo['thread']
-			if thread['preview'].lower().find(input.nick.lower()) > 0:
+			match = toFind.match(thread['preview'].lower())
+			if not match is None and match.group(1) == nick:
 				if thread['prefix_rich'].find("APPROVED"):
-					bot.reply("Welcome to Project Epoch, %s!" % input.nick)
-					if not input.account_id in bot.clan_roster:
-						bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER, input.nick)
+					bot.reply("Welcome to Project Epoch, %s!" % nick)
+					if not aid in bot.clan_roster:
+						bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER, nick)
 						bot.reply("Invited!")
-						bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
+						# bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
 					else:
 						bot.reply("You're already in the clan?!")
-						bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan. (By someone else)")
-					bot.vb.MoveThread( thread['threadid'], 38 )
+						# bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan. (By someone else)")
+					# bot.vb.MoveThread( thread['threadid'], 38 )
+				elif thread['prefix_rich'].find("DENIED"):
+					bot.reply("Your application was denied.")
 				else:
 					bot.reply("Your application is still pending.")
 				return
