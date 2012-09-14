@@ -183,6 +183,7 @@ def dtopic(bot, input):
             bot.config.set('default_topic', {input.origin[2]: input.group(2)})
         else:
             bot.reply( "Current: {0}".format( bot.config.default_topic[input.origin[2]] ) )
+dtopic.commands = ['dtopic']
 
 def topic(bot,input):
     """Sets topic on channel issued"""
