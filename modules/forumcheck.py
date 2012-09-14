@@ -14,7 +14,7 @@ def apply(bot, input):
 			bot.reply('Unable to check application at this time')
 			print("Forum credentials are invaid")
 			return
-		toFind = re.compile("in game username?: (\w*?)\n")
+		toFind = re.compile("in game username\?: (\w+)")
 		if input.group(2):
 			nick = input.group(2).lower()
 			aid = bot.nick2id[nick]
@@ -24,7 +24,7 @@ def apply(bot, input):
 		traineeApps = bot.vb.GetThreads(34, 30)
 		for threadinfo in traineeApps:
 			thread = threadinfo['thread']
-			match = toFind.match(thread['preview'].lower())
+			match = toFind.search(thread['preview'].lower())
 			if match is not None and match.group(1).lower() == nick:
 				if thread['prefix_rich'].find("APPROVED"):
 					bot.reply("Welcome to Project Epoch, %s! Inviting now." % nick)
@@ -44,7 +44,7 @@ def apply(bot, input):
 		mentorApps = bot.vb.GetThreads(35, 30)
 		for threadinfo in mentorApps:
 			thread = threadinfo['thread']
-			match = toFind.match(thread['preview'].lower())
+			match = toFind.search(thread['preview'].lower())
 			if match is not None and match.group(1).lower() == nick:
 				if thread['prefix_rich'].find("APPROVED"):
 					bot.reply("Welcome to Project Epoch, %s!" % nick)
