@@ -328,14 +328,15 @@ class Bot( asynchat.async_chat ):
                     if origin[0] in [packets.ID.HON_SC_CHANNEL_MSG,packets.ID.HON_SC_CHANNEL_EMOTE]:
                         #prevent channel overspam
                         t = time.time()
-                        if origin[2] not in self.bot.channel_cooldowns or \
-                                ( origin[2] in self.bot.channel_cooldowns and \
-                                t - self.bot.channel_cooldowns[origin[2]]\
-                                >= self.bot.config.channel_cooldown):
-                            self.bot.channel_cooldowns[origin[2]] = t
-                        else:
-                            origin[0] = packets.ID.HON_SC_WHISPER
-                            origin[1] = input.nick
+                        if not input.admin:
+                            if origin[2] not in self.bot.channel_cooldowns or \
+                                    ( origin[2] in self.bot.channel_cooldowns and \
+                                    t - self.bot.channel_cooldowns[origin[2]]\
+                                    >= self.bot.config.channel_cooldown):
+                                self.bot.channel_cooldowns[origin[2]] = t
+                            else:
+                                origin[0] = packets.ID.HON_SC_WHISPER
+                                origin[1] = input.nick
 
                     if attr == 'reply':
                         if origin[0] in [packets.ID.HON_SC_CHANNEL_MSG,packets.ID.HON_SC_CHANNEL_EMOTE]:
