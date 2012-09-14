@@ -98,7 +98,6 @@ apply.commands = ['apply']
 
 def apply(bot, input):
 	"""Check if you application has been successful, Once every minute"""
-	if not input.admin: return
 	try:
 		if not bot.vb.Login(bot.config.forumuser,bot.config.forumpassword):
 			bot.reply('Unable to check application at this time')
