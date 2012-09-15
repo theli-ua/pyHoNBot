@@ -81,10 +81,10 @@ def apply(bot, input):
 						bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER, nick)
 						bot.reply("Invited!")
 
-						if thread['threadid'] == 34:
+						if thread['forumid'] == 34:
 							vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
 							vb.MoveThread( thread['threadid'], 36 )
-						elif thread['threadid'] == 35:
+						elif thread['forumid'] == 35:
 							vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
 							vb.MoveThread( thread['threadid'], 38 )
 					elif state == "D":
