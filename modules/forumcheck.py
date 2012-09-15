@@ -58,7 +58,7 @@ def apply(bot, input):
 		if searchid:
 			print("Search ID for {0} is {1}".format( nick, searchid ))
 			results = vb.ProcessSearch(searchid)
-			if len(results) == 0:
+			if not results or len(results) == 0:
 				bot.reply("No application found for your username.")
 				return
 			print("Search results: {0}".format(len(results)))
