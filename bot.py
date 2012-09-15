@@ -46,10 +46,6 @@ class Bot( asynchat.async_chat ):
         #self.writelock = threading.Lock()
         #self.sleep = time.time() - 10
         #self.send_threshold = 1
-        try:
-            self.vb = VB(self.config.forumurl, self.config.forumapikey) # Forum Connect
-        except:
-            print("No forum credentials set or error occurred. Who knows?")
 
         self.ac_in_buffer_size = 2
         #self.ac_out_buffer_size = 2
