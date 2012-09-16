@@ -82,14 +82,19 @@ def activityreport(bot, input):
         return
     bot.reply("Running report")
     bot.reportRunning = True
+    toOut = []
     out = "Project Epoch Activity Report\n\n\n"
     for id in bot.clan_roster:
         nick = bot.id2nick[id]
+        print("Processing " + nick)
         query = {'nickname' : nick}
         query['f'] = 'show_stats'
         query['table'] = 'player'
         data = bot.masterserver_request(query,cookie=True)
-        out += "{0}: {1}".format(nick, data['last_activity'])
+        toOut.append({"nick": nick, "date": data['last_activity']})
+        # out += "{0}: {1}\n".format(nick, data['last_activity'])
+    for each in toOut.sort(key=lambda x: datetime.datetime.strptime(x['date'], '%m/%d/%Y')):
+        out += "{0}: {1}\n".format( each['nick'], each['date'] )
     f = open(bot.config.logdir + 'activity.log', 'w')
     f.write(out)
     bot.reply("Log written to log directory. URL in officer forum")
