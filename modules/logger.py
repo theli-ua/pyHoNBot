@@ -48,6 +48,8 @@ def setup(bot):
     bot.config.module_config('logchannels',[[CM_PSEUDO_CHANNEL,CLAN_EVENTS_PSEUDO_CHANNEL,WHISP_PSEUDO_CHANNEL],'list of channels to log, use log/unlog commands to add/del to this list'])
     bot.config.module_config('logdir',['/tmp/','path to store channel logs in'])
 
+    bot.reportRunning = False
+
     # make the logdir path if not there
     logdir = bot.config.logdir
     if not os.path.exists(logdir):
@@ -72,6 +74,27 @@ def unlog(bot, input):
     if not input.admin: return
     bot.config.set_del('logchannels',input.group(2).lower())
 unlog.commands = ['unlog']
+
+def activityreport(bot, input):
+    if not input.owner: return
+    if bot.reportRunning:
+        bot.reply("Report is already running.")
+        return
+    bot.reportRunning = True
+    out = "Project Epoch Activity Report\n\n\n"
+    for id in bot.clan_roster:
+        nick = bot.id2nick[id]
+        query = {'nickname' : nick}
+        query['f'] = 'show_stats'
+        query['table'] = 'player'
+        data = bot.masterserver_request(query,cookie=True)
+        out += "{0}: {1}".format(nick, data['last_activity'])
+    f = open(bot.config.logdir + 'activity.log', 'w')
+    f.write(out)
+    bot.reply("Log written to log directory. URL in officer forum")
+    bot.reportRunning = False
+activityreport.commands = ['activityreport']
+activityreport.thread = True
 
 def loggit(bot, origin,data):
     if origin[0] in [ID.HON_SC_CHANNEL_MSG,ID.HON_SC_CHANNEL_EMOTE,ID.HON_SC_CHANNEL_ROLL]:
