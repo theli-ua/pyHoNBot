@@ -93,7 +93,7 @@ def activityreport(bot, input):
         data = bot.masterserver_request(query,cookie=True)
         toOut.append({"nick": nick, "date": data['last_activity']})
         # out += "{0}: {1}\n".format(nick, data['last_activity'])
-    for each in toOut.sort(key=lambda x: datetime.datetime.strptime(x['date'], '%m/%d/%Y')):
+    for each in toOut.sort(key=lambda x: datetime.strptime(x['date'], '%m/%d/%Y')):
         out += "{0}: {1}\n".format( each['nick'], each['date'] )
     f = open(bot.config.logdir + 'activity.log', 'w')
     f.write(out)
