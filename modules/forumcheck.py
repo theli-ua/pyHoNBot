@@ -25,7 +25,7 @@ appForums = {
 
 def __cooldown(accountid):
 	if accountid in check_time:
-		if (check_time[accountid] + 60) > time():
+		if (check_time[accountid] + 120) > time():
 			return False
 		else:
 			check_time[accountid] = time()
