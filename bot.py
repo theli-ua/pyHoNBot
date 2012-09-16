@@ -47,6 +47,15 @@ class Bot( asynchat.async_chat ):
         #self.sleep = time.time() - 10
         #self.send_threshold = 1
 
+        try:
+            self.vb = VB( self.config.forumurl, self.config.forumapikey )
+            if not self.vb.Login( self.config.forumuser, self.config.forumpassword ):
+                print("Forum credentials are invaid")
+            else:
+                print("Logged into forum")
+        except:
+            print("Unable to connect to forum")
+
         self.ac_in_buffer_size = 2
         #self.ac_out_buffer_size = 2
         self.connection_timeout_threshold = 60

@@ -10,6 +10,7 @@ Modified and ported to HoNBot by Anton Romanov
 """
 # -*- coding: utf8 -*-
 from hon.packets import ID
+from hon.honutils import normalize_nick
 from datetime import datetime
 import logging
 import logging.handlers
@@ -18,6 +19,7 @@ import os
 
 CM_PSEUDO_CHANNEL = 'clan messages'
 CLAN_EVENTS_PSEUDO_CHANNEL = 'clan events'
+WHISP_PSEUDO_CHANNEL = 'whispers'
 ONLINE_PSEUDO_CHANNEL = 'online count'
 
 def get_logger(bot,filename):
@@ -43,7 +45,7 @@ def get_file(phenny, chan):
 
 def setup(bot):
 
-    bot.config.module_config('logchannels',[[CM_PSEUDO_CHANNEL,CLAN_EVENTS_PSEUDO_CHANNEL],'list of channels to log, use log/unlog commands to add/del to this list'])
+    bot.config.module_config('logchannels',[[CM_PSEUDO_CHANNEL,CLAN_EVENTS_PSEUDO_CHANNEL,WHISP_PSEUDO_CHANNEL],'list of channels to log, use log/unlog commands to add/del to this list'])
     bot.config.module_config('logdir',['/tmp/','path to store channel logs in'])
 
     # make the logdir path if not there
@@ -84,6 +86,13 @@ def loggit(bot, origin,data):
 loggit.event = [ID.HON_SC_CHANNEL_MSG,ID.HON_SC_CHANNEL_EMOTE,ID.HON_SC_CHANNEL_ROLL,ID.HON_SC_CLAN_MESSAGE]
 loggit.priority = 'high'
 loggit.thread = False
+
+def logwhisper(bot, origin, data):
+    nick = normalize_nick(origin[1])
+    log_message(bot, nick, WHISP_PSEUDO_CHANNEL, data)
+logwhisper.event = [ID.HON_SC_WHISPER,ID.HON_CS_PM]
+logwhisper.priority = 'high'
+logwhisper.thread = False
 
 def logonline(bot,origin,data):
     log_message(bot,ONLINE_PSEUDO_CHANNEL,ONLINE_PSEUDO_CHANNEL,data[1])

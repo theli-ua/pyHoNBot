@@ -16,15 +16,15 @@ import json
 from time import time
 
 class VB:
-	def __init__(self, url, apikey):
+	def __init__(self, url, apikey, autoInit=True):
 		self.url = url
 		self.apikey = apikey
 		self.loggedIn = False
 
 		self.allowed = ['redirect_inline_moved', 'redirect_login', 'redirect_postthanks', 'search']
 
-		if not self.InitAPI():
-			print("Error connecting to vB API")
+		if autoInit and not self.InitAPI():
+				print("Error connecting to vB API")
 
 	def IsInit(self):
 		try:
@@ -38,8 +38,12 @@ class VB:
 			test = ret['response']['errormessage']
 			if test in self.allowed:
 				return False
-			print("Error: " + test)
-			return True
+			elif test == 'invalid_sessionhash':
+				print("Session expired!")
+				self.loggedIn = False
+				return True
+			else:
+				return True
 		except:
 			return False
 
@@ -58,7 +62,7 @@ class VB:
 
 	def Login(self, username, password):
 		if not self.IsInit(): return False
-		if self.loggedIn is not False and (self.loggedIn+120) > time(): return True
+		if self.loggedIn is not False and (self.loggedIn+900) > time(): return True
 		signed = self.Sign({"api_m": "login_login"})
 		get = urlencode({'api_m': 'login_login', 'api_c': self.init["apiclientid"], 'api_s': self.init["apiaccesstoken"], 'api_sig': signed})
 		post = urlencode({"vb_login_username": username, "vb_login_md5password": password})
@@ -144,6 +148,7 @@ class VB:
 		post = urlencode({"searchid": searchid})
 		try:
 			retval = json.load(urlopen(self.url + "?%s" % get, post))
+			print(retval)
 			if not self.IsError(retval):
 				if isinstance(retval['response']['searchbits'], dict):
 					out = []

@@ -70,6 +70,8 @@ status = {
 
 def info(bot,input):
     """Get clan member info"""
+    if not input.group(2):
+        return
     nick = input.group(2).lower()
     if nick not in bot.nick2id:
         bot.reply("Unknown Player")
@@ -91,8 +93,11 @@ def officers(bot, input):
     avail_officers = []
     for ply in bot.clan_status:
         if ply == bot.account_id: continue # It's us, silly!
+        if ply not in bot.clan_roster: continue
         if not bot.clan_status[ply] in [ ID.HON_STATUS_INGAME, ID.HON_STATUS_OFFLINE ]:
-            if bot.clan_roster[ply]['rank'] in ['Officer', 'Leader']:
+            if bot.id2nick[ply] == bot.config.owner:
+                avail_officers.append(bot.id2nick[ply])
+            elif bot.clan_roster[ply]['rank'] in ['Officer', 'Leader']:
                 avail_officers.append(bot.id2nick[ply])
     if len(avail_officers) > 0:
         outstr = ', '.join(avail_officers)

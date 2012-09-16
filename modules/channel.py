@@ -60,6 +60,8 @@ channel_user_joined_channel_smurfs.event = [ID.HON_SC_JOINED_CHANNEL]
 channel_user_joined_channel_smurfs.thread = True
 
 def channel_user_joined_channel(bot,origin,data):
+    if data[2] not in bot.channel_channels:
+        bot.channel_channels[data[2]] = {}
     bot.channel_channels[data[2]][data[1]] = [data[1],data[0],datetime.now(),None]
     l = len(bot.channel_channels[data[2]])
     CHANNEL_MAX = bot.config.channel_limit
