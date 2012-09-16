@@ -95,5 +95,12 @@ _eval = eval
 def eval(bot, input):
     """Top Secret"""
     if not input.owner: return
-    bot.reply( str( _eval( "{0}".format( input.group(2) ) ) ) )
+    bot.reply( str( _eval( input.group(2) ) ) )
 eval.commands = ['eval']
+
+_print = print
+def print(bot, input):
+    """Top Secret"""
+    if not input.owner: return
+    _print( _eval( input.group(2) ) )
+print.commands = ['print']
