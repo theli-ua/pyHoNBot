@@ -32,12 +32,16 @@ def member_changestatus(bot,origin,data):
     id = data[0]
     if id in bot.clan_roster:
         bot.clan_status[id] = data[1]
+    elif bot.id2nick[id] == bot.config.owner:
+        bot.clan_status[id] = data[1]
 member_changestatus.event = [ID.HON_SC_UPDATE_STATUS]
 
 def member_initstatus(bot,origin,data):
     for u in data[1]:
         id = u[0]
         if id in bot.clan_roster:
+            bot.clan_status[id] = u[1]
+        elif bot.id2nick[id] == bot.config.owner:
             bot.clan_status[id] = u[1]
 member_initstatus.event = [ID.HON_SC_INITIAL_STATUS]
 
@@ -95,8 +99,6 @@ def officers(bot, input):
         if ply == bot.account_id: continue # It's us, silly!
         if ply not in bot.clan_roster: continue
         if not bot.clan_status[ply] in [ ID.HON_STATUS_INGAME, ID.HON_STATUS_OFFLINE ]:
-            if bot.id2nick[ply] == bot.config.owner:
-                avail_officers.append(bot.id2nick[ply])
             elif bot.clan_roster[ply]['rank'] in ['Officer', 'Leader']:
                 avail_officers.append(bot.id2nick[ply])
     if len(avail_officers) > 0:

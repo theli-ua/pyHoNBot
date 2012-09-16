@@ -36,9 +36,13 @@ class VB:
 	def IsError(self, ret):
 		try:
 			test = ret['response']['errormessage']
-			if test in self.allowed:
-				return False
-			elif test == 'invalid_sessionhash':
+			if isinstance(test, list):
+				if test[0] in self.allowed:
+					return False
+			else:
+				if test in self.allowed:
+					return False
+			if test == 'invalid_sessionhash':
 				print("Session expired!")
 				self.loggedIn = False
 				return True
@@ -70,7 +74,8 @@ class VB:
 			retval = json.load(urlopen(self.url + "?%s" % get, post))
 			self.loggedIn = time()
 			return not self.IsError(retval)
-		except:
+		except Exception as inst:
+			print("Login Error: " + inst)
 			return False
 
 	def GetPost(self, postid):
@@ -148,7 +153,6 @@ class VB:
 		post = urlencode({"searchid": searchid})
 		try:
 			retval = json.load(urlopen(self.url + "?%s" % get, post))
-			print(retval)
 			if not self.IsError(retval):
 				if isinstance(retval['response']['searchbits'], dict):
 					out = []

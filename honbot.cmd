@@ -1,5 +1,5 @@
 @echo off
-MODE CON: COLS=150 LINES=50
+MODE CON: COLS=150 LINES=500
 
 :START
 echo honbot starting

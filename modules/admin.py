@@ -91,16 +91,19 @@ def query(bot, input):
     bot.reply("Printed to stdout")
 query.commands = ['query']
 
-_eval = eval
+try:
+    test = _eval
+except:
+    _eval = eval
+
 def eval(bot, input):
     """Top Secret"""
     if not input.owner: return
     bot.reply( str( _eval( input.group(2) ) ) )
 eval.commands = ['eval']
 
-_print = print
-def print(bot, input):
+def pprint(bot, input):
     """Top Secret"""
     if not input.owner: return
-    _print( _eval( input.group(2) ) )
-print.commands = ['print']
+    print( _eval( input.group(2) ) )
+pprint.commands = ['print']

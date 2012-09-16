@@ -53,13 +53,10 @@ def apply(bot, input):
 		bot.vb.Login(bot.config.forumuser, bot.config.forumpassword) # Session expiry check, this is instant if still under expiry time
 		searchid = bot.vb.Search( 1, "in-game username?: {0}".format(nick) )
 		if searchid:
-			print("Search ID: {0}".format(searchid))
 			results = bot.vb.ProcessSearch(searchid)
 			if not results or len(results) == 0:
-				print(input)
 				bot.reply("No application found for your username.")
 				return
-			print("Results: {0}".format( len(results) ))
 			for result in results:
 				thread = result['thread']
 				if int(thread['forumid']) in appForums and thread['preview'].lower().find(nick) > 0:

@@ -7,6 +7,8 @@ Licensed under the Eiffel Forum License 2.
 http://inamidst.com/phenny/
 """
 
+from time import sleep
+
 def doc(phenny, input): 
    """Shows a command's documentation, and possibly an example."""
    name = input.group(2)
@@ -24,7 +26,10 @@ def commands(phenny, input):
    # This function only works in private message
    if isinstance(input.origin[1],int): return
    names = ', '.join(sorted(phenny.doc.iterkeys()))
-   phenny.say('Commands I recognise: ' + names + '.')
+   phenny.say('Commands I recognise:')
+   for line in [names[i:i+245] for i in range(0, len(names), 245)]:
+      phenny.say(line)
+      sleep(1)
    phenny.say(("For help, do '.doc example' where example is the " + 
                "name of the command you want help for."))
 commands.commands = ['commands']

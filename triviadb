@@ -1,0 +1,20 @@
+(lp0
+(dp1
+S'question'
+p2
+S"What is Andromeda's first ability called?"
+p3
+sS'answer'
+p4
+S'Comet'
+p5
+sa(dp6
+S'question'
+p7
+S"What is Bubbles' ultimate ability called?"
+p8
+sS'answer'
+p9
+S'Kelp Field'
+p10
+sa.
