@@ -80,6 +80,7 @@ def activityreport(bot, input):
     if bot.reportRunning:
         bot.reply("Report is already running.")
         return
+    bot.reply("Running report")
     bot.reportRunning = True
     out = "Project Epoch Activity Report\n\n\n"
     for id in bot.clan_roster:
