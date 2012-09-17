@@ -103,21 +103,18 @@ def activityreport(bot, input):
     idx = 0
     for id in bot.clan_roster:
         idx += 1
-        if bot.clan_roster[id]['rank'] in ['Officer', 'Leader']:
-            print( "{0}/{1}: Skipping {2} due to rank".format( idx, len(bot.clan_roster) - 1, nick ) )
-            continue
         nick = bot.id2nick[id]
         print( "{0}/{1}: Processing {2}".format( idx, len(bot.clan_roster) - 1, nick ) )
         query = {'nickname' : nick}
         query['f'] = 'show_stats'
         query['table'] = 'player'
         data = bot.masterserver_request(query,cookie=True)
-        toOut.append({"nick": nick, "date": data['last_activity']})
+        toOut.append({"nick": nick, "date": data['last_activity'], "rank": bot.clan_roster[id]['rank']})
 
     outStr = "{0} Activity Report\n\n\n".format(bot.clan_info['name'])
     toOut = sorted(toOut, cmp=sortArray)
     for row in toOut:
-        outStr += "{0}:\t\t\t{1}{2}\n".format( row['nick'], len(row['nick']) <= 6 and '\t' or '', row['date'] )
+        outStr += "{0}:\t\t\t{1}{2}\t{3}\n".format( row['nick'], len(row['nick']) <= 6 and '\t' or '', row['date'], row['rank'] )
     f = open( bot.config.logdir + 'activity.log', 'w' )
     f.write( outStr )
     bot.reply("Log written to log directory. URL in officer forum")
