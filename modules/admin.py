@@ -49,7 +49,7 @@ def ban(bot, input):
         bot.config.set_add('banlist',nick)
         regen_ban_re(bot)
         bot.reply('{0} added to banlist'.format(nick))
-ban.commands = ['ban']
+#ban.commands = ['ban']
 
 def unban(bot, input): 
     """makes bot stop banning user, admins only""" 
@@ -63,7 +63,7 @@ def unban(bot, input):
         bot.reply('{0} removed from banlist'.format(nick))
     else:
         bot.reply('Sorry, there was no "{0}" in my banlist"'.format(nick))
-unban.commands = ['unban']
+#unban.commands = ['unban']
 
 def admin(bot, input): 
     """Adds person to admin list, owner only""" 
