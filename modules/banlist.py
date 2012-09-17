@@ -49,7 +49,7 @@ class Banlist:
 
 def bot_join_ban(bot, origin, data):
 	for m in data[-1]:
-        nick = normalize_nick(m[0]).lower()
+		nick = normalize_nick(m[0]).lower()
         if bot.banlist.IsBanlisted(nick):
 			for chan in bot.config.channels:
 				chanid = bot.chan2id[chan.lower()]
