@@ -24,21 +24,21 @@ class Banlist:
 		except:
 			return False
 	def Add(self, accountid, username):
-		if not self.Connect(): return True
+		if not self.Connect(): return False
 		if not self.IsBanlisted(username):
 			self.c.execute( "INSERT INTO banlist VALUES ('', '{0}', '{1}')".format( accountid, username ) )
 			return True
 		else:
 			return False
 	def Remove(self, username):
-		if not self.Connect(): return True
+		if not self.Connect(): return False
 		if not self.IsBanlisted(username):
 			return False
 		else:
 			self.c.execute( "DELETE FROM banlist WHERE nick = '{0}'".format( username ) )
 			return True
 	def IsBanlisted(self, value):
-		if not self.Connect(): return True
+		if not self.Connect(): return False
 		self.c.execute( "SELECT * FROM banlist WHERE accountid = '{0}' OR nick = '{0}'".format( value ) )
 		return (self.db.fetchone() is not None)
 	def Close(self):
@@ -53,6 +53,7 @@ def bot_join_ban(bot, origin, data):
 				chanid = bot.chan2id[chan.lower()]
 				bot.write_packet(ID.HON_CS_CHANNEL_BAN, chanid, nick)
 bot_join_ban.event = [ID.HON_SC_CHANGED_CHANNEL]
+bot_join_ban.thread = True
 
 def ply_join_ban(bot, origin, data):
 	nick = normalize_nick(data[0])
@@ -61,6 +62,7 @@ def ply_join_ban(bot, origin, data):
 			chanid = bot.chan2id[chan.lower()]
 			bot.write_packet(ID.HON_CS_CHANNEL_BAN, chanid, nick)
 ply_join_ban.event = [ID.HON_SC_JOINED_CHANNEL]
+ply_join_ban.thread = True
 
 def ban(bot, input):
 	if not input.admin: return
@@ -75,6 +77,7 @@ def ban(bot, input):
 	else:
 		bot.reply("{0} is already banlisted".format(nick))
 ban.commands = ['ban']
+ban.thread = True
 
 def unban(bot, input):
 	if not input.admin: return
@@ -88,6 +91,7 @@ def unban(bot, input):
 	else:
 		bot.reply("{0} is not banlisted".format(nick))
 unban.commands = ['unban']
+unban.Thread = True
 
 def setup(bot):
 	bot.config.module_config('db_host', ['localhost', 'Database host'])
