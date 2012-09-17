@@ -26,7 +26,7 @@ class Banlist:
 		if not self.IsBanlisted(username):
 			cursor = self.Connect()
 			if not cursor: return False
-			cursor.execute( "INSERT INTO banlist VALUES ('', '{0}', '{1}')".format( accountid, username ) )
+			cursor.execute( "INSERT INTO banlist VALUES ('{0}', '{1}')".format( accountid, username ) )
 			return True
 		else:
 			return False
@@ -71,9 +71,8 @@ def ban(bot, input):
 	id = bot.nick2id[nick]
 	if bot.banlist.Add(id, nick):
 		bot.reply("Banlisted {0}".format(nick))
-		for chan in bot.config.channels:
-			chanid = bot.chan2id[chan.lower()]
-			bot.write_packet(ID.HON_CS_CHANNEL_BAN, chanid, nick)
+		for chan in bot.channel_channels.keys():
+			bot.write_packet(ID.HON_CS_CHANNEL_BAN, chan, nick)
 	else:
 		bot.reply("{0} is already banlisted".format(nick))
 ban.commands = ['ban']
@@ -85,9 +84,8 @@ def unban(bot, input):
 	nick = input.group(2)
 	if bot.banlist.Remove(nick):
 		bot.reply("Removed {0} from banlist".format(nick))
-		for chan in bot.config.channels:
-			chanid = bot.chan2id[chan.lower()]
-			bot.write_packet(ID.HON_CS_CHANNEL_UNBAN, chanid, nick)
+		for chan in bot.channel_channels.keys():
+			bot.write_packet(ID.HON_CS_CHANNEL_UNBAN, chan, nick)
 	else:
 		bot.reply("{0} is not banlisted".format(nick))
 unban.commands = ['unban']
