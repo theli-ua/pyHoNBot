@@ -45,7 +45,7 @@ class Banlist:
 		if not conn: return False
 		q = "SELECT * FROM banlist WHERE accountid = '{0}' OR nick = '{0}'".format( value )
 		conn['cursor'].execute( q )
-		return (cursor.fetchone() is not None)
+		return (conn['cursor'].fetchone() is not None)
 
 def bot_join_ban(bot, origin, data):
 	for m in data[-1]:
