@@ -103,6 +103,9 @@ def activityreport(bot, input):
     idx = 0
     for id in bot.clan_roster:
         idx += 1
+        if bot.clan_roster[id]['rank'] in ['Officer', 'Leader']:
+            print( "{0}/{1}: Skipping {2} due to rank".format( idx, len(bot.clan_roster) - 1, nick ) )
+            continue
         nick = bot.id2nick[id]
         print( "{0}/{1}: Processing {2}".format( idx, len(bot.clan_roster) - 1, nick ) )
         query = {'nickname' : nick}
