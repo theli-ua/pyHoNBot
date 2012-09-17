@@ -14,36 +14,36 @@ class Banlist:
 		self.database = bot.config.db_db
 	def Connect(self):
 		try:
-			self.conn = MySQLdb.connect(
+			conn = MySQLdb.connect(
 					host=self.host,
 					user=self.user,
 					passwd=self.password,
 					db=self.database)
-			self.c = self.conn.cursor()
-			return True
+			return conn.cursor()
 		except:
 			return False
 	def Add(self, accountid, username):
-		if not self.Connect(): return False
 		if not self.IsBanlisted(username):
-			self.c.execute( "INSERT INTO banlist VALUES ('', '{0}', '{1}')".format( accountid, username ) )
+			cursor = self.Connect()
+			if not cursor: return False
+			cursor.execute( "INSERT INTO banlist VALUES ('', '{0}', '{1}')".format( accountid, username ) )
 			return True
 		else:
 			return False
 	def Remove(self, username):
-		if not self.Connect(): return False
 		if not self.IsBanlisted(username):
 			return False
 		else:
-			self.c.execute( "DELETE FROM banlist WHERE nick = '{0}'".format( username ) )
+			cursor = self.Connect()
+			if not cursor: return False
+			cursor.execute( "DELETE FROM banlist WHERE nick = '{0}'".format( username ) )
 			return True
 	def IsBanlisted(self, value):
-		if not self.Connect(): return False
-		self.c.execute( "SELECT * FROM banlist WHERE accountid = '{0}' OR nick = '{0}'".format( value ) )
-		return (self.c.fetchone() is not None)
-	def Close(self):
-		self.c.close()
-		self.conn.close()
+		cursor = self.Connect()
+		if not cursor: return False
+		q = "SELECT * FROM banlist WHERE accountid = '{0}' OR nick = '{0}'".format( value )
+		cursor.execute( q )
+		return (cursor.fetchone() is not None)
 
 def bot_join_ban(bot, origin, data):
 	for m in data[-1]:
