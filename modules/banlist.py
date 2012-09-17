@@ -40,9 +40,9 @@ class Banlist:
 	def IsBanlisted(self, value):
 		if not self.Connect(): return False
 		self.c.execute( "SELECT * FROM banlist WHERE accountid = '{0}' OR nick = '{0}'".format( value ) )
-		return (self.db.fetchone() is not None)
+		return (self.c.fetchone() is not None)
 	def Close(self):
-		self.db.close()
+		self.c.close()
 		self.conn.close()
 
 def bot_join_ban(bot, origin, data):
