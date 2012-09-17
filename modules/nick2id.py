@@ -13,6 +13,7 @@ def joined_channel(bot,origin,data):
         bot.id2nick[m[1]] = m[0]
 joined_channel.event = [ID.HON_SC_CHANGED_CHANNEL]
 joined_channel.priority = 'high'
+joined_channel.thread = False
 
 def user_joined_channel(bot,origin,data):
     nick = normalize_nick(data[0]).lower()
@@ -20,6 +21,7 @@ def user_joined_channel(bot,origin,data):
     bot.id2nick[data[1]] = nick
 user_joined_channel.event = [ID.HON_SC_JOINED_CHANNEL]
 user_joined_channel.priority = 'high'
+user_joined_channel.thread = False
 
 def name_change(bot,origin,data):
     nick = normalize_nick(data[1]).lower()
@@ -27,3 +29,4 @@ def name_change(bot,origin,data):
     bot.id2nick[data[0]] = nick
 name_change.event = [ID.HON_SC_NAME_CHANGE]
 name_change.priority = 'high'
+name_change.thread = False
