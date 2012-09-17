@@ -14,6 +14,7 @@ from hon.honutils import normalize_nick
 from datetime import datetime
 import logging
 import logging.handlers
+import json
 
 import os
 
@@ -83,7 +84,6 @@ def activityreport(bot, input):
     bot.reply("Running report")
     bot.reportRunning = True
     toOut = []
-    out = "Project Epoch Activity Report\n\n\n"
     for id in bot.clan_roster:
         nick = bot.id2nick[id]
         print("Processing " + nick)
@@ -92,11 +92,8 @@ def activityreport(bot, input):
         query['table'] = 'player'
         data = bot.masterserver_request(query,cookie=True)
         toOut.append({"nick": nick, "date": data['last_activity']})
-        # out += "{0}: {1}\n".format(nick, data['last_activity'])
-    for each in toOut.sort(key=lambda x: datetime.strptime(x['date'], '%m/%d/%Y')):
-        out += "{0}: {1}\n".format( each['nick'], each['date'] )
-    f = open(bot.config.logdir + 'activity.log', 'w')
-    f.write(out)
+    f = open( bot.config.logdir + 'activity.log', 'w' )
+    f.write( json.dumps( toOut ) )
     bot.reply("Log written to log directory. URL in officer forum")
     bot.reportRunning = False
 activityreport.commands = ['activityreport']
