@@ -44,12 +44,14 @@ def channel_joined_channel(bot,origin,data):
             bot.write_packet( ID.HON_CS_UPDATE_TOPIC, data[1], bot.config.default_topic[data[1]] )
 
     #banlist management
+    """
     for m in data[-1]:
         nick = normalize_nick(m[0]).lower()
         if bot.store.banlist_re.match(nick):
             bot.write_packet(ID.HON_CS_CHANNEL_BAN,data[1],nick)
         #else:
             #silence_smurfs(bot,data[1],nick)
+    """
 
 channel_joined_channel.event = [ID.HON_SC_CHANGED_CHANNEL]
 
@@ -67,23 +69,25 @@ def channel_user_joined_channel(bot,origin,data):
     CHANNEL_MAX = bot.config.channel_limit
     #banlist management
     nick = normalize_nick(data[0]).lower()
+    """
     if bot.store.banlist_re.match(nick):
         print("Banlist match: " + nick)
         bot.write_packet(ID.HON_CS_CHANNEL_BAN,data[2],data[0])
     else:
-        if CHANNEL_MAX == 0:
-            return
-        if l > CHANNEL_MAX:
-            l -= CHANNEL_MAX
-            for i in sorted(bot.channel_channels[data[2]].values(), key=lambda x:x[2]):
-                if l <= 0:break
-                nick = normalize_nick(i[1])
-                if i[0] not in bot.clan_roster and nick not in bot.config.whitelist and i[1].split(']')[0] not in ['[GM','[S2']:
-                    bot.write_packet(ID.HON_CS_CHANNEL_KICK,data[2],i[0])
-                    sleep(0.5)
-                    bot.write_packet(ID.HON_CS_WHISPER,i[1],'Sorry, too many people in channel, we need some place for active members')
-                    l -= 1
-                    sleep(0.5)
+    """
+    if CHANNEL_MAX == 0:
+        return
+    if l > CHANNEL_MAX:
+        l -= CHANNEL_MAX
+        for i in sorted(bot.channel_channels[data[2]].values(), key=lambda x:x[2]):
+            if l <= 0:break
+            nick = normalize_nick(i[1])
+            if i[0] not in bot.clan_roster and nick not in bot.config.whitelist and i[1].split(']')[0] not in ['[GM','[S2']:
+                bot.write_packet(ID.HON_CS_CHANNEL_KICK,data[2],i[0])
+                sleep(0.5)
+                bot.write_packet(ID.HON_CS_WHISPER,i[1],'Sorry, too many people in channel, we need some place for active members')
+                l -= 1
+                sleep(0.5)
 channel_user_joined_channel.event = [ID.HON_SC_JOINED_CHANNEL]
 channel_user_joined_channel.thread = False
 
@@ -99,7 +103,8 @@ def update_stats(bot,origin,data):
     if (time - bot.channel_channels[origin[2]][origin[1]][2]).seconds < bot.config.spam_threshold and data == bot.channel_channels[origin[2]][origin[1]][3]:
         nick = bot.id2nick[origin[1]].lower()
         bot.write_packet(ID.HON_CS_CHANNEL_BAN,origin[2],nick)
-        bot.config.set_add('banlist',nick)
+        # bot.config.set_add('banlist',nick)
+        bot.banlist.Add(nick)
     bot.channel_channels[origin[2]][origin[1]][2] = time
     bot.channel_channels[origin[2]][origin[1]][3] = data
 update_stats.event = [ID.HON_SC_CHANNEL_MSG]

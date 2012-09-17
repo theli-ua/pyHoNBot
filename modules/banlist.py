@@ -92,7 +92,8 @@ def migrate(bot, input):
 	if not input.owner: return
 	print("Starting")
 	for ban in bot.config.banlist:
-		bot.banlist.Add('imported', ban)
+		if not bot.banlist.Add('imported', ban):
+			print("{0} already in list".format(ban))
 	print("Finished")
 migrate.commands = ['migrate']
 migrate.thread = True
