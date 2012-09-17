@@ -8,39 +8,38 @@ from hon.packets import ID
 
 class Banlist:
 	def __init__(self, bot):
-		self.Yes = self.Connect(bot.config.db_host, bot.config.db_user, bot.config.db_pass, bot.config.db_db)
-		if not self.Yes:
-			print("SQL connection failed")
-		else:
-			print("SQL connected")
-	def Connect(self, host, username, password, database, Port=3306):
+		self.host = bot.config.db_host
+		self.user = bot.config.db_user
+		self.pass = bot.config.db_pass
+		self.database = bot.config.db_db
+	def Connect(self):
 		try:
 			self.conn = MySQLdb.connect(
-					host=host,
-					user=username,
-					passwd=password,
-					db=database)
-			self.db = self.conn.cursor()
+					host=self.host,
+					user=self.user,
+					passwd=self.pass,
+					db=self.database)
+			self.c = self.conn.cursor()
 			return True
 		except:
 			return False
 	def Add(self, accountid, username):
-		if not self.Yes: return False
+		if not self.Connect(): return True
 		if not self.IsBanlisted(username):
-			self.db.execute( "INSERT INTO banlist VALUES ('', '{0}', '{1}')".format( accountid, username ) )
+			self.c.execute( "INSERT INTO banlist VALUES ('', '{0}', '{1}')".format( accountid, username ) )
 			return True
 		else:
 			return False
 	def Remove(self, username):
-		if not self.Yes: return False
+		if not self.Connect(): return True
 		if not self.IsBanlisted(username):
 			return False
 		else:
-			self.db.execute( "DELETE FROM banlist WHERE nick = '{0}'".format( username ) )
+			self.c.execute( "DELETE FROM banlist WHERE nick = '{0}'".format( username ) )
 			return True
 	def IsBanlisted(self, value):
-		if not self.Yes: return False
-		self.db.execute( "SELECT * FROM banlist WHERE accountid = '{0}' OR nick = '{0}'".format( value ) )
+		if not self.Connect(): return True
+		self.c.execute( "SELECT * FROM banlist WHERE accountid = '{0}' OR nick = '{0}'".format( value ) )
 		return (self.db.fetchone() is not None)
 	def Close(self):
 		self.db.close()
