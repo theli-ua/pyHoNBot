@@ -4,6 +4,7 @@
 
 import MySQLdb
 from hon.honutils import normalize_nick
+from hon.packets import ID
 
 class Banlist:
 	def __init__(self, bot):
@@ -50,7 +51,7 @@ class Banlist:
 def bot_join_ban(bot, origin, data):
 	for m in data[-1]:
 		nick = normalize_nick(m[0]).lower()
-        if bot.banlist.IsBanlisted(nick):
+		if bot.banlist.IsBanlisted(nick):
 			for chan in bot.config.channels:
 				chanid = bot.chan2id[chan.lower()]
 				bot.write_packet(ID.HON_CS_CHANNEL_BAN, chanid, nick)
