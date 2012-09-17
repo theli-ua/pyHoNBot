@@ -14,7 +14,8 @@ _responses = ['It is possible.', 'Yes!', 'Of course.',
                            'The outlook is hazy, please ask again later.',
                            'What are you asking me for?', 'Come again?',
                            'You know the answer better than I.',
-                           'The answer is def-- oooh! shiny thing!']
+                           'The answer is def-- oooh! shiny thing!',
+                           'Fish sticks!']
 
 def eightball(bot,*args):
     """Decide your fate"""

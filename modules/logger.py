@@ -12,9 +12,10 @@ Modified and ported to HoNBot by Anton Romanov
 from hon.packets import ID
 from hon.honutils import normalize_nick
 from datetime import datetime
+import time
+import re
 import logging
 import logging.handlers
-import json
 
 import os
 
@@ -76,6 +77,21 @@ def unlog(bot, input):
     bot.config.set_del('logchannels',input.group(2).lower())
 unlog.commands = ['unlog']
 
+def string2date(string):
+    if string is None or len(string) == 0:
+        return 0
+    pattern = '%m/%d/%Y'
+    return int(time.mktime(time.strptime(string, pattern)))
+
+def sortArray(a, b):
+    if a is None or b is None:
+        return 0
+    adate = string2date(a['date'])
+    bdate = string2date(b['date'])
+    if adate == bdate:
+        return 0
+    return adate - bdate
+
 def activityreport(bot, input):
     if not input.owner: return
     if bot.reportRunning:
@@ -84,16 +100,23 @@ def activityreport(bot, input):
     bot.reply("Running report")
     bot.reportRunning = True
     toOut = []
+    idx = 0
     for id in bot.clan_roster:
+        idx += 1
         nick = bot.id2nick[id]
-        print("Processing " + nick)
+        print( "{0}/{1}: Processing {2}".format( idx, len(bot.clan_roster) - 1, nick ) )
         query = {'nickname' : nick}
         query['f'] = 'show_stats'
         query['table'] = 'player'
         data = bot.masterserver_request(query,cookie=True)
         toOut.append({"nick": nick, "date": data['last_activity']})
+
+    outStr = "{0} Activity Report\n\n\n".format(bot.clan_info['name'])
+    toOut = sorted(toOut, cmp=sortArray)
+    for row in toOut:
+        outStr += "{0}:\t\t\t{1}{2}\n".format( row['nick'], len(row['nick']) <= 6 and '\t' or '', row['date'] )
     f = open( bot.config.logdir + 'activity.log', 'w' )
-    f.write( json.dumps( toOut ) )
+    f.write( outStr )
     bot.reply("Log written to log directory. URL in officer forum")
     bot.reportRunning = False
 activityreport.commands = ['activityreport']

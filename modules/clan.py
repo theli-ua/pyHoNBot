@@ -72,24 +72,36 @@ status = {
     ID.HON_STATUS_INGAME: "In Game"
 }
 
+def sublist(alist, value):
+    return [dictio for dictio in alist if alist[dictio] == value]
+
 def info(bot,input):
     """Get clan member info"""
     if not input.group(2):
-        return
-    nick = input.group(2).lower()
-    if nick not in bot.nick2id:
-        bot.reply("Unknown Player")
+        bot.reply( 
+            "{0} - Members: {1}, Online: {2}, In-Game: {3}"
+            .format(
+                bot.clan_info['name'],
+                len(bot.clan_roster),
+                len(sublist(bot.clan_status, ID.HON_STATUS_ONLINE)),
+                len(sublist(bot.clan_status, ID.HON_STATUS_INGAME))
+            )
+        )
     else:
-        id = bot.nick2id[nick]
-        if id in bot.clan_roster:
-            player = bot.clan_roster[id]
-            query = {'nickname' : nick}
-            query['f'] = 'show_stats'
-            query['table'] = 'player'
-            data = bot.masterserver_request(query,cookie=True)
-            bot.reply("{0} - Rank: {1}, Last Online: {2}, Status: {3}".format(nick, player['rank'], data['last_activity'], status[bot.clan_status[id]]))
+        nick = input.group(2).lower()
+        if nick not in bot.nick2id:
+            bot.reply("Unknown Player")
         else:
-            bot.reply("Not in clan")
+            id = bot.nick2id[nick]
+            if id in bot.clan_roster:
+                player = bot.clan_roster[id]
+                query = {'nickname' : nick}
+                query['f'] = 'show_stats'
+                query['table'] = 'player'
+                data = bot.masterserver_request(query,cookie=True)
+                bot.reply("{0} - Rank: {1}, Last Online: {2}, Status: {3}".format(nick, player['rank'], data['last_activity'], status[bot.clan_status[id]]))
+            else:
+                bot.reply("Not in clan")
 info.commands = ['info']
 
 def officers(bot, input):
