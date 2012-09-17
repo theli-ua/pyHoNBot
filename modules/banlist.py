@@ -53,7 +53,6 @@ def bot_join_ban(bot, origin, data):
 			for chan in bot.channel_channels.keys():
 				bot.write_packet(ID.HON_CS_CHANNEL_BAN, chanid, nick)
 bot_join_ban.event = [ID.HON_SC_CHANGED_CHANNEL]
-bot_join_ban.thread = True
 
 def ply_join_ban(bot, origin, data):
 	nick = normalize_nick(data[0])
@@ -61,7 +60,6 @@ def ply_join_ban(bot, origin, data):
 		for chan in bot.channel_channels.keys():
 			bot.write_packet(ID.HON_CS_CHANNEL_BAN, chanid, nick)
 ply_join_ban.event = [ID.HON_SC_JOINED_CHANNEL]
-ply_join_ban.thread = True
 
 def ban(bot, input):
 	if not input.admin: return
