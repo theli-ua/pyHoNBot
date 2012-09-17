@@ -24,8 +24,6 @@ class Banlist:
 			return True
 		except:
 			return False
-	def Escape(self, str):
-		return _mysql.escape_string(str)
 	def Add(self, accountid, username):
 		if not self.Yes: return False
 		if not self.IsBanlisted(username):
@@ -43,7 +41,7 @@ class Banlist:
 	def IsBanlisted(self, value):
 		if not self.Yes: return False
 		self.db.execute( "SELECT * FROM banlist WHERE accountid = '{0}' OR nick = '{0}'".format( value ) )
-		return ( self.db.rowcount() > 0 )
+		return int(self.db.rowcount()) > 0
 	def Close(self):
 		self.db.close()
 		self.conn.close()
