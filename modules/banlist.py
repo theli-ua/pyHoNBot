@@ -26,7 +26,7 @@ class Banlist:
 		if not self.IsBanlisted(username):
 			conn = self.Connect()
 			if not conn: return False
-			conn['cursor'].execute( "INSERT INTO banlist (accountid, nick) VALUES ('{0}', '{1}')".format( accountid, username ) )
+			conn['cursor'].execute( "INSERT INTO banlist (accountid, nick) VALUES (%s, %s)", [accountid, username] )
 			conn['db'].commit()
 			return True
 		else:
@@ -37,14 +37,13 @@ class Banlist:
 		else:
 			conn = self.Connect()
 			if not conn: return False
-			conn['cursor'].execute( "DELETE FROM banlist WHERE nick = '{0}'".format( username ) )
+			conn['cursor'].execute( "DELETE FROM banlist WHERE nick = %s", [username] )
 			conn['db'].commit()
 			return True
 	def IsBanlisted(self, value):
 		conn = self.Connect()
 		if not conn: return False
-		q = "SELECT * FROM banlist WHERE accountid = '{0}' OR nick = '{0}'".format( value )
-		conn['cursor'].execute( q )
+		conn['cursor'].execute( "SELECT * FROM banlist WHERE accountid = %s OR nick = %s", [username, username] )
 		return (conn['cursor'].fetchone() is not None)
 
 def bot_join_ban(bot, origin, data):
