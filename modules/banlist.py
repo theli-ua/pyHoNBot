@@ -10,14 +10,14 @@ class Banlist:
 	def __init__(self, bot):
 		self.host = bot.config.db_host
 		self.user = bot.config.db_user
-		self.pass = bot.config.db_pass
+		self.password = bot.config.db_pass
 		self.database = bot.config.db_db
 	def Connect(self):
 		try:
 			self.conn = MySQLdb.connect(
 					host=self.host,
 					user=self.user,
-					passwd=self.pass,
+					passwd=self.password,
 					db=self.database)
 			self.c = self.conn.cursor()
 			return True
