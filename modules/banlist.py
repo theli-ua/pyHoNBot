@@ -17,7 +17,7 @@ class Banlist:
 			self.conn = MySQLdb.connect(
 					host=host,
 					user=username,
-					passwd=password
+					passwd=password,
 					db=database)
 			self.db = self.conn.cursor()
 			return True
