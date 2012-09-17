@@ -105,9 +105,6 @@ def receivemessage(bot, origin, data):
 		if origin[2] == bot.chan2id[bot.trivia.channel]:
 			if not bot.trivia.running: return
 			bot.trivia.recvMsg(bot,origin,data)
-	else:
-		# bot.write_packet( ID.HON_CS_JOIN_CHANNEL, bot.trivia.channel )
-		print("Channel not in chan2id")
 receivemessage.event = [ID.HON_SC_CHANNEL_MSG]
 receivemessage.priority = 'high'
 receivemessage.thread = True

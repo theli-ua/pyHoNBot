@@ -12,7 +12,7 @@ def startup(bot, *args):
 
 startup.event = [ID.HON_SC_AUTH_ACCEPTED]
 startup.priority = 'low'
-startup.thread = True
+startup.thread = False
 
 if __name__ == '__main__': 
     print __doc__.strip()
