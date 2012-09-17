@@ -51,8 +51,7 @@ def bot_join_ban(bot, origin, data):
 	for m in data[-1]:
 		nick = normalize_nick(m[0]).lower()
 		if bot.banlist.IsBanlisted(nick):
-			for chan in bot.config.channels:
-				chanid = bot.chan2id[chan.lower()]
+			for chan in bot.channel_channels.keys():
 				bot.write_packet(ID.HON_CS_CHANNEL_BAN, chanid, nick)
 bot_join_ban.event = [ID.HON_SC_CHANGED_CHANNEL]
 bot_join_ban.thread = True
@@ -60,8 +59,7 @@ bot_join_ban.thread = True
 def ply_join_ban(bot, origin, data):
 	nick = normalize_nick(data[0])
 	if bot.banlist.IsBanlisted(nick):
-		for chan in bot.config.channels:
-			chanid = bot.chan2id[chan.lower()]
+		for chan in bot.channel_channels.keys():
 			bot.write_packet(ID.HON_CS_CHANNEL_BAN, chanid, nick)
 ply_join_ban.event = [ID.HON_SC_JOINED_CHANNEL]
 ply_join_ban.thread = True
@@ -91,7 +89,17 @@ def unban(bot, input):
 	else:
 		bot.reply("{0} is not banlisted".format(nick))
 unban.commands = ['unban']
-unban.Thread = True
+unban.thread = True
+
+def migrate(bot, input):
+	if not input.owner: return
+	print("Starting")
+	for ban in bot.config.banlist:
+		bot.banlist.Add('imported', ban)
+	print("Finished")
+migrate.commands = ['migrate']
+migrate.thread = True
+
 
 def setup(bot):
 	bot.config.module_config('db_host', ['localhost', 'Database host'])
