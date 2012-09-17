@@ -41,7 +41,7 @@ class Banlist:
 	def IsBanlisted(self, value):
 		if not self.Yes: return False
 		self.db.execute( "SELECT * FROM banlist WHERE accountid = '{0}' OR nick = '{0}'".format( value ) )
-		return int(self.db.rowcount()) > 0
+		return (self.db.fetchone() is not None)
 	def Close(self):
 		self.db.close()
 		self.conn.close()
