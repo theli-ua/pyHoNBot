@@ -47,6 +47,7 @@ class VB:
 				self.loggedIn = False
 				return True
 			else:
+				print(ret)
 				return True
 		except:
 			return False
