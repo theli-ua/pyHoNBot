@@ -54,7 +54,7 @@ def apply(bot, input):
 		searchid = bot.vb.Search( 1, "in-game username?: {0}".format(nick) )
 		if searchid:
 			results = bot.vb.ProcessSearch(searchid)
-			if not results or len(results) == 0:
+			if len(results) == 0:
 				bot.reply("No application found for your username.")
 				return
 			for result in results:

@@ -33,24 +33,14 @@ class VB:
 		except:
 			return False
 
-	def IsError(self, ret):
+	def IsError(self, ret, allowed=[None]):
 		try:
 			test = ret['response']['errormessage']
 			if isinstance(test, list):
-				if test[0] in self.allowed:
-					return False
-			else:
-				if test in self.allowed:
-					return False
-			if test == 'invalid_sessionhash':
-				print("Session expired!")
-				self.loggedIn = False
-				return True
-			else:
-				print(ret)
-				return True
+				return test[0]
+			return not test in allowed
 		except:
-			return False
+			return None
 
 	def Sign(self, args):
 		args = sorted(args.items())
@@ -74,7 +64,7 @@ class VB:
 		try:
 			retval = json.load(urlopen(self.url + "?%s" % get, post))
 			self.loggedIn = time()
-			return not self.IsError(retval)
+			return self.IsError(retval)
 		except Exception as inst:
 			print("Login Error: " + inst)
 			return False
@@ -93,7 +83,7 @@ class VB:
 		get = urlencode({'api_m': 'forumdisplay', 'forumid': forumid, 'perpage': limit, 'api_c': self.init["apiclientid"], 'api_s': self.init["apiaccesstoken"], 'api_sig': signed})
 		try:
 			retval = json.load(urlopen(self.url + "?%s" % get))
-			if not self.IsError(retval):
+			if self.IsError(retval) is None:
 				return retval['response']['threadbits']
 			else:
 				return False
@@ -108,7 +98,7 @@ class VB:
 		post = urlencode({"subject": title, "message": body, "forumid": forumid})
 		try:
 			retval = json.load(urlopen(self.url + "?%s" % get, post))
-			return not self.IsError(retval)
+			return self.IsError(retval) is None
 		except:
 			return False
 
@@ -140,12 +130,11 @@ class VB:
 		post = urlencode({"type": contenttypeid, "query": query, "titleonly": titleonly and 1 or 0, "forumchoice": forumchoice, "prefixchoice": prefixchoice, "showposts": showposts and 1 or 0})
 		try:
 			retval = json.load(urlopen(self.url + "?%s" % get, post))
-			if not self.IsError(retval):
+			if not self.IsError(retval, ['search']):
 				return retval['show']['searchid']
 			else:
 				return False
-		except Exception as inst:
-			print(inst)
+		except:
 			return False
 	def ProcessSearch(self, searchid):
 		if not self.IsInit(): return False
@@ -161,6 +150,6 @@ class VB:
 					return out
 				return retval['response']['searchbits']
 			else:
-				return False
+				return []
 		except:
-			return False
+			return []
