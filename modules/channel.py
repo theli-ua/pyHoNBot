@@ -111,7 +111,7 @@ update_stats.event = [ID.HON_SC_CHANNEL_MSG]
 
 def kickall(bot,input):
     if not input.admin:
-        return
+        return False
     if input.origin[2] in bot.channel_channels:
         for i in bot.channel_channels[input.origin[2]]:
             if i[0] not in bot.clan_roster and i[1].split(']')[0] not in ['[GM','[S2','[TECH']:
@@ -123,18 +123,19 @@ kickall.thread = False
 
 def unwhitelist(bot,input):
     if not input.admin:
-        return
+        return False
     bot.config.set_del('whitelist',input.group(2).lower())
 unwhitelist.commands = ['unwhitelist']
 def whitelist(bot,input):
     if not input.admin:
-        return
+        return False
     bot.config.set_add('whitelist',input.group(2).lower())
 whitelist.commands = ['whitelist']
 
 def kick(bot, input): 
     """makes bot kick user""" 
-    if not input.admin or not input.group(2): return
+    if not input.admin: return False
+    if not input.group(2): return
     if not input.group(3) and input.origin[0] == ID.HON_SC_CHANNEL_MSG:
         bot.write_packet(ID.HON_CS_CHANNEL_KICK,input.origin[2],bot.nick2id[input.group(2).lower()])
     else:
@@ -150,7 +151,7 @@ kick.rule = (['kick'],'([^\ ]+)(?:\ +(.+))?')
 
 def promote(bot, input): 
     """makes bot promote user""" 
-    if not input.admin: return
+    if not input.admin: return False
     if not input.group(2) and input.origin[0] == ID.HON_SC_CHANNEL_MSG:
         bot.write_packet(ID.HON_CS_CHANNEL_PROMOTE,input.origin[2],input.account_id)
     else:
@@ -166,7 +167,7 @@ promote.rule = (['promote'],'([^\ ]+)?(?:\ +(.+))?')
 
 def demote(bot, input): 
     """makes bot demote user""" 
-    if not input.admin: return
+    if not input.admin: return False
     if not input.group(2) and input.origin[0] == ID.HON_SC_CHANNEL_MSG:
         bot.write_packet(ID.HON_CS_CHANNEL_DEMOTE,input.origin[2],input.account_id)
     else:
@@ -183,7 +184,7 @@ demote.rule = (['demote'],'([^\ ]+)?(?:\ +(.+))?')
 def dtopic(bot, input):
     """Set default channel topic, run this from intended channel"""
     if not input.admin:
-        return
+        return False
     if not input.origin[0] == ID.HON_SC_CHANNEL_MSG:
         bot.reply("Run me from channel intended for the default topic!")
     else:
@@ -200,14 +201,14 @@ dtopic.commands = ['dtopic']
 def topic(bot,input):
     """Sets topic on channel issued"""
     if not input.admin:
-        return
+        return False
     bot.write_packet(ID.HON_CS_UPDATE_TOPIC,input.origin[2],input.group(2))
 topic.commands = ['topic']
 topic.event = [ID.HON_SC_CHANNEL_MSG]
 
 def silence(bot, input): 
     """makes bot silence user, seconds""" 
-    if not input.admin: return
+    if not input.admin: return False
     nick = input.group(2)
     time = input.group(3)
     chan = input.group(4)

@@ -364,7 +364,9 @@ class Bot( asynchat.async_chat ):
         return PhennyWrapper(self)
 
     def call(self, func, origin, phenny, *input): 
-        try: func(phenny, *input)
+        try:
+            if func(phenny, *input) is False:
+                self.noauth(*input)
         except Exception, e:
             self.error(origin)
 
@@ -444,6 +446,6 @@ class Bot( asynchat.async_chat ):
                                     t.start()
                                 else: self.call(func, list(origin), phenny, input)
 
-    def noauth(input):
+    def noauth(self, input):
             self.write_packet(packets.ID.HON_SC_WHISPER, input.nick,'You do not have access to this command.')
             return False

@@ -78,7 +78,7 @@ def setup(bot):
 def config(bot,input):
     """ config - list config keys, config key - show doc and value, config key value - set key to value, whisper to set global(will be set for channel otherwise) """
     if not input.admin:
-        return
+        return False
     if not input.group(2):
         bot.say(bot.config.info())
     else:

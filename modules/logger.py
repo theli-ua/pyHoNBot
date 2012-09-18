@@ -67,13 +67,13 @@ def log_message(phenny, teller, chan, msg):
 
 def log(bot, input): 
     """Adds channel to log list, owner only""" 
-    if not input.owner: return
+    if not input.owner: return False
     bot.config.set_add('logchannels',input.group(2).lower())
 log.commands = ['log']
 
 def unlog(bot, input): 
     """Removes channel from log list, owner only""" 
-    if not input.admin: return
+    if not input.admin: return False
     bot.config.set_del('logchannels',input.group(2).lower())
 unlog.commands = ['unlog']
 
@@ -93,7 +93,7 @@ def sortArray(a, b):
     return adate - bdate
 
 def activityreport(bot, input):
-    if not input.owner: return
+    if not input.owner: return False
     if bot.reportRunning:
         bot.reply("Report is already running.")
         return

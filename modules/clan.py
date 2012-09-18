@@ -47,13 +47,13 @@ member_initstatus.event = [ID.HON_SC_INITIAL_STATUS]
 
 def invite(bot,input):
     """invites to clan, admins only""" 
-    if not input.admin: return
+    if not input.admin: return False
     bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER,input.group(2))
 invite.commands = ['invite']
 
 def remove(bot,input):
     """remove from clan, admins only""" 
-    if not input.admin: return
+    if not input.admin: return False
     nick = input.group(2).lower()
     if nick not in bot.nick2id:
         bot.reply('Sorry, I don''t know ' + nick)

@@ -62,7 +62,7 @@ def ply_join_ban(bot, origin, data):
 ply_join_ban.event = [ID.HON_SC_JOINED_CHANNEL]
 
 def ban(bot, input):
-	if not input.admin: return
+	if not input.admin: return False
 	if not input.group(2): return
 	nick = input.group(2)
 	id = bot.nick2id[nick]
@@ -75,7 +75,7 @@ ban.commands = ['ban']
 ban.thread = True
 
 def unban(bot, input):
-	if not input.admin: return
+	if not input.admin: return False
 	if not input.group(2): return
 	nick = input.group(2)
 	if bot.banlist.Remove(nick):

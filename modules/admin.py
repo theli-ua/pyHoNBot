@@ -4,33 +4,33 @@ import re
 
 def restart(bot, input): 
     """Reloads and reconnects, admins only""" 
-    if not input.admin: return
+    if not input.admin: return False
     bot.close()
 restart.commands = ['restart']
 
 def join(bot, input): 
     """Joins a channel, admins only""" 
-    if not input.admin: return
+    if not input.admin: return False
     bot.write_packet(ID.HON_CS_JOIN_CHANNEL,input.group(2))
     bot.config.set_add('channels',input.group(2))
 join.commands = ['join']
 
 def part(bot, input): 
     """parts a channel, admins only""" 
-    if not input.admin: return
+    if not input.admin: return False
     bot.write_packet(ID.HON_CS_LEAVE_CHANNEL,input.group(2))
     bot.config.set_del('channels',input.group(2))
 part.commands = ['part']
 
 def ignore(bot, input): 
     """makes bot ignore user, admins only""" 
-    if not input.admin: return
+    if not input.admin: return False
     bot.config.set_add('ignore',input.group(2).lower())
 ignore.commands = ['ignore']
 
 def unignore(bot, input): 
     """makes bot stop ignoring user, admins only""" 
-    if not input.admin: return
+    if not input.admin: return False
     bot.config.set_del('ignore',input.group(2).lower())
 unignore.commands = ['unignore']
 
@@ -39,7 +39,7 @@ def regen_ban_re(bot):
 
 def ban(bot, input): 
     """makes bot ban user, bot will try to reban user on each occasion""" 
-    if not input.admin: return
+    if not input.admin: return False
     nick = input.group(2).lower()
     if input.origin[0] == ID.HON_SC_CHANNEL_MSG:
         bot.write_packet(ID.HON_CS_CHANNEL_BAN,input.origin[2],nick)
@@ -53,7 +53,7 @@ def ban(bot, input):
 
 def unban(bot, input): 
     """makes bot stop banning user, admins only""" 
-    if not input.admin: return
+    if not input.admin: return False
     nick = input.group(2).lower()
     if input.origin[0] == ID.HON_SC_CHANNEL_MSG:
         bot.write_packet(ID.HON_CS_CHANNEL_UNBAN,input.origin[2],nick)
@@ -67,13 +67,13 @@ def unban(bot, input):
 
 def admin(bot, input): 
     """Adds person to admin list, owner only""" 
-    if not input.owner: return
+    if not input.owner: return False
     bot.config.set_add('admins',input.group(2).lower())
 admin.commands = ['admin']
 
 def unadmin(bot, input): 
     """Removes person from admins list, owner only""" 
-    if not input.owner: return
+    if not input.owner: return False
     bot.config.set_del('admins',input.group(2).lower())
 unadmin.commands = ['unadmin']
 
@@ -82,7 +82,7 @@ def setup(bot):
 
 def query(bot, input):
     """Master server query"""
-    if not input.owner: return
+    if not input.owner: return False
     query = {'nickname' : input.group(2)}
     query['f'] = 'show_stats'
     query['table'] = 'player'
@@ -98,12 +98,12 @@ except:
 
 def eval(bot, input):
     """Top Secret"""
-    if not input.owner: return
+    if not input.owner: return False
     bot.reply( str( _eval( input.group(2) ) ) )
 eval.commands = ['eval']
 
 def pprint(bot, input):
     """Top Secret"""
-    if not input.owner: return
+    if not input.owner: return False
     print( _eval( input.group(2) ) )
 pprint.commands = ['print']
