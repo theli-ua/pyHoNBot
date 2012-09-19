@@ -133,6 +133,7 @@ class VB:
 			if not self.IsError(retval, ['search']):
 				return retval['show']['searchid']
 			else:
+				print(retval)
 				return False
 		except:
 			return False

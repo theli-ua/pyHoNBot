@@ -110,9 +110,9 @@ def officers(bot, input):
     for ply in bot.clan_status:
         if ply == bot.account_id: continue # It's us, silly!
         if not bot.clan_status[ply] in [ ID.HON_STATUS_INGAME, ID.HON_STATUS_OFFLINE ]:
-            if ply not in bot.clan_roster and bot.id2nick[ply] is not bot.config.owner:
+            if ply not in bot.clan_roster and bot.id2nick[ply] in self.config.admins:
                 continue
-            if bot.id2nick[ply] == bot.config.owner:
+            if bot.id2nick[ply] in self.config.admins:
                 avail_officers.append(bot.id2nick[ply])
             elif bot.clan_roster[ply]['rank'] in ['Officer', 'Leader']:
                 avail_officers.append(bot.id2nick[ply])

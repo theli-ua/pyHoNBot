@@ -76,8 +76,13 @@ def apply(bot, input):
 						bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER, nick)
 						bot.reply("Invited!")
 						if thread['forumid'] == 34:
-							bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
-							bot.vb.MoveThread( thread['threadid'], 36 )
+							if bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan."):
+								if bot.vb.MoveThread( thread['threadid'], 36 ):
+									print("Success")
+								else:
+									print("Failed to move")
+							else:
+								print("Failed to post")
 						elif thread['forumid'] == 35:
 							bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
 							bot.vb.MoveThread( thread['threadid'], 38 )
