@@ -9,6 +9,9 @@ from utils.forum import VB
 import sys
 import traceback
 
+def setup(bot):
+	bot.config.module_config('apply', [1, 'Disable Applications'])
+
 check_time = {}
 appForums = {
 	34: "C",
@@ -48,6 +51,9 @@ def apply(bot, input):
 			return
 		if aid in bot.clan_roster:
 			bot.reply("You're already in {0}, silly.".format( bot.clan_info['name'] ))
+			return
+		if not input.admin and bot.config.apply == 0:
+			bot.reply("Applications are closed.")
 			return
 		bot.write_packet( ID.HON_SC_WHISPER, input.nick, "Fetching application status, please wait..." )
 		bot.vb.Login(bot.config.forumuser, bot.config.forumpassword) # Session expiry check, this is instant if still under expiry time
