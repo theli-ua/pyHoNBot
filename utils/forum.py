@@ -37,10 +37,18 @@ class VB:
 		try:
 			test = ret['response']['errormessage']
 			if isinstance(test, list):
-				return test[0]
+				if test[0] == 'invalid_accesstoken':
+					self.ReInit()
+					return True
+				return test[0] in allowed
 			return not test in allowed
 		except:
 			return None
+
+	def ReInit(self):
+		if not self.username: return
+		self.InitAPI()
+		self.Login(self.username, self.password)
 
 	def Sign(self, args):
 		args = sorted(args.items())
@@ -58,6 +66,8 @@ class VB:
 	def Login(self, username, password):
 		if not self.IsInit(): return False
 		if self.loggedIn is not False and (self.loggedIn+900) > time(): return True
+		self.username = username
+		self.password = password
 		signed = self.Sign({"api_m": "login_login"})
 		get = urlencode({'api_m': 'login_login', 'api_c': self.init["apiclientid"], 'api_s': self.init["apiaccesstoken"], 'api_sig': signed})
 		post = urlencode({"vb_login_username": username, "vb_login_md5password": password})

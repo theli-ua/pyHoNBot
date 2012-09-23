@@ -3,6 +3,7 @@ from hon.packets import ID
 
 def setup(bot):
     bot.config.module_config('welcome_members',[1,'Will welcome members in /c m if set to non-zero value'])
+    bot.config.module_config('officers', [[], 'Officers alts'])
 
 def change_member(bot,origin,data):
     who,status,whodid = data[0],data[1],data[2]
@@ -107,18 +108,42 @@ info.commands = ['info']
 def officers(bot, input):
     """Find available officers"""
     avail_officers = []
-    for ply in bot.clan_status:
-        if ply == bot.account_id: continue # It's us, silly!
-        if not bot.clan_status[ply] in [ ID.HON_STATUS_INGAME, ID.HON_STATUS_OFFLINE ]:
-            if ply not in bot.clan_roster and bot.id2nick[ply] in self.config.admins:
-                continue
-            if bot.id2nick[ply] in self.config.admins:
-                avail_officers.append(bot.id2nick[ply])
-            elif bot.clan_roster[ply]['rank'] in ['Officer', 'Leader']:
-                avail_officers.append(bot.id2nick[ply])
+    for ply in bot.id2nick:
+        if ply == bot.account_id:
+            continue
+        if bot.id2nick[ply] in bot.config.officers:
+            avail_officers.append(bot.id2nick[ply])
+        elif ply in bot.clan_status and ply in bot.clan_roster:
+            if not bot.clan_status[ply] in [ ID.HON_STATUS_INGAME, ID.HON_STATUS_OFFLINE ]:
+                if ply not in bot.clan_roster:
+                    continue
+                elif bot.clan_roster[ply]['rank'] in ['Officer', 'Leader']:
+                    avail_officers.append(bot.id2nick[ply])
     if len(avail_officers) > 0:
         outstr = ', '.join(avail_officers)
     else:
         outstr = 'None'
     bot.reply( "Available officers: {0}".format( outstr ) )
 officers.commands = ['officers']
+
+def officer(bot, input):
+    if not input.admin:
+        return False
+    nick = input.group(2).lower()
+    if not nick in bot.config.officers:
+        bot.config.set_add('officers', nick)
+        bot.reply("Added {0} to officer list".format(nick))
+    else:
+        bot.reply(nick + " is already an officer")
+officer.commands = ['officer']
+
+def unofficer(bot, input):
+    if not input.admin:
+        return False
+    nick = input.group(2).lower()
+    if nick in bot.config.officers:
+        bot.config.set_del('officers', nick)
+        bot.reply("Removed {0} from officer list".format(nick))
+    else:
+        bot.reply(nick + " isn't an officer")
+unofficer.commands = ['unofficer']
