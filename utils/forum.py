@@ -74,7 +74,7 @@ class VB:
 		try:
 			retval = json.load(urlopen(self.url + "?%s" % get, post))
 			self.loggedIn = time()
-			return self.IsError(retval)
+			return not self.IsError(retval)
 		except Exception as inst:
 			print("Login Error: " + inst)
 			return False
