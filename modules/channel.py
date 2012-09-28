@@ -195,7 +195,7 @@ def dtopic(bot, input):
         cname = bot.id2chan[input.origin[2]]
         if input.group(2):
             print( "Inserting dtopic for {0}: {1}".format( cname, input.group(2) ) )
-            bot.db.Config("default_topic", {cname: input.group(2)})
+            bot.db.Config("default_topic", {cname: input.group(2)}, True)
         else:
             topics = bot.db.Config("default_topic")
             if topics is not None and cname in topics:

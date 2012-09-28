@@ -30,7 +30,7 @@ class DB:
 		except Exception, inst:
 			print(inst)
 			return False
-	def Config(self, item, value=None):
+	def Config(self, item, value=None, append=False):
 		conn = self.Connect()
 		if not conn: return None
 		if value is None:
@@ -43,7 +43,7 @@ class DB:
 				conn['cursor'].execute( "SELECT value FROM config WHERE name = %s", [item] )
 				curr = conn['cursor'].fetchone()
 				if curr is not None:
-					if isinstance(value, dict):
+					if isinstance(value, dict) and append:
 						curr = json.loads(curr[0])
 						for key in curr.keys():
 							value[key] = curr[key]
