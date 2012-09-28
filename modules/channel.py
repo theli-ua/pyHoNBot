@@ -42,8 +42,8 @@ def channel_joined_channel(bot,origin,data):
     # Default topic setting
     topic = data[3]
     if ( len(topic) == 0 ) or ( topic == "Welcome to the {0} clan channel!".format( bot.clan_info['name'] ) ):
-        if data[1] in bot.config.default_topic:
-            bot.write_packet( ID.HON_CS_UPDATE_TOPIC, data[1], bot.config.default_topic[data[1]] )
+        if int(data[1]) in bot.config.default_topic:
+            bot.write_packet( ID.HON_CS_UPDATE_TOPIC, data[1], bot.config.default_topic[int(data[1])] )
 
     #banlist management
     """
@@ -192,10 +192,10 @@ def dtopic(bot, input):
     else:
         if input.group(2):
             print( "Inserting dtopic for {0}: {1}".format( input.origin[2], input.group(2) ) )
-            bot.config.set('default_topic', {input.origin[2]: input.group(2)})
+            bot.config.set('default_topic', {int(input.origin[2]): input.group(2)})
         else:
-            if input.origin[2] in bot.config.default_topic:
-                bot.reply( "Current: {0}".format( bot.config.default_topic[input.origin[2]] ) )
+            if int(input.origin[2]) in bot.config.default_topic:
+                bot.reply( "Current: {0}".format( bot.config.default_topic[int(input.origin[2])] ) )
             else:
                 bot.reply( "Default topic for the current channel is not set." )
 dtopic.commands = ['dtopic']
