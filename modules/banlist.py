@@ -100,9 +100,4 @@ migrate.thread = True
 
 
 def setup(bot):
-	bot.config.module_config('db_host', ['localhost', 'Database host'])
-	bot.config.module_config('db_user', ['honbot', 'Database user'])
-	bot.config.module_config('db_pass', ['', 'Database password'])
-	bot.config.module_config('db_db', ['honbot', 'Database... database!'])
-
 	bot.banlist = Banlist(bot)

@@ -15,6 +15,7 @@ import time
 from hon.honutils import normalize_nick
 from utils.dep import dep
 from utils.forum import VB
+from utils import database
 
 home = os.getcwd() 
 
@@ -44,6 +45,7 @@ class Bot( asynchat.async_chat ):
         self.channel_cooldowns = {}
         self.clan_status = {}
         self.user_status = {}
+        self.db = database.DB(self)
         #self.writelock = threading.Lock()
         #self.sleep = time.time() - 10
         #self.send_threshold = 1
