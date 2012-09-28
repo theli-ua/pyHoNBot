@@ -42,8 +42,9 @@ def channel_joined_channel(bot,origin,data):
     # Default topic setting
     topic = data[3]
     if ( len(topic) == 0 ) or ( topic == "Welcome to the {0} clan channel!".format( bot.clan_info['name'] ) ):
-        if int(data[1]) in bot.config.default_topic:
-            bot.write_packet( ID.HON_CS_UPDATE_TOPIC, data[1], bot.config.default_topic[int(data[1])] )
+        if bot.id2chan[data[1]] in bot.config.default_topic:
+            cname = bot.id2chan[data[1]]
+            bot.write_packet( ID.HON_CS_UPDATE_TOPIC, data[1], bot.config.default_topic[cname] )
 
     #banlist management
     """
@@ -190,12 +191,13 @@ def dtopic(bot, input):
     if not input.origin[0] == ID.HON_SC_CHANNEL_MSG:
         bot.reply("Run me from channel intended for the default topic!")
     else:
+        cname = bot.id2chan[input.origin[2]]
         if input.group(2):
-            print( "Inserting dtopic for {0}: {1}".format( input.origin[2], input.group(2) ) )
-            bot.config.set('default_topic', {int(input.origin[2]): input.group(2)})
+            print( "Inserting dtopic for {0}: {1}".format( cname, input.group(2) ) )
+            bot.config.set('default_topic', {cname: input.group(2)})
         else:
-            if int(input.origin[2]) in bot.config.default_topic:
-                bot.reply( "Current: {0}".format( bot.config.default_topic[int(input.origin[2])] ) )
+            if cname in bot.config.default_topic:
+                bot.reply( "Current: {0}".format( bot.config.default_topic[cname] ) )
             else:
                 bot.reply( "Default topic for the current channel is not set." )
 dtopic.commands = ['dtopic']
