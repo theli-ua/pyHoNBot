@@ -152,7 +152,7 @@ def ucw(bot,input):
     if not input.admin:
         return False
     bot.config.set_del('clanwhitelist', input.group(2).lower())
-cw.commands['ucw']
+ucw.commands['ucw']
 
 def kick(bot, input): 
     """makes bot kick user""" 
