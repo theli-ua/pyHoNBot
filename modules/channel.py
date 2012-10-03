@@ -11,7 +11,7 @@ def setup(bot):
     bot.config.module_config('silence_smurfs',[-1,'Will silence anyone with normal mode tmm wins equal or lower than this'])
     bot.config.module_config('spam_threshold',[0,'number of seconds, if user repeats his message in channel with delay lower than this he will be considered spamming and banned'])
     bot.config.module_config('whitelist',[[],'whitelist for antispam etc'])
-    bot.config.module_config('default_topic', [{}, 'Set the channel default topic'])
+    bot.config.module_config('clanwhitelist', [[], 'Clan whitelist'])
 
 silenced = {}
 
@@ -26,6 +26,8 @@ def silence_smurfs(bot,chanid,nick):
         return
     query = {'nickname' : nick,'f': 'show_stats','table': 'ranked'}
     stats_data = bot.masterserver_request(query,cookie=True)
+    if stats_data['name'] in bot.config.clanwhitelist:
+        return
     if 'rnk_wins' not in stats_data:
         return
     if int(stats_data['rnk_wins']) <= bot.config.silence_smurfs:
