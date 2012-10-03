@@ -26,7 +26,7 @@ def silence_smurfs(bot,chanid,nick):
         return
     query = {'nickname' : nick,'f': 'show_stats','table': 'ranked'}
     stats_data = bot.masterserver_request(query,cookie=True)
-    if stats_data['name'] in bot.config.clanwhitelist:
+    if stats_data['name'].lower() in bot.config.clanwhitelist:
         return
     if 'rnk_wins' not in stats_data:
         return
@@ -128,23 +128,27 @@ kickall.event = [ID.HON_SC_CHANNEL_MSG]
 kickall.thread = False
 
 def unwhitelist(bot,input):
+    """Unwhitelist player"""
     if not input.admin:
         return False
     bot.config.set_del('whitelist',input.group(2).lower())
 unwhitelist.commands = ['unwhitelist']
 def whitelist(bot,input):
+    """Whitelist player"""
     if not input.admin:
         return False
     bot.config.set_add('whitelist',input.group(2).lower())
 whitelist.commands = ['whitelist']
 
 def cw(bot,input):
+    """Whitelist Clan"""
     if not input.admin:
         return False
     bot.config.set_add('clanwhitelist', input.group(2).lower())
 cw.commands['cw']
 
 def ucw(bot,input):
+    """Unwhitelist Clan"""
     if not input.admin:
         return False
     bot.config.set_del('clanwhitelist', input.group(2).lower())
