@@ -145,14 +145,14 @@ def cw(bot,input):
     if not input.admin:
         return False
     bot.config.set_add('clanwhitelist', input.group(2).lower())
-cw.commands['cw']
+cw.commands = ['cw']
 
 def ucw(bot,input):
     """Unwhitelist Clan"""
     if not input.admin:
         return False
     bot.config.set_del('clanwhitelist', input.group(2).lower())
-ucw.commands['ucw']
+ucw.commands = ['ucw']
 
 def kick(bot, input): 
     """makes bot kick user""" 
