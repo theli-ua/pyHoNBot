@@ -26,8 +26,9 @@ def silence_smurfs(bot,chanid,nick):
         return
     query = {'nickname' : nick,'f': 'show_stats','table': 'ranked'}
     stats_data = bot.masterserver_request(query,cookie=True)
-    if 'name' in stats_data and stats_data['name'].lower() in bot.config.clanwhitelist:
-        return
+    if 'name' in stats_data and stats['name'] is not None:
+        if stats_data['name'].lower() in bot.config.clanwhitelist:
+            return
     if 'rnk_wins' not in stats_data:
         return
     if int(stats_data['rnk_wins']) <= bot.config.silence_smurfs:
