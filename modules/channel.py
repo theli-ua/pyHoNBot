@@ -78,7 +78,6 @@ def channel_user_joined_channel(bot,origin,data):
     nick = normalize_nick(data[0]).lower()
     """
     if bot.store.banlist_re.match(nick):
-        print("Banlist match: " + nick)
         bot.write_packet(ID.HON_CS_CHANNEL_BAN,data[2],data[0])
     else:
     """

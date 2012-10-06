@@ -1,33 +1,33 @@
 #!/usr/bin/env python
 """
 """
-
-import MySQLdb
+import sqlite3
+try:
+	import MySQLdb
+except: pass
 from hon.honutils import normalize_nick
 from hon.packets import ID
 
 class Banlist:
 	def __init__(self, bot):
-		self.host = bot.config.db_host
-		self.user = bot.config.db_user
-		self.password = bot.config.db_pass
-		self.database = bot.config.db_db
+		self.mode = bot.config.db_mode
+		self.database = bot.nick
+		self.Connect()
 	def Connect(self):
 		try:
-			conn = MySQLdb.connect(
-					host=self.host,
-					user=self.user,
-					passwd=self.password,
-					db=self.database)
-			return {"db": conn, "cursor": conn.cursor()}
-		except:
+			self.conn = sqlite3.connect(self.database+".db")
+			tmpc = self.conn.cursor()
+			tmpc.execute("CREATE TABLE IF NOT EXISTS banlist ( accountid TEXT, nick TEXT )")
+			self.conn.commit()
+		except Exception, inst:
+			print(inst)
 			return False
 	def Add(self, accountid, username):
 		if not self.IsBanlisted(username):
-			conn = self.Connect()
-			if not conn: return False
-			conn['cursor'].execute( "INSERT INTO banlist (accountid, nick) VALUES (%s, %s)", [accountid, username] )
-			conn['db'].commit()
+			if not self.conn: return False
+			c = self.conn.cursor()
+			c.execute( "INSERT INTO banlist (accountid, nick) VALUES (?, ?)", [accountid, username] )
+			self.conn.commit()
 			return True
 		else:
 			return False
@@ -35,16 +35,22 @@ class Banlist:
 		if not self.IsBanlisted(username):
 			return False
 		else:
-			conn = self.Connect()
-			if not conn: return False
-			conn['cursor'].execute( "DELETE FROM banlist WHERE nick = %s", [username] )
-			conn['db'].commit()
+			if not self.conn: return False
+			c = self.conn.cursor()
+			c.execute( "DELETE FROM banlist WHERE nick = ?", [username] )
+			self.conn.commit()
 			return True
 	def IsBanlisted(self, value):
-		conn = self.Connect()
-		if not conn: return False
-		conn['cursor'].execute( "SELECT * FROM banlist WHERE accountid = %s OR nick = %s", [value, value] )
-		return (conn['cursor'].fetchone() is not None)
+		if not self.conn: return False
+		c = self.conn.cursor()
+		c.execute( "SELECT * FROM banlist WHERE accountid = ? OR nick = ?", [value, value] )
+		return (c.fetchone() is not None)
+	def Count(self):
+		if not self.conn: return False
+		c = self.conn.cursor()
+		c.execute("SELECT COUNT(*) FROM banlist")
+		return c.fetchone()[0]
+
 
 def bot_join_ban(bot, origin, data):
 	for m in data[-1]:
@@ -53,6 +59,7 @@ def bot_join_ban(bot, origin, data):
 			for chan in bot.channel_channels.keys():
 				bot.write_packet(ID.HON_CS_CHANNEL_BAN, chan, nick)
 bot_join_ban.event = [ID.HON_SC_CHANGED_CHANNEL]
+bot_join_ban.thread = False
 
 def ply_join_ban(bot, origin, data):
 	nick = normalize_nick(data[0])
@@ -60,6 +67,7 @@ def ply_join_ban(bot, origin, data):
 		for chan in bot.channel_channels.keys():
 			bot.write_packet(ID.HON_CS_CHANNEL_BAN, chan, nick)
 ply_join_ban.event = [ID.HON_SC_JOINED_CHANNEL]
+ply_join_ban.thread = False
 
 def ban(bot, input):
 	if not input.admin: return False
@@ -72,7 +80,7 @@ def ban(bot, input):
 	else:
 		bot.reply("{0} is already banlisted".format(nick))
 ban.commands = ['ban']
-ban.thread = True
+ban.thread = False
 
 def unban(bot, input):
 	if not input.admin: return False
@@ -86,7 +94,7 @@ def unban(bot, input):
 	else:
 		bot.reply("{0} is not banlisted".format(nick))
 unban.commands = ['unban']
-unban.thread = True
+unban.thread = False
 
 def migrate(bot, input):
 	if not input.owner: return
@@ -96,8 +104,14 @@ def migrate(bot, input):
 			print("{0} already in list".format(ban))
 	print("Finished")
 migrate.commands = ['migrate']
-migrate.thread = True
+migrate.thread = False
 
+def banlisted(bot, input):
+	if not input.owner: return
+	bot.reply("Count: {0}".format(bot.banlist.Count()))
+banlisted.commands = ['banlisted']
+banlisted.thread = False
 
 def setup(bot):
+	bot.config.module_config('db_mode', ['sqlite', 'Database Mode'])
 	bot.banlist = Banlist(bot)

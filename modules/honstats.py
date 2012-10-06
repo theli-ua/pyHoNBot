@@ -282,6 +282,7 @@ def get_stats(bot,input,table,hero=None):
     if float(stats['exp_time']) == 0 or float(stats['matches']) == 0:
         bot.say("Unable to return stats")
         return
+    """
     stats['TSR'] = ((float(stats['K'])/float(stats['D'])/1.15)*0.65)+\
             ((float(stats['A'])/float(stats['D'])/1.55)*1.20)+\
             (((float(stats['wins'])/(float(stats['matches'])))/0.55)*0.9)+\
@@ -290,6 +291,7 @@ def get_stats(bot,input,table,hero=None):
             ((((((float(stats['cd'])/float(stats['matches']))/12)*(1-((4.5/8.5)*(0.0/float(stats['matches'])))))*0.70)+\
             ((((float(stats['ck'])/float(stats['matches']))/93)*(1-((63/81)*(0.0/float(stats['matches'])))))*0.50)+\
             ((float(stats['wards'])/float(stats['matches']))/1.45*0.30))*(37.5/(float(stats['exp_time'])/float(stats['matches'])/60)))
+    """
 
     bot.say(bot.config.honstats_player.format(**stats))
 
