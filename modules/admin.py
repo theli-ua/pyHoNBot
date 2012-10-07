@@ -99,7 +99,9 @@ except:
 def eval(bot, input):
     """Top Secret"""
     if not input.owner: return False
-    bot.reply( str( _eval( input.group(2) ) ) )
+    send = str( _eval( input.group(2) ) )
+    print(send)
+    bot.reply(send)
 eval.commands = ['eval']
 
 def pprint(bot, input):
