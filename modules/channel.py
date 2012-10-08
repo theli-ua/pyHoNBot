@@ -120,7 +120,8 @@ def kickall(bot,input):
         return False
     if input.origin[2] in bot.channel_channels:
         for i in bot.channel_channels[input.origin[2]]:
-            if i[0] not in bot.clan_roster and i[1].split(']')[0] not in ['[GM','[S2','[TECH']:
+            split = re.match(r'\[(.*)\](.*)', i[1])
+            if i[0] not in bot.clan_roster and split.group(1) not in ['GM','S2','TECH','EC']:
                 bot.write_packet(ID.HON_CS_CHANNEL_KICK,input.origin[2],i[0])
                 sleep(0.5)
 kickall.commands = ['kickall']
