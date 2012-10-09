@@ -2,9 +2,6 @@
 """
 """
 import sqlite3
-try:
-	import MySQLdb
-except: pass
 from hon.honutils import normalize_nick
 from hon.packets import ID
 

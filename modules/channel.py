@@ -3,6 +3,7 @@ from hon.packets import ID
 from time import sleep
 from datetime import datetime
 from hon.honutils import normalize_nick
+import re
 
 def setup(bot):
     bot.channel_channels = {}
@@ -120,9 +121,8 @@ def kickall(bot,input):
         return False
     if input.origin[2] in bot.channel_channels:
         for i in bot.channel_channels[input.origin[2]]:
-            split = re.match(r'\[(.*)\](.*)', i[1])
-            if i[0] not in bot.clan_roster and split.group(1) not in ['GM','S2','TECH','EC']:
-                bot.write_packet(ID.HON_CS_CHANNEL_KICK,input.origin[2],i[0])
+            if i not in bot.clan_roster and (i in bot.id2nick and bot.id2nick[i] not in bot.config.admins and bot.id2nick[i] not in bot.config.officers):
+                bot.write_packet(ID.HON_CS_CHANNEL_KICK, input.origin[2], i)
                 sleep(0.5)
 kickall.commands = ['kickall']
 kickall.event = [ID.HON_SC_CHANNEL_MSG]
