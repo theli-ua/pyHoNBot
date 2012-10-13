@@ -70,7 +70,9 @@ def ban(bot, input):
 	if not input.admin: return False
 	if not input.group(2): return
 	nick = input.group(2)
-	id = bot.nick2id[nick]
+	id = "unknown"
+	if nick in bot.nick2id:
+		id = bot.nick2id[nick]
 	if bot.banlist.Add(id, nick):
 		bot.reply("Banlisted {0}".format(nick))
 		bot.write_packet(ID.HON_CS_CHANNEL_BAN, input.origin[2], nick)
