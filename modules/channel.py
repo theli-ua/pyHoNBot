@@ -46,7 +46,7 @@ def channel_joined_channel(bot,origin,data):
     # Default topic setting
     topic = data[3]
     if ( len(topic) == 0 ) or ( topic == "Welcome to the {0} clan channel!".format( bot.clan_info['name'] ) ):
-        topics = bot.db.Config("default_topic")
+        topics = bot.config.default_topic
         if topics is not None and bot.id2chan[data[1]] in topics:
             cname = bot.id2chan[data[1]]
             bot.write_packet( ID.HON_CS_UPDATE_TOPIC, data[1], bot.db.Config("default_topic")[cname] )
@@ -214,9 +214,9 @@ def dtopic(bot, input):
         cname = bot.id2chan[input.origin[2]]
         if input.group(2):
             print( "Inserting dtopic for {0}: {1}".format( cname, input.group(2) ) )
-            bot.db.Config("default_topic", {cname: input.group(2)}, True)
+            bot.config.set_add("default_topic", {cname: input.group(2)})
         else:
-            topics = bot.db.Config("default_topic")
+            topics = bot.config.default_topic
             if topics is not None and cname in topics:
                 bot.reply( "Current: {0}".format( bot.config.default_topic[cname] ) )
             else:
