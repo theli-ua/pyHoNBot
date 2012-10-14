@@ -5,7 +5,7 @@
 """
 """
 
-import os, imp, sys,threading
+import os, imp, sys,threading,inspect
 import re
 import socket, asyncore, asynchat
 from hon import masterserver,packets
@@ -27,6 +27,9 @@ class Bot( asynchat.async_chat ):
         self.sending.acquire()
         asynchat.async_chat.initiate_send(self)
         self.sending.release()
+    def err(self, msg):
+        caller = inspect.stack()
+        print("Error: {0} ({1}:{2} - {3})".format(msg, caller[1][1], caller[1][2], time.strftime('%X')))
     def __init__( self,config ):
         asynchat.async_chat.__init__( self )   
         self.config = config
@@ -39,6 +42,7 @@ class Bot( asynchat.async_chat ):
         self.chan2id = {}
         self.id2chan = {}
         self.id2clan = {}
+        self.nick2clan = {}
         self.setup()
         self.sending = threading.Lock()
         self.cooldowns = {}

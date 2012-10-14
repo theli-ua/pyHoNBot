@@ -15,6 +15,7 @@ def joined_channel(bot,origin,data):
     for m in data[-1]:
         bot.id2clan[m[1]] = GetClanTag(m[0])
         m[0] = normalize_nick(m[0])
+        bot.nick2clan[m[0]] = bot.id2clan[m[1]]
         bot.nick2id[m[0]] = m[1]
         bot.id2nick[m[1]] = m[0]
         bot.user_status[m[1]] = m[2]
@@ -25,6 +26,7 @@ joined_channel.thread = False
 def user_joined_channel(bot,origin,data):
     nick = normalize_nick(data[0])
     bot.id2clan[data[1]] = GetClanTag(data[0])
+    bot.nick2clan[nick] = bot.id2clan[data[1]]
     bot.nick2id[nick] = data[1]
     bot.id2nick[data[1]] = nick
     bot.user_status[data[1]] = data[3]

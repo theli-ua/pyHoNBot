@@ -25,20 +25,18 @@ def silence_smurfs(bot,chanid,nick):
         return
     if nick in bot.not_smurfs or nick in bot.config.whitelist:
         return
+    if bot.nick2clan[nick] in bot.config.clanwhitelist:
+        return
     query = {'nickname' : nick,'f': 'show_stats','table': 'ranked'}
     stats_data = bot.masterserver_request(query,cookie=True)
-    if 'name' in stats_data and stats_data['name'] is not None:
-        if stats_data['name'].lower() in bot.config.clanwhitelist:
-            return
     if 'rnk_wins' not in stats_data:
+        bot.err("Received malformed data from masterserver")
         return
     if int(stats_data['rnk_wins']) <= bot.config.silence_smurfs:
-        bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER,chanid,nick,0x7fffffff)
+        bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER, chanid, nick, 0x7fffffff)
         silenced[(nick,chanid)] = True
     else:
         bot.not_smurfs.append(nick)
-
-    
 
 def channel_joined_channel(bot,origin,data):
     bot.channel_channels[data[1]] = dict([[m[1],[m[1],m[0],datetime.now(),None]] for m in data[-1]])
@@ -50,16 +48,6 @@ def channel_joined_channel(bot,origin,data):
         if topics is not None and bot.id2chan[data[1]] in topics:
             cname = bot.id2chan[data[1]]
             bot.write_packet( ID.HON_CS_UPDATE_TOPIC, data[1], bot.config.default_topic[cname] )
-
-    #banlist management
-    """
-    for m in data[-1]:
-        nick = normalize_nick(m[0]).lower()
-        if bot.store.banlist_re.match(nick):
-            bot.write_packet(ID.HON_CS_CHANNEL_BAN,data[1],nick)
-        #else:
-            #silence_smurfs(bot,data[1],nick)
-    """
 
 channel_joined_channel.event = [ID.HON_SC_CHANGED_CHANNEL]
 
@@ -77,11 +65,6 @@ def channel_user_joined_channel(bot,origin,data):
     CHANNEL_MAX = bot.config.channel_limit
     #banlist management
     nick = normalize_nick(data[0]).lower()
-    """
-    if bot.store.banlist_re.match(nick):
-        bot.write_packet(ID.HON_CS_CHANNEL_BAN,data[2],data[0])
-    else:
-    """
     if CHANNEL_MAX == 0:
         return
     if l > CHANNEL_MAX:
