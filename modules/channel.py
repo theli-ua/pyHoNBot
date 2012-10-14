@@ -25,7 +25,7 @@ def silence_smurfs(bot,chanid,nick):
         return
     if nick in bot.not_smurfs or nick in bot.config.whitelist:
         return
-    if bot.nick2clan[nick] in bot.config.clanwhitelist:
+    if bot.nick2clan[nick].lower() in bot.config.clanwhitelist:
         return
     query = {'nickname' : nick,'f': 'show_stats','table': 'ranked'}
     stats_data = bot.masterserver_request(query,cookie=True)
