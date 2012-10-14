@@ -2,12 +2,18 @@
 #
 from hon.packets import ID
 from hon.honutils import normalize_nick
+import re
+
+def GetClanTag(nick):
+    match = re.match(r'\[(.*)\](.*)', nick)
+    return match and match.group(1) or ""
 
 def joined_channel(bot,origin,data):
     print("Joined " + data[0])
     bot.chan2id[data[0].lower()] = data[1]
     bot.id2chan[data[1]] = data[0].lower()
     for m in data[-1]:
+        bot.id2clan[m[1]] = GetClanTag(m[0])
         m[0] = normalize_nick(m[0])
         bot.nick2id[m[0]] = m[1]
         bot.id2nick[m[1]] = m[0]
@@ -17,7 +23,8 @@ joined_channel.priority = 'high'
 joined_channel.thread = False
 
 def user_joined_channel(bot,origin,data):
-    nick = normalize_nick(data[0]).lower()
+    nick = normalize_nick(data[0])
+    bot.id2clan[data[1]] = GetClanTag(data[0])
     bot.nick2id[nick] = data[1]
     bot.id2nick[data[1]] = nick
     bot.user_status[data[1]] = data[3]
@@ -26,7 +33,7 @@ user_joined_channel.priority = 'high'
 user_joined_channel.thread = False
 
 def name_change(bot,origin,data):
-    nick = normalize_nick(data[1]).lower()
+    nick = normalize_nick(data[1])
     bot.nick2id[nick] = data[0]
     bot.id2nick[data[0]] = nick
 name_change.event = [ID.HON_SC_NAME_CHANGE]

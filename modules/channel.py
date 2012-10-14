@@ -49,7 +49,7 @@ def channel_joined_channel(bot,origin,data):
         topics = bot.config.default_topic
         if topics is not None and bot.id2chan[data[1]] in topics:
             cname = bot.id2chan[data[1]]
-            bot.write_packet( ID.HON_CS_UPDATE_TOPIC, data[1], bot.db.Config("default_topic")[cname] )
+            bot.write_packet( ID.HON_CS_UPDATE_TOPIC, data[1], bot.config.default_topic[cname] )
 
     #banlist management
     """

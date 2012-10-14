@@ -38,6 +38,7 @@ class Bot( asynchat.async_chat ):
         self.nick2id = {}
         self.chan2id = {}
         self.id2chan = {}
+        self.id2clan = {}
         self.setup()
         self.sending = threading.Lock()
         self.cooldowns = {}
