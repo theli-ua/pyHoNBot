@@ -34,7 +34,7 @@ def member_changestatus(bot,origin,data):
     id = data[0]
     if id in bot.clan_roster:
         bot.clan_status[id] = data[1]
-        if data[1] is ID.HON_STATUS_ONLINE:
+        if data[1] in [ID.HON_STATUS_ONLINE]:
             nick = bot.id2nick[id]
             bot.clan_roster[id]['upgrades'] = user_upgrades(bot, nick)
     elif bot.id2nick[id] == bot.config.owner:
@@ -45,7 +45,7 @@ def member_initstatus(bot,origin,data):
     for u in data[1]:
         id = u[0]
         if id in bot.clan_roster:
-            if u[1] is in [ID.HON_STATUS_ONLINE, ID.HON_STATUS_INGAME]:
+            if u[1] in [ID.HON_STATUS_ONLINE, ID.HON_STATUS_INGAME]:
                 nick = bot.id2nick[id]
                 bot.clan_roster[id]['upgrades'] = user_upgrades(bot, nick)
             bot.clan_status[id] = u[1]
