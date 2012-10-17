@@ -72,7 +72,6 @@ def channel_user_joined_channel(bot,origin,data):
     if data[1] in bot.clan_roster:
         if not 'upgrades' in bot.clan_roster[data[1]]:
             bot.clan_roster[data[1]]['upgrades'] = user_upgrades(data, 1)
-            print(bot.clan_roster[data[1]])
     if CHANNEL_MAX == 0:
         return
     if l > CHANNEL_MAX:
