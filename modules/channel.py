@@ -57,8 +57,6 @@ channel_joined_channel.event = [ID.HON_SC_CHANGED_CHANNEL]
 
 def channel_user_joined_channel_smurfs(bot,origin,data):
     nick = normalize_nick(data[0]).lower()
-    if data[1] is bot.config.owner:
-        print(data)
     silence_smurfs(bot,data[2],nick)
 channel_user_joined_channel_smurfs.event = [ID.HON_SC_JOINED_CHANNEL]
 channel_user_joined_channel_smurfs.thread = True
@@ -71,6 +69,10 @@ def channel_user_joined_channel(bot,origin,data):
     CHANNEL_MAX = bot.config.channel_limit
     #banlist management
     nick = normalize_nick(data[0]).lower()
+    if data[1] in bot.clan_roster:
+        if not 'upgrades' in bot.clan_roster[data[1]]:
+            bot.clan_roster[data[1]]['upgrades'] = user_upgrades(data, 1)
+            print(bot.clan_roster[data[1]])
     if CHANNEL_MAX == 0:
         return
     if l > CHANNEL_MAX:

@@ -21,12 +21,12 @@ def normalize_nick(nick):
 		return nick[nick.index(']') + 1 :]
 	else:
 		return nick
-def user_upgrades(info):
+def user_upgrades(info, offset=0):
 	id = info[1]
 	ai = "http://www.heroesofnewerth.com/getAvatar.php?id={0}".format(id)
 	retval = {
-		"color": colors[info[5]],
-		"symbol": len(info[4]) > 0 and info[4] or "default",
-		"ai": ai
+		"ai": ai,
+		"color": colors[info[5+offset]],
+		"symbol": len(info[4+offset]) > 0 and info[4+offset] or "default"
 	}
 	return retval
