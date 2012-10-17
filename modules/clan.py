@@ -1,5 +1,6 @@
 # -*- coding: utf8 -*-
 from hon.packets import ID
+from hon.honutils import user_upgrades
 
 def setup(bot):
     bot.config.module_config('welcome_members',[1,'Will welcome members in /c m if set to non-zero value'])
@@ -20,6 +21,14 @@ def change_member(bot,origin,data):
         bot.clan_roster[who]['rank'] = 'Leader'
 
 change_member.event = [ID.HON_SC_CLAN_MEMBER_CHANGE]
+
+def update_roster(bot,origin,data):
+    for id in bot.clan_roster:
+        nick = bot.id2nick[id]
+        bot.clan_roster[id]['upgrades'] = user_upgrades(bot, nick)
+update_roster.event = [ID.HON_SC_AUTH_ACCEPTED]
+update_roster.priority = 'low'
+update_roster.thread = True
 
 def add_member(bot,origin,data):
     id = data[0]
