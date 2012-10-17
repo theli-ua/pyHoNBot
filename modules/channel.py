@@ -3,6 +3,7 @@ from hon.packets import ID
 from time import sleep
 from datetime import datetime
 from hon.honutils import normalize_nick
+from hon.honutils import user_upgrades
 import re
 
 def setup(bot):
@@ -40,7 +41,10 @@ def silence_smurfs(bot,chanid,nick):
 
 def channel_joined_channel(bot,origin,data):
     bot.channel_channels[data[1]] = dict([[m[1],[m[1],m[0],datetime.now(),None]] for m in data[-1]])
-
+    for m in data[-1]:
+        if m[1] in bot.clan_roster:
+            if not 'upgrades' in bot.clan_roster[m[1]]:
+                bot.clan_roster[m[1]]['upgrades'] = user_upgrades(m)
     # Default topic setting
     topic = data[3]
     if ( len(topic) == 0 ) or ( topic == "Welcome to the {0} clan channel!".format( bot.clan_info['name'] ) ):
@@ -53,6 +57,8 @@ channel_joined_channel.event = [ID.HON_SC_CHANGED_CHANNEL]
 
 def channel_user_joined_channel_smurfs(bot,origin,data):
     nick = normalize_nick(data[0]).lower()
+    if data[1] is bot.config.owner:
+        print(data)
     silence_smurfs(bot,data[2],nick)
 channel_user_joined_channel_smurfs.event = [ID.HON_SC_JOINED_CHANNEL]
 channel_user_joined_channel_smurfs.thread = True

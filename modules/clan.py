@@ -1,6 +1,5 @@
 # -*- coding: utf8 -*-
 from hon.packets import ID
-from hon.honutils import user_upgrades
 
 def setup(bot):
     bot.config.module_config('welcome_members',[1,'Will welcome members in /c m if set to non-zero value'])
@@ -36,7 +35,7 @@ def member_changestatus(bot,origin,data):
         bot.clan_status[id] = data[1]
         if data[1] in [ID.HON_STATUS_ONLINE]:
             nick = bot.id2nick[id]
-            bot.clan_roster[id]['upgrades'] = user_upgrades(bot, nick)
+            #bot.clan_roster[id]['upgrades'] = user_upgrades(bot, nick)
     elif bot.id2nick[id] == bot.config.owner:
         bot.clan_status[id] = data[1]
 member_changestatus.event = [ID.HON_SC_UPDATE_STATUS]
@@ -47,7 +46,7 @@ def member_initstatus(bot,origin,data):
         if id in bot.clan_roster:
             if u[1] in [ID.HON_STATUS_ONLINE, ID.HON_STATUS_INGAME]:
                 nick = bot.id2nick[id]
-                bot.clan_roster[id]['upgrades'] = user_upgrades(bot, nick)
+                #bot.clan_roster[id]['upgrades'] = user_upgrades(bot, nick)
             bot.clan_status[id] = u[1]
         elif bot.id2nick[id] == bot.config.owner:
             bot.clan_status[id] = u[1]
