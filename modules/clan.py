@@ -22,14 +22,6 @@ def change_member(bot,origin,data):
 
 change_member.event = [ID.HON_SC_CLAN_MEMBER_CHANGE]
 
-def update_roster(bot,origin,data):
-    for id in bot.clan_roster:
-        nick = bot.id2nick[id]
-        bot.clan_roster[id]['upgrades'] = user_upgrades(bot, nick)
-update_roster.event = [ID.HON_SC_AUTH_ACCEPTED]
-update_roster.priority = 'low'
-update_roster.thread = True
-
 def add_member(bot,origin,data):
     id = data[0]
     bot.clan_roster[id] = {"rank":"Member"}
@@ -42,6 +34,8 @@ def member_changestatus(bot,origin,data):
     id = data[0]
     if id in bot.clan_roster:
         bot.clan_status[id] = data[1]
+        if data[1] is ID.HON_STATUS_ONLINE:
+            bot.clan_roster[id]['upgrades'] = user_upgrades(bot, nick)
     elif bot.id2nick[id] == bot.config.owner:
         bot.clan_status[id] = data[1]
 member_changestatus.event = [ID.HON_SC_UPDATE_STATUS]
