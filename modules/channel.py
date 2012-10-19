@@ -19,6 +19,8 @@ def setup(bot):
 silenced = {}
 
 def getTopic(bot, cname):
+    if isinstance(bot.config.default_topic, dict):
+        bot.config.set('default_topic', [])
     for topic in bot.config.default_topic:
         if not isinstance(topic, dict): break
         if topic['name'] == cname:
