@@ -12,7 +12,8 @@ colors = {
 	"diamond": "#2ACC1FA",
 	"goldshield": "#DBBF4A",
 	"silvershield": "#7C8DA7",
-	"white": "#FFFFFF"
+	"white": "#FFFFFF",
+	"": "#FFFFFF"
 }
 
 def normalize_nick(nick):

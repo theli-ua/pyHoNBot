@@ -14,8 +14,27 @@ def setup(bot):
     bot.config.module_config('spam_threshold',[0,'number of seconds, if user repeats his message in channel with delay lower than this he will be considered spamming and banned'])
     bot.config.module_config('whitelist',[[],'whitelist for antispam etc'])
     bot.config.module_config('clanwhitelist', [[], 'Clan whitelist'])
+    bot.config.module_config('default_topic', [[], 'Default Topics'])
 
 silenced = {}
+
+def getTopic(bot, cname):
+    for topic in bot.config.default_topic:
+        if not isinstance(topic, dict): break
+        if topic['name'] == cname:
+            return topic['topic']
+    return False
+def setTopic(bot, cname, topic):
+    curr = bot.config.default_topic
+    found = False
+    for key,item in enumerate(curr):
+        if not isinstance(item, dict): break
+        if item['name'] == cname:
+            found = True
+            curr[key]['topic'] = topic
+    if not found:
+        curr.append({"name": cname, "topic": topic})
+    bot.config.set('default_topic', curr)
 
 def silence_smurfs(bot,chanid,nick):
     if bot.config.silence_smurfs < 0:
@@ -48,10 +67,9 @@ def channel_joined_channel(bot,origin,data):
     # Default topic setting
     topic = data[3]
     if ( len(topic) == 0 ) or ( topic == "Welcome to the {0} clan channel!".format( bot.clan_info['name'] ) ):
-        topics = bot.config.default_topic
-        if topics is not None and bot.id2chan[data[1]] in topics:
-            cname = bot.id2chan[data[1]]
-            bot.write_packet( ID.HON_CS_UPDATE_TOPIC, data[1], bot.config.default_topic[cname] )
+        cname = bot.id2chan[data[1]]
+        if getTopic(bot, cname):
+            bot.write_packet( ID.HON_CS_UPDATE_TOPIC, data[1], getTopic(bot, cname) )
 
 channel_joined_channel.event = [ID.HON_SC_CHANGED_CHANNEL]
 
@@ -204,11 +222,10 @@ def dtopic(bot, input):
         cname = bot.id2chan[input.origin[2]]
         if input.group(2):
             print( "Inserting dtopic for {0}: {1}".format( cname, input.group(2) ) )
-            bot.config.set_add("default_topic", {cname: input.group(2)})
+            setTopic(bot, cname, input.group(2))
         else:
-            topics = bot.config.default_topic
-            if topics is not None and cname in topics:
-                bot.reply( "Current: {0}".format( bot.config.default_topic[cname] ) )
+            if getTopic(bot, cname):
+                bot.reply( "Current: {0}".format( getTopic(bot, cname) ) )
             else:
                 bot.reply( "Default topic for the current channel is not set." )
 dtopic.commands = ['dtopic']
