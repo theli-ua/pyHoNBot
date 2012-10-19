@@ -92,10 +92,8 @@ class Bot( asynchat.async_chat ):
         print ('socket connected')
         self.set_terminator(2)
         self.got_len = False
-        #self.write(packets.pack(packets.ID.HON_CS_AUTH_INFO,self.account_id,
-            #self.cookie,self.ip,self.auth_hash,packets.ID.HON_PROTOCOL_VERSION,5,0))
         self.write_packet(packets.ID.HON_CS_AUTH_INFO,self.account_id,
-            self.cookie,self.ip,self.auth_hash,packets.ID.HON_PROTOCOL_VERSION,5,0)
+            self.cookie,self.ip,self.auth_hash,packets.ID.HON_PROTOCOL_VERSION,0x383,0,5,4,'lac',0)
 
     def collect_incoming_data( self, data ):
         self.buffer += data

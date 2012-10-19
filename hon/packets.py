@@ -3,7 +3,7 @@ import struct
 class ID:
     #generic constants
     HON_CHAT_PORT = 11031
-    HON_PROTOCOL_VERSION = 27
+    HON_PROTOCOL_VERSION = 34
 
     HON_STATUS_OFFLINE    =  0
     HON_STATUS_ONLINE     =  3
@@ -167,7 +167,7 @@ def parse_user_status(packet_id,data):
 
 chat_packets = [ID.HON_SC_PM,ID.HON_SC_WHISPER,ID.HON_SC_CHANNEL_MSG,ID.HON_SC_CHANNEL_ROLL,ID.HON_SC_CHANNEL_EMOTE]
 cs_structs = {
-        ID.HON_CS_AUTH_INFO : 'IsssIIB',
+        ID.HON_CS_AUTH_INFO : 'IsssIIBIIsI',
         ID.HON_CS_PONG      : '',
         ID.HON_CS_JOIN_CHANNEL : 's',
         ID.HON_CS_PM : 'ss',
