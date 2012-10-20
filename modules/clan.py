@@ -153,3 +153,11 @@ def unofficer(bot, input):
     else:
         bot.reply(nick + " isn't an officer")
 unofficer.commands = ['unofficer']
+
+def announce(bot, input):
+    if not input.admin:
+        return False
+    if not input.group(2):
+        return
+    bot.write_packet(ID.HON_CS_CLAN_MESSAGE, input.group(2))
+announce.commands = ['announce']
