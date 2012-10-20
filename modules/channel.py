@@ -143,12 +143,14 @@ def unwhitelist(bot,input):
     if not input.admin:
         return False
     bot.config.set_del('whitelist',input.group(2).lower())
+    bot.reply("Unwhitelisted {0}".format(input.group(2)))
 unwhitelist.commands = ['unwhitelist']
 def whitelist(bot,input):
     """Whitelist player"""
     if not input.admin:
         return False
     bot.config.set_add('whitelist',input.group(2).lower())
+    bot.reply("Whitelisted {0}".format(input.group(2)))
 whitelist.commands = ['whitelist']
 
 def cw(bot,input):
@@ -156,6 +158,7 @@ def cw(bot,input):
     if not input.admin:
         return False
     bot.config.set_add('clanwhitelist', input.group(2).lower())
+    bot.reply("Whitelisted clan {0}".format(input.group(2)))
 cw.commands = ['cw']
 
 def ucw(bot,input):
@@ -163,6 +166,7 @@ def ucw(bot,input):
     if not input.admin:
         return False
     bot.config.set_del('clanwhitelist', input.group(2).lower())
+    bot.reply("Unwhitelisted clan {0}".format(input.group(2)))
 ucw.commands = ['ucw']
 
 def kick(bot, input): 

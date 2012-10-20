@@ -280,7 +280,7 @@ def get_stats(bot,input,table,hero=None):
         stats['rating_type'] = 'MMR'
     print( "Debug: exp_time: %f, matches: %f" % (float(stats['exp_time']), float(stats['matches'])) )
     if float(stats['exp_time']) == 0 or float(stats['matches']) == 0:
-        bot.say("Unable to return stats")
+        bot.say("No matches played or error occurred.")
         return
     """
     stats['TSR'] = ((float(stats['K'])/float(stats['D'])/1.15)*0.65)+\

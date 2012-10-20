@@ -13,6 +13,7 @@ def join(bot, input):
     if not input.admin: return False
     bot.write_packet(ID.HON_CS_JOIN_CHANNEL,input.group(2))
     bot.config.set_add('channels',input.group(2))
+    bot.reply("Joined channel: {0}".format(input.group(2)))
 join.commands = ['join']
 
 def part(bot, input): 
@@ -20,18 +21,21 @@ def part(bot, input):
     if not input.admin: return False
     bot.write_packet(ID.HON_CS_LEAVE_CHANNEL,input.group(2))
     bot.config.set_del('channels',input.group(2))
+    bot.reply("Left channel: {0}".format(input.group(2)))
 part.commands = ['part']
 
 def ignore(bot, input): 
     """makes bot ignore user, admins only""" 
     if not input.admin: return False
     bot.config.set_add('ignore',input.group(2).lower())
+    bot.reply("Ignored {0}".format(input.group(2)))
 ignore.commands = ['ignore']
 
 def unignore(bot, input): 
     """makes bot stop ignoring user, admins only""" 
     if not input.admin: return False
     bot.config.set_del('ignore',input.group(2).lower())
+    bot.reply("Unignored {0}".format(input.group(2)))
 unignore.commands = ['unignore']
 
 def regen_ban_re(bot):
@@ -69,12 +73,14 @@ def admin(bot, input):
     """Adds person to admin list, owner only""" 
     if not input.owner: return False
     bot.config.set_add('admins',input.group(2).lower())
+    bot.reply("Admin'd {0}".format(input.group(2)))
 admin.commands = ['admin']
 
 def unadmin(bot, input): 
     """Removes person from admins list, owner only""" 
     if not input.owner: return False
     bot.config.set_del('admins',input.group(2).lower())
+    bot.reply("Unadmin'd {0}".format(input.group(2)))
 unadmin.commands = ['unadmin']
 
 def setup(bot):

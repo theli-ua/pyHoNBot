@@ -56,6 +56,7 @@ def invite(bot,input):
     """invites to clan, admins only""" 
     if not input.admin: return False
     bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER,input.group(2))
+    bot.reply("Invited {0}".format(input.group(2)))
 invite.commands = ['invite']
 
 def remove(bot,input):

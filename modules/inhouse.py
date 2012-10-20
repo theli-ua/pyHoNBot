@@ -75,6 +75,9 @@ def ih(bot,input):
             inhouses[game.name] = '{0}^* [{1}]'.format(game.name,','.join(players))
     real_inhouses = []
     tmm = []
+    if len(inhouses) == 0:
+        bot.reply("No inhouses are up")
+        return
     for name in inhouses:
         if name.startswith('TMM'):
             tmm.append(name)
@@ -91,6 +94,7 @@ def ihadd(bot,input):
     if not input.admin:
         return
     bot.config.set_add('ih_keywords',input.group(2))
+    bot.reply("Added ih keyword: {0}".format(input.group(2)))
 ihadd.commands = ['ihadd']
 
 def ihdel(bot,input):
@@ -98,6 +102,7 @@ def ihdel(bot,input):
     if not input.admin:
         return
     bot.config.set_del('ih_keywords',input.group(2))
+    bot.reply("Removed ih keyword: {0}".format(input.group(2)))
 ihdel.commands = ['ihdel']
 
 def setup(bot):
