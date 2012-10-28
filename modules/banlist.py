@@ -62,7 +62,7 @@ class Banlist:
 		c.execute( "SELECT * FROM banlist WHERE lower(nick) = ?", [value.lower()] )
 		row = c.fetchone()
 		if row is not None:
-			return c.fetchone()
+			return row
 		else:
 			return False
 	def Count(self):
@@ -130,7 +130,7 @@ def baninfo(bot, input):
 	if bot.banlist.IsBanlisted(nick):
 		info = bot.banlist.GetBan(nick)
 		if info:
-			bot.reply("{0} was banned by {1} on {2}".format(info[1], info[2], info[3]))
+			bot.reply("{0} was banned by {1} on {2}".format(info[1], info[2] or 'N/A', info[3] or 'N/A'))
 		else:
 			bot.reply("There was an error fetching the ban info.")
 	else:
