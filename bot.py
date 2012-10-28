@@ -119,6 +119,9 @@ class Bot( asynchat.async_chat ):
 
     def auth(self):
         auth_data = masterserver.auth(self.config.nick,self.config.password)
+        if 'ip' not in auth_data:
+            print("Login Failure")
+            return False
         self.ip = auth_data['ip']
         self.cookie = auth_data['cookie']
         self.account_id = int(auth_data['account_id'])
@@ -156,6 +159,8 @@ class Bot( asynchat.async_chat ):
 
     def run(self):
         auth_data = self.auth()
+        if auth_data is False:
+            return
         self.create_socket( socket.AF_INET, socket.SOCK_STREAM )
         self.connect( ( auth_data['chat_url'], int(auth_data['chat_port']) ) )
         asyncore.loop()

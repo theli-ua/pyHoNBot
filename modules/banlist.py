@@ -4,26 +4,40 @@
 import sqlite3
 from hon.honutils import normalize_nick
 from hon.packets import ID
+from datetime import datetime
 
 class Banlist:
-	def __init__(self, bot):
+	def __init__(self, bot, filename=None):
 		self.mode = bot.config.db_mode
-		self.database = bot.nick
+		if filename is not None:
+			self.database = filename
+		else:
+			self.database = bot.nick
 		self.Connect()
 	def Connect(self):
 		try:
 			self.conn = sqlite3.connect(self.database+".db")
 			tmpc = self.conn.cursor()
-			tmpc.execute("CREATE TABLE IF NOT EXISTS banlist ( accountid TEXT, nick TEXT )")
+			tmpc.execute("CREATE TABLE IF NOT EXISTS banlist ( accountid TEXT, nick TEXT, admin TEXT, date TEXT )")
 			self.conn.commit()
+			self.AddAdminColumn() # Backwards compatibility
 		except Exception, inst:
 			print(inst)
 			return False
-	def Add(self, accountid, username):
+	def AddAdminColumn(self):
+		if not self.conn: return
+		try:
+			c = self.conn.cursor()
+			c.execute("ALTER TABLE banlist ADD COLUMN admin TEXT")
+			c.execute("ALTER TABLE banlist ADD COLUMN date TEXT")
+			self.conn.commit()
+		except: pass
+	def Add(self, accountid, username, adminName='Unknown'):
 		if not self.IsBanlisted(username):
 			if not self.conn: return False
 			c = self.conn.cursor()
-			c.execute( "INSERT INTO banlist (accountid, nick) VALUES (?, ?)", [accountid, username] )
+			theDate = str(datetime.now()).split(" ")[0]
+			c.execute( "INSERT INTO banlist (accountid, nick, admin, date) VALUES (?, ?, ?, ?)", [accountid, username, adminName, theDate] )
 			self.conn.commit()
 			return True
 		else:
@@ -34,14 +48,23 @@ class Banlist:
 		else:
 			if not self.conn: return False
 			c = self.conn.cursor()
-			c.execute( "DELETE FROM banlist WHERE nick = ?", [username] )
+			c.execute( "DELETE FROM banlist WHERE lower(nick) = ?", [username.lower()] )
 			self.conn.commit()
 			return True
 	def IsBanlisted(self, value):
 		if not self.conn: return False
 		c = self.conn.cursor()
-		c.execute( "SELECT * FROM banlist WHERE accountid = ? OR nick = ?", [value, value] )
+		c.execute( "SELECT * FROM banlist WHERE lower(nick) = ?", [value.lower()] )
 		return (c.fetchone() is not None)
+	def GetBan(self, value):
+		if not self.conn: return False
+		c = self.conn.cursor()
+		c.execute( "SELECT * FROM banlist WHERE lower(nick) = ?", [value.lower()] )
+		row = c.fetchone()
+		if row is not None:
+			return c.fetchone()
+		else:
+			return False
 	def Count(self):
 		if not self.conn: return False
 		c = self.conn.cursor()
@@ -69,11 +92,11 @@ ply_join_ban.thread = False
 def ban(bot, input):
 	if not input.admin: return False
 	if not input.group(2): return
-	nick = input.group(2)
+	nick = input.group(2).lower()
 	id = "unknown"
 	if nick in bot.nick2id:
 		id = bot.nick2id[nick]
-	if bot.banlist.Add(id, nick):
+	if bot.banlist.Add(id, nick, input.nick):
 		bot.reply("Banlisted {0}".format(nick))
 		bot.write_packet(ID.HON_CS_CHANNEL_BAN, input.origin[2], nick)
 	else:
@@ -95,6 +118,26 @@ def unban(bot, input):
 unban.commands = ['unban']
 unban.thread = False
 
+def bancount(bot, input):
+	bot.reply("There are {0} banned users".format(bot.banlist.Count()))
+bancount.commands = ['bancount']
+bancount.thread = False
+
+def baninfo(bot, input):
+	if not input.admin: return False
+	if not input.group(2): return
+	nick = input.group(2)
+	if bot.banlist.IsBanlisted(nick):
+		info = bot.banlist.GetBan(nick)
+		if info:
+			bot.reply("{0} was banned by {1} on {2}".format(info[1], info[2], info[3]))
+		else:
+			bot.reply("There was an error fetching the ban info.")
+	else:
+		bot.reply("{0} is not banlisted".format(nick))
+baninfo.commands = ['baninfo']
+baninfo.thread = False
+
 def migrate(bot, input):
 	if not input.owner: return
 	print("Starting")
@@ -104,12 +147,6 @@ def migrate(bot, input):
 	print("Finished")
 migrate.commands = ['migrate']
 migrate.thread = False
-
-def banlisted(bot, input):
-	if not input.owner: return
-	bot.reply("Count: {0}".format(bot.banlist.Count()))
-banlisted.commands = ['banlisted']
-banlisted.thread = False
 
 def setup(bot):
 	bot.config.module_config('db_mode', ['sqlite', 'Database Mode'])
