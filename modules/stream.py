@@ -64,7 +64,12 @@ def GetOnlineStreams(bot):
 		except: pass
 
 def Broadcast(bot, stream):
-	bot.write_packet(ID.HON_CS_CLAN_MESSAGE, "Stream: ^r{0}^* has come online! ^gtwitch.tv/{0}^*".format(stream))
+	string = "Stream: ^r{0}^* has come online! ^gtwitch.tv/{0}^*".format(stream)
+	channame = "clan {0}".format(bot.clan_info['name'].lower())
+	if channame in bot.chan2id:
+		chanid = bot.chan2id[channame]
+		bot.write_packet(ID.HON_SC_CHANNEL_EMOTE, string, chanid)
+	bot.write_packet(ID.HON_CS_CLAN_MESSAGE, string)
 
 def setup(bot):
 	bot.lastStream = 0
