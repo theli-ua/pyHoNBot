@@ -115,16 +115,15 @@ info.commands = ['info']
 def officers(bot, input):
     """Find available officers"""
     avail_officers = []
-    for ply in bot.user_status:
+    for ply in bot.id2nick:
         if ply == bot.account_id:
             continue
-        if bot.id2nick[ply] in bot.config.officers:
-            if not bot.user_status[ply] in [ID.HON_STATUS_INGAME, ID.HON_STATUS_INLOBBY]:
+        if ply in bot.clan_status and ply in bot.clan_roster:
+            if bot.clan_status[ply] is ID.HON_STATUS_ONLINE and bot.clan_roster[ply]['rank'] in ['Officer', 'Leader']:
                 avail_officers.append(bot.id2nick[ply])
-        elif ply in bot.clan_status and ply in bot.clan_roster:
-            if not bot.clan_status[ply] in [ ID.HON_STATUS_INGAME, ID.HON_STATUS_OFFLINE ]:
-                if bot.clan_roster[ply]['rank'] in ['Officer', 'Leader']:
-                    avail_officers.append(bot.id2nick[ply])
+        elif bot.id2nick[ply] in bot.config.officers:
+            if ply in bot.user_status and bot.user_status[ply] is ID.HON_STATUS_ONLINE:
+                avail_officers.append(bot.id2nick[ply])
     if len(avail_officers) > 0:
         outstr = ', '.join(avail_officers)
     else:

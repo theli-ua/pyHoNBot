@@ -176,6 +176,7 @@ cs_structs = {
         ID.HON_CS_CHANNEL_EMOTE : 'sI',
         ID.HON_CS_JOIN_CHANNEL : 's',
         ID.HON_CS_LEAVE_CHANNEL : 's',
+        ID.HON_CS_USER_INFO : 's',
         ID.HON_CS_START_MM_GROUP : 'sHsssH',
         ID.HON_CS_INVITE_TO_MM : 's',
         ID.HON_CS_CHANNEL_KICK : 'II',
@@ -212,6 +213,9 @@ sc_structs = {
         ID.HON_SC_CLAN_MESSAGE : 'Is',
         ID.HON_SC_LEFT_CHANNEL : 'II',
         ID.HON_SC_TOTAL_ONLINE : 'Is',
+        ID.HON_SC_USER_INFO_NO_EXIST : 's',
+        ID.HON_SC_USER_INFO_OFFLINE : 'ss',
+        ID.HON_SC_USER_INFO_IN_GAME : 'sss',
         }
 def pack(packet_id, *args):
     args = list(args)
