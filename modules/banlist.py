@@ -98,7 +98,8 @@ def ban(bot, input):
 		id = bot.nick2id[nick]
 	if bot.banlist.Add(id, nick, input.nick):
 		bot.reply("Banlisted {0}".format(nick))
-		bot.write_packet(ID.HON_CS_CHANNEL_BAN, input.origin[2], nick)
+		for chan in bot.channel_channels.keys():
+			bot.write_packet(ID.HON_CS_CHANNEL_BAN, chan, nick)
 	else:
 		bot.reply("{0} is already banlisted".format(nick))
 ban.commands = ['ban']
