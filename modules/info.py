@@ -8,6 +8,7 @@ http://inamidst.com/phenny/
 """
 
 from time import sleep
+from hon.packets import ID
 
 def doc(phenny, input): 
    """Shows a command's documentation, and possibly an example."""
