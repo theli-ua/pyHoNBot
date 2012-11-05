@@ -26,7 +26,7 @@ doc.priority = 'low'
 def commands(phenny, input): 
    # This function only works in private message
    if input.origin[0] == ID.HON_SC_CHANNEL_MSG:
-      bot.reply("I only respond to this command in whisper. Type: /w icbot .commands")
+      phenny.reply("I only respond to this command in whisper. Type: /w icbot .commands")
       return
    if isinstance(input.origin[1],int): return
    names = ', '.join(sorted(phenny.doc.iterkeys()))
