@@ -184,6 +184,9 @@ def kick(bot, input):
             chan = input.origin[2]
         if chan is not None:
             bot.write_packet(ID.HON_CS_CHANNEL_KICK,chan,bot.nick2id[nick.lower()])
+        else:
+            for chanid in bot.channel_channels.keys():
+                bot.write_packet(ID.HON_CS_CHANNEL_KICK, chanid, bot.nick2id[nick.lower()])
 kick.rule = (['kick'],'([^\ ]+)(?:\ +(.+))?')
 
 def promote(bot, input): 
@@ -256,4 +259,7 @@ def silence(bot, input):
         chan = input.origin[2]
     if chan is not None and time is not None and nick is not None:
         bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER,chan,nick,1000*int(time))
+    elif chan is None and time is not None and nick is not None:
+        for chanid in bot.channel_channels.keys():
+            bot.write_packet(ID.HON_CS_CHANNEL_KICK, chanid, nick, 1000*int(time))
 silence.rule = (['silence'],'([^\ ]+) ([0-9]+)(?:\ +(.+))?')
