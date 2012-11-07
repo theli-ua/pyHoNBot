@@ -10,7 +10,7 @@ def setup(bot):
     bot.channel_channels = {}
     bot.not_smurfs = []
     bot.config.module_config('channel_limit',[0,'Will try to keep channel at this limit kicking afk non-clanmates'])
-    bot.config.module_config('silence_smurfs',[-1,'Will silence anyone with normal mode tmm wins equal or lower than this'])
+    bot.config.module_config('silence_smurfs',[-1,'Will silence anyone with normal mode tmm games played equal or lower than this'])
     bot.config.module_config('spam_threshold',[0,'number of seconds, if user repeats his message in channel with delay lower than this he will be considered spamming and banned'])
     bot.config.module_config('whitelist',[[],'whitelist for antispam etc'])
     bot.config.module_config('clanwhitelist', [[], 'Clan whitelist'])
@@ -54,7 +54,7 @@ def silence_smurfs(bot,chanid,nick):
     if 'rnk_games_played' not in stats_data:
         bot.err("Received malformed data from masterserver")
         return
-    if int(stats_data['rnk_games_played']) <= bot.config.silence_smurfs:
+    if (int(stats_data['rnk_games_played']) - int(stats_data['rnk_discos'])) <= bot.config.silence_smurfs:
         bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER, chanid, nick, 0x7fffffff)
         silenced[(nick,chanid)] = True
     else:
