@@ -10,7 +10,7 @@ import sys
 import traceback
 
 def setup(bot):
-	bot.config.module_config('apply', [1, 'Disable Applications'])
+	bot.config.module_config('apply', [1, 'Enable application checking'])
 
 check_time = {}
 appForums = {
@@ -53,7 +53,7 @@ def apply(bot, input):
 			bot.reply("You're already in {0}, silly.".format( bot.clan_info['name'] ))
 			return
 		if not input.admin and bot.config.apply == 0:
-			bot.reply("Applications are closed.")
+			bot.reply("In-Game application checking is disabled.")
 			return
 		bot.write_packet( ID.HON_SC_WHISPER, input.nick, "Fetching application status, please wait..." )
 		bot.vb.Login(bot.config.forumuser, bot.config.forumpassword) # Session expiry check, this is instant if still under expiry time
@@ -65,7 +65,7 @@ def apply(bot, input):
 				return
 			for result in results:
 				thread = result['thread']
-				if int(thread['forumid']) in appForums and thread['preview'].lower().find(nick) > 0:
+				if int(thread['forumid']) in appForums and thread['preview'].lower().find("username?: {0}".format(nick)) > 0:
 					state = appForums[ int(thread['forumid']) ]
 					if state == "C":
 						if len(thread['prefix_rich']) > 0:
@@ -107,5 +107,6 @@ def apply(bot, input):
 		bot.reply('Unable to check application at this time')
 apply.commands = ['apply']
 apply.thread = True
+
 if __name__ == '__main__': 
     print __doc__.strip()
