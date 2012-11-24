@@ -173,9 +173,12 @@ def mentors(bot, input):
     """Find available mentors"""
     avail_mentors = []
     for ply in bot.config.mentors:
-        if ply in bot.clan_status:
-            if bot.clan_status[ply] is ID.HON_STATUS_ONLINE:
-                avail_mentors.append(bot.id2nick[ply])
+        if ply not in bot.nick2id:
+            continue
+        id = bot.nick2id[ply]
+        if id in bot.clan_status:
+            if bot.clan_status[id] is ID.HON_STATUS_ONLINE:
+                avail_mentors.append(ply)
     if len(avail_mentors) > 0:
         outstr = ', '.join(avail_mentors)
     else:
