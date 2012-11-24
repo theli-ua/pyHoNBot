@@ -212,4 +212,4 @@ def unmentor(bot, input):
         bot.reply("Removed {0} from mentor list".format(nick))
     else:
         bot.reply(nick + " isn't a mentor")
-unofficer.commands = ['unmentor']
+unmentor.commands = ['unmentor']
