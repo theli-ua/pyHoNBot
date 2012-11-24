@@ -207,7 +207,7 @@ def unmentor(bot, input):
     if not input.group(2):
         return
     nick = input.group(2).lower()
-    if nick in bot.config.officers:
+    if nick in bot.config.mentors:
         bot.config.set_del('mentors', nick)
         bot.reply("Removed {0} from mentor list".format(nick))
     else:
