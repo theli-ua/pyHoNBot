@@ -5,6 +5,7 @@ def setup(bot):
     bot.config.module_config('welcome_members',[1,'Will welcome members in /c m if set to non-zero value'])
     bot.config.module_config('officers', [[], 'Officers alts'])
     bot.config.module_config('mentors', [[], 'Mentor List'])
+    bot.mentordnd = []
 
 def change_member(bot,origin,data):
     who,status,whodid = data[0],data[1],data[2]
@@ -169,11 +170,28 @@ def announce(bot, input):
     bot.write_packet(ID.HON_CS_CLAN_MESSAGE, input.group(2))
 announce.commands = ['announce']
 
+def dnd(bot, input):
+    """Mentors can set themselves to not appear in .mentors command"""
+    if not input.nick in bot.config.mentors:
+        return
+    for key, nick in enumerate(bot.mentordnd):
+        if input.nick == nick:
+            bot.reply("You are now available in mentors command.")
+            del(bot.mentordnd[key])
+            return
+    bot.reply("You are now unavailable in mentors command.")
+    bot.mentordnd.append(input.nick)
+dnd.commands = ['dnd']
+
 def mentors(bot, input):
     """Find available mentors"""
+    if not input.account_id in bot.clan_roster:
+        return False
     avail_mentors = []
     for ply in bot.config.mentors:
         if ply not in bot.nick2id:
+            continue
+        if ply in bot.mentordnd:
             continue
         id = bot.nick2id[ply]
         if id in bot.clan_status:
@@ -183,7 +201,8 @@ def mentors(bot, input):
         outstr = ', '.join(avail_mentors)
     else:
         outstr = 'None'
-    bot.reply( "Available mentors: {0}".format( outstr ) )
+    bot.write_packet( ID.HON_CS_WHISPER, input.nick, "Available mentors: {0}".format( outstr ) )
+    # bot.reply( "Available mentors: {0}".format( outstr ) )
 mentors.commands = ['mentors']
 
 def mentor(bot, input):
