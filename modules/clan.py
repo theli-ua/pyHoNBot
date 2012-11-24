@@ -4,6 +4,7 @@ from hon.packets import ID
 def setup(bot):
     bot.config.module_config('welcome_members',[1,'Will welcome members in /c m if set to non-zero value'])
     bot.config.module_config('officers', [[], 'Officers alts'])
+    bot.config.module_config('mentors', [[], 'Mentor List'])
 
 def change_member(bot,origin,data):
     who,status,whodid = data[0],data[1],data[2]
@@ -133,8 +134,11 @@ def officers(bot, input):
 officers.commands = ['officers']
 
 def officer(bot, input):
+    """Add Officer Alt"""
     if not input.admin:
         return False
+    if not input.group(2):
+        return
     nick = input.group(2).lower()
     if not nick in bot.config.officers:
         bot.config.set_add('officers', nick)
@@ -144,8 +148,11 @@ def officer(bot, input):
 officer.commands = ['officer']
 
 def unofficer(bot, input):
+    """Remove Officer Alt"""
     if not input.admin:
         return False
+    if not input.group(2):
+        return
     nick = input.group(2).lower()
     if nick in bot.config.officers:
         bot.config.set_del('officers', nick)
@@ -161,3 +168,45 @@ def announce(bot, input):
         return
     bot.write_packet(ID.HON_CS_CLAN_MESSAGE, input.group(2))
 announce.commands = ['announce']
+
+def mentors(bot, input):
+    """Find available mentors"""
+    avail_mentors = []
+    for ply in bot.config.mentors:
+        if ply in bot.clan_status:
+            if bot.clan_status[ply] is ID.HON_STATUS_ONLINE:
+                avail_mentors.append(bot.id2nick[ply])
+    if len(avail_mentors) > 0:
+        outstr = ', '.join(avail_mentors)
+    else:
+        outstr = 'None'
+    bot.reply( "Available mentors: {0}".format( outstr ) )
+mentors.commands = ['mentors']
+
+def mentor(bot, input):
+    """Add Mentor"""
+    if not input.admin:
+        return False
+    if not input.group(2):
+        return
+    nick = input.group(2).lower()
+    if not nick in bot.config.mentors:
+        bot.config.set_add('mentors', nick)
+        bot.reply("Added {0} to mentor list".format(nick))
+    else:
+        bot.reply(nick + " is already a mentor")
+mentor.commands = ['mentor']
+
+def unmentor(bot, input):
+    """Remove Mentor"""
+    if not input.admin:
+        return False
+    if not input.group(2):
+        return
+    nick = input.group(2).lower()
+    if nick in bot.config.officers:
+        bot.config.set_del('mentors', nick)
+        bot.reply("Removed {0} from mentor list".format(nick))
+    else:
+        bot.reply(nick + " isn't a mentor")
+unofficer.commands = ['unmentor']
