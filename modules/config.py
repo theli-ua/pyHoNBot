@@ -86,7 +86,7 @@ def config(bot,input):
             if bot.config.__getattr__(key) is None:
                 bot.reply("Unknown config: {0}".format(key))
                 return
-            msg = '{0},{1}'.format(bot.config.doc(key),bot.config.__getattr__(key))
+            msg = '{0}, {1}'.format(bot.config.doc(key),bot.config.__getattr__(key))
             for line in [msg[i:i+245] for i in range(0, len(msg), 245)]:
                 bot.say(line)
                 sleep(1)

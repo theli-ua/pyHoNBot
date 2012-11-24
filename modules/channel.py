@@ -68,10 +68,11 @@ def channel_joined_channel(bot,origin,data):
                 bot.clan_roster[m[1]]['upgrades'] = user_upgrades(m)
     # Default topic setting
     topic = data[3]
-    if ( len(topic) == 0 ) or ( topic == "Welcome to the {0} clan channel!".format( bot.clan_info['name'] ) ):
-        cname = bot.id2chan[data[1]]
-        if getTopic(bot, cname):
-            bot.write_packet( ID.HON_CS_UPDATE_TOPIC, data[1], getTopic(bot, cname) )
+    if 'name' in bot.clan_info:
+        if ( len(topic) == 0 ) or ( topic == "Welcome to the {0} clan channel!".format( bot.clan_info['name'] ) ):
+            cname = bot.id2chan[data[1]]
+            if getTopic(bot, cname):
+                bot.write_packet( ID.HON_CS_UPDATE_TOPIC, data[1], getTopic(bot, cname) )
 
 channel_joined_channel.event = [ID.HON_SC_CHANGED_CHANNEL]
 

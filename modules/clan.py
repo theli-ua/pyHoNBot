@@ -39,7 +39,7 @@ def member_changestatus(bot,origin,data):
             """ """
             #nick = bot.id2nick[id]
             #bot.clan_roster[id]['upgrades'] = user_upgrades(bot, nick)
-    elif bot.id2nick[id] == bot.config.owner:
+    elif id in bot.id2nick and bot.id2nick[id] == bot.config.owner:
         bot.clan_status[id] = data[1]
 member_changestatus.event = [ID.HON_SC_UPDATE_STATUS]
 
