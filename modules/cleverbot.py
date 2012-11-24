@@ -85,6 +85,8 @@ def quote(s, safe = '/'):   #quote('abc def') -> 'abc%20def'
 
 def cb(bot, input):
     """Send message to CleverBot"""
+    if bot.config.cb == 0:
+        return
     if not input.group(2):
         return
     toAsk = input.group(2)
@@ -94,3 +96,4 @@ cb.commands = ['cb']
 
 def setup(bot):
     bot.cb = Session()
+    bot.config.module_config('cb', [1, 'Enable Cleverbot'])
