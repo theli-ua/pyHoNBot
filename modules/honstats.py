@@ -69,6 +69,9 @@ def match(bot,input):
                 if match_type == "1":
                     match_stats['rating'] = player_stats['pub_skill']
                 else:
+                    if not 'amm_team_rating' in player_stats:
+                        bot.reply("Error Occurred. Please try again later.")
+                        return
                     match_stats['rating'] = player_stats['amm_team_rating']
                 match_stats['D'] = player_stats['deaths']
                 match_stats['K'] = player_stats['herokills']

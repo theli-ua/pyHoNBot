@@ -8,7 +8,7 @@ def startup(bot, *args):
     print ('authenticated to chatserver')
     for channel in bot.config.channels: 
         bot.write_packet(ID.HON_CS_JOIN_CHANNEL,channel)
-        # sleep(0.5)
+        sleep(0.25)
 
 startup.event = [ID.HON_SC_AUTH_ACCEPTED]
 startup.priority = 'low'
