@@ -102,10 +102,8 @@ def activityreport(bot, input):
     toOut = []
     idx = 0
     for id in bot.clan_roster:
-        if id not in bot.id2nick:
-            continue
         idx += 1
-        nick = bot.id2nick[id]
+        nick = bot.clan_roster[id]['nickname']
         print( "{0}/{1}: Processing {2}".format( idx, len(bot.clan_roster) - 1, nick ) )
         query = {'nickname' : nick}
         query['f'] = 'show_stats'
