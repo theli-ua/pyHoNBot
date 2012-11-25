@@ -5,10 +5,21 @@ from hon.packets import ID
 from time import time
 import re
 
+silences = {}
+
 def spam_silence(bot, chanid, nick):
 	if bot.config.spam_silence == 0:
 		return
-	bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER, chanid, nick, ((60 * bot.config.spam_silence) * 1000))
+	if nick not in silences:
+		silences[nick] = 1
+	else:
+		silences[nick] += 1
+	if silences[nick] >= bot.config.spam_silence_ban:
+		bot.banlist.Add('N/A', nick, 'Anti-Spam')
+		bot.write_packet(ID.HON_CS_CHANNEL_BAN, chanid, nick)
+		del(silences[nick])
+	else:
+		bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER, chanid, nick, ((60 * bot.config.spam_silence) * 1000))
 
 def checkSpam(bot, origin, data):
 	chanid = origin[2]
@@ -29,7 +40,7 @@ def checkSpam(bot, origin, data):
 	else:
 		bot.spamcd[nick] = [now]
 checkSpam.event = [ID.HON_SC_CHANNEL_MSG, ID.HON_SC_CHANNEL_EMOTE]
-checkSpam.thread = True
+checkSpam.thread = False
 
 def addword(bot, input):
 	"""Add word to bad words list"""
@@ -61,6 +72,7 @@ delword.commands = ['delword']
 
 def setup(bot):
 	bot.spamcd = {}
+	bot.config.module_config('spam_silence_ban', [3, 'x silences for spam will ban (Covers badword silences too)'])
 	bot.config.module_config('spam_silence', [5, 'Silence for x minutes when spam detected, 0 = disabled (Also used for badwords)'])
 	bot.config.module_config('spam_length', [5, 'Seconds until messages are removed from the spam stack'])
 	bot.config.module_config('badwords', [[], 'List of bad words for insta-silence'])
