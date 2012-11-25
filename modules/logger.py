@@ -102,6 +102,8 @@ def activityreport(bot, input):
     toOut = []
     idx = 0
     for id in bot.clan_roster:
+        if id not in bot.id2nick:
+            continue
         idx += 1
         nick = bot.id2nick[id]
         print( "{0}/{1}: Processing {2}".format( idx, len(bot.clan_roster) - 1, nick ) )
