@@ -106,11 +106,14 @@ def info(bot,input):
             id = bot.nick2id[nick]
             if id in bot.clan_roster:
                 player = bot.clan_roster[id]
+                rank = player['rank']
+                if nick in bot.config.mentors and rank == "Member":
+                    rank = "Mentor"
                 query = {'nickname' : nick}
                 query['f'] = 'show_stats'
                 query['table'] = 'player'
                 data = bot.masterserver_request(query,cookie=True)
-                bot.reply("{0} - Rank: {1}, Last Online: {2}, Status: {3}".format(nick, player['rank'], data['last_activity'], status[bot.clan_status[id]]))
+                bot.reply("{0} - Rank: {1}, Last Online: {2}, Status: {3}".format(nick, rank, data['last_activity'], status[bot.clan_status[id]]))
             else:
                 bot.reply("Not in clan")
 info.commands = ['info']
