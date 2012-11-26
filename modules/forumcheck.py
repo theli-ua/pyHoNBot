@@ -67,9 +67,11 @@ def apply(bot, input):
 			if len(results) == 0:
 				bot.reply("No application found for your username.")
 				return
+			handled = False
 			for result in results:
 				thread = result['thread']
 				if int(thread['forumid']) in appForums and thread['preview'].lower().find("username?: {0}".format(nick)) > 0:
+					handled = True
 					state = appForums[ int(thread['forumid']) ]
 					if state == "C":
 						if len(thread['prefix_rich']) > 0:
@@ -105,7 +107,11 @@ def apply(bot, input):
 						bot.reply("Your application is pending.")
 					elif state == "M":
 						bot.reply("Your application was archived, result unknown. Contact an officer.")
+					else:
+						bot.reply("Unable to check application at this time")
 					return
+			if not handled:
+				bot.reply("No application found for your username.")
 		else:
 			bot.reply('Unable to check application at this time')
 			print("SearchID not returned")
