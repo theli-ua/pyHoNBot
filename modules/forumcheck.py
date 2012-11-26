@@ -43,14 +43,17 @@ def apply(bot, input):
 	try:
 		if input.admin and input.group(2):
 			nick = input.group(2).lower()
-			aid = bot.nick2id[nick]
+			if nick in bot.nick2id:
+				aid = bot.nick2id[nick]
+			else:
+				aid = 0
 		else:
 			nick = input.nick
 			aid = input.account_id
 		if not input.admin and not __cooldown(aid):
 			bot.reply("Please wait to use this command again")
 			return
-		if aid in bot.clan_roster:
+		if aid > 0 and aid in bot.clan_roster:
 			bot.reply("You're already in {0}, silly.".format( bot.clan_info['name'] ))
 			return
 		if not input.admin and bot.config.apply == 0:
