@@ -11,6 +11,7 @@ import traceback
 
 def setup(bot):
 	bot.config.module_config('apply', [1, 'Enable application checking'])
+	bot.config.module_config('apply_invite', [0, 'Enable automated inviting'])
 
 check_time = {}
 appForums = {
@@ -78,20 +79,23 @@ def apply(bot, input):
 						else:
 							state = "H"
 					if state == "A":
-						bot.reply("Welcome to Project Epoch, %s!" % nick)
-						bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER, nick)
-						bot.reply("Invited!")
-						if thread['forumid'] == 34:
-							if bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan."):
-								if bot.vb.MoveThread( thread['threadid'], 36 ):
-									print("Success")
+						if bot.config.apply_invite == 0:
+							bot.reply("Your application was accepted. Please contact an officer to get invited.")
+						else:
+							bot.reply("Welcome to Project Epoch, %s!" % nick)
+							bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER, nick)
+							bot.reply("Invited!")
+							if thread['forumid'] == 34:
+								if bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan."):
+									if bot.vb.MoveThread( thread['threadid'], 36 ):
+										print("Success")
+									else:
+										print("Failed to move")
 								else:
-									print("Failed to move")
-							else:
-								print("Failed to post")
-						elif thread['forumid'] == 35:
-							bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
-							bot.vb.MoveThread( thread['threadid'], 38 )
+									print("Failed to post")
+							elif thread['forumid'] == 35:
+								bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
+								bot.vb.MoveThread( thread['threadid'], 38 )
 					elif state == "D":
 						bot.reply("Sorry, your application was denied. Ask an officer to find out why.")
 					elif state == "H":
