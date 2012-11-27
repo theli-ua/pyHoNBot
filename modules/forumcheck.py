@@ -38,6 +38,9 @@ def __cooldown(accountid):
 		check_time[accountid] = time()
 		return True
 
+def cleanPreview(text):
+	return text.replace("`", "").replace("_", "").lower()
+
 def apply(bot, input):
 	"""Check if you application has been successful, Once every minute"""
 	try:
@@ -70,7 +73,9 @@ def apply(bot, input):
 			handled = False
 			for result in results:
 				thread = result['thread']
-				if int(thread['forumid']) in appForums and thread['preview'].lower().find("username?: {0}".format(nick)) > 0:
+				appUsernameMatch = re.search(r'username\?: ([a-zA-Z0-9`_]+)', thread['preview'])
+				appUsername = appUsernameMatch.group(1).lower()
+				if int(thread['forumid']) in appForums and appUsername == nick:
 					handled = True
 					state = appForums[ int(thread['forumid']) ]
 					if state == "C":
