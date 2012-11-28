@@ -24,7 +24,10 @@ appForums = {
 	50: "H",
 	51: "M", # Morgue (Archive)
 	52: "H",
-	53: "M" # Morgue (Archive)
+	53: "M", # Morgue (Archive)
+	54: "COMM",
+	55: "COMM_A",
+	56: "COMM_D"
 }
 
 def __cooldown(accountid):
@@ -112,6 +115,18 @@ def apply(bot, input):
 						bot.reply("Your application is pending.")
 					elif state == "M":
 						bot.reply("Your application was archived, result unknown. Contact an officer.")
+					elif state == "COMM":
+						if len(thread['prefix_rich']) > 0:
+							if thread['prefix_rich'].find("APPROVED") > 0:
+								state = "COMM_A"
+							elif thread['prefix_rich'].find("DENIED") > 0:
+								state = "COMM_D"
+						if state == "COMM":
+							bot.reply("Your community application is pending.")
+						elif state == "COMM_A":
+							bot.reply("Your community application was accepted. Please contact an officer to get invited.")
+						elif state == "COMM_D":
+							bot.reply("Sorry, your community application was denied. Ask an officer to find out why.")
 					else:
 						bot.reply("Unable to check application at this time")
 					return
