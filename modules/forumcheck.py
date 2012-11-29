@@ -71,7 +71,7 @@ def apply(bot, input):
 		if searchid:
 			results = bot.vb.ProcessSearch(searchid)
 			if len(results) == 0:
-				bot.reply("No application found for your username.")
+				bot.write_packet( ID.HON_SC_WHISPER, input.nick, "No application found for your username.")
 				return
 			handled = False
 			for result in results:
@@ -93,7 +93,7 @@ def apply(bot, input):
 							state = "H"
 					if state == "A":
 						if bot.config.apply_invite == 0:
-							bot.reply("Your application was accepted. Please contact an officer to get invited.")
+							bot.write_packet( ID.HON_SC_WHISPER, input.nick, "Your application was accepted. Please contact an officer to get invited.")
 						else:
 							bot.reply("Welcome to Project Epoch, %s!" % nick)
 							bot.write_packet(ID.HON_CS_CLAN_ADD_MEMBER, nick)
@@ -110,11 +110,11 @@ def apply(bot, input):
 								bot.vb.NewPost( thread['threadid'], "Invited", "Player has been invited to the clan.")
 								bot.vb.MoveThread( thread['threadid'], 38 )
 					elif state == "D":
-						bot.reply("Sorry, your application was denied. Ask an officer to find out why.")
+						bot.write_packet( ID.HON_SC_WHISPER, input.nick, "Sorry, your application was denied. Ask an officer to find out why.")
 					elif state == "H":
-						bot.reply("Your application is pending.")
+						bot.write_packet( ID.HON_SC_WHISPER, input.nick, "Your application is pending.")
 					elif state == "M":
-						bot.reply("Your application was archived, result unknown. Contact an officer.")
+						bot.write_packet( ID.HON_SC_WHISPER, input.nick, "Your application was archived, result unknown. Contact an officer.")
 					elif state == "COMM":
 						if len(thread['prefix_rich']) > 0:
 							if thread['prefix_rich'].find("APPROVED") > 0:
@@ -122,22 +122,22 @@ def apply(bot, input):
 							elif thread['prefix_rich'].find("DENIED") > 0:
 								state = "COMM_D"
 						if state == "COMM":
-							bot.reply("Your community application is pending.")
+							bot.write_packet( ID.HON_SC_WHISPER, input.nick, "Your community application is pending.")
 						elif state == "COMM_A":
-							bot.reply("Your community application was accepted. Please contact an officer to get invited.")
+							bot.write_packet( ID.HON_SC_WHISPER, input.nick, "Your community application was accepted. Please contact an officer to get invited.")
 						elif state == "COMM_D":
-							bot.reply("Sorry, your community application was denied. Ask an officer to find out why.")
+							bot.write_packet( ID.HON_SC_WHISPER, input.nick, "Sorry, your community application was denied. Ask an officer to find out why.")
 					else:
-						bot.reply("Unable to check application at this time")
+						bot.write_packet( ID.HON_SC_WHISPER, input.nick, "Unable to check application at this time")
 					return
 			if not handled:
-				bot.reply("No application found for your username.")
+				bot.write_packet( ID.HON_SC_WHISPER, input.nick, "No application found for your username.")
 		else:
-			bot.reply('Unable to check application at this time')
+			bot.write_packet( ID.HON_SC_WHISPER, input.nick, 'Unable to check application at this time')
 			print("SearchID not returned")
 	except Exception as inst:
 		traceback.print_exc()
-		bot.reply('Unable to check application at this time')
+		bot.write_packet( ID.HON_SC_WHISPER, input.nick, 'Unable to check application at this time')
 apply.commands = ['apply']
 apply.thread = True
 
