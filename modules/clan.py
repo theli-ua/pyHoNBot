@@ -140,7 +140,7 @@ officers.commands = ['officers']
 def officer(bot, input):
     """Add Officer Alt"""
     if not input.admin:
-        return False
+        return officers(bot, input)
     if not input.group(2):
         return
     nick = input.group(2).lower()
@@ -211,7 +211,7 @@ mentors.commands = ['mentors']
 def mentor(bot, input):
     """Add Mentor"""
     if not input.admin:
-        return False
+        return mentors(bot, input)
     if not input.group(2):
         return
     nick = input.group(2).lower()
