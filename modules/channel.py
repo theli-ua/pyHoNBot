@@ -15,6 +15,7 @@ def setup(bot):
     bot.config.module_config('whitelist',[[],'whitelist for antispam etc'])
     bot.config.module_config('clanwhitelist', [[], 'Clan whitelist'])
     bot.config.module_config('default_topic', [[], 'Default Topics'])
+    bot.config.module_config('default_prefix', [[], 'Default Topic Prefix'])
 
 silenced = {}
 
@@ -22,6 +23,14 @@ def getTopic(bot, cname):
     if isinstance(bot.config.default_topic, dict):
         bot.config.set('default_topic', [])
     for topic in bot.config.default_topic:
+        if not isinstance(topic, dict): break
+        if topic['name'] == cname:
+            return topic['topic']
+    return False
+def getTopicPrefix(bot, cname):
+    if isinstance(bot.config.default_prefix, dict):
+        bot.config.set('default_prefix', [])
+    for topic in bot.config.default_prefix:
         if not isinstance(topic, dict): break
         if topic['name'] == cname:
             return topic['topic']
@@ -37,6 +46,17 @@ def setTopic(bot, cname, topic):
     if not found:
         curr.append({"name": cname, "topic": topic})
     bot.config.set('default_topic', curr)
+def setTopicPrefix(bot, cname, topic):
+    curr = bot.config.default_prefix
+    found = False
+    for key,item in enumerate(curr):
+        if not isinstance(item, dict): break
+        if item['name'] == cname:
+            found = True
+            curr[key]['topic'] = topic
+    if not found:
+        curr.append({"name": cname, "topic": topic})
+    bot.config.set('default_prefix', curr)
 
 def silence_smurfs(bot,chanid,nick):
     if bot.config.silence_smurfs < 0:
@@ -233,6 +253,7 @@ def dtopic(bot, input):
         if input.group(2):
             print( "Inserting dtopic for {0}: {1}".format( cname, input.group(2) ) )
             setTopic(bot, cname, input.group(2))
+            bot.reply("Default topic set")
         else:
             if getTopic(bot, cname):
                 bot.reply( "Current: {0}".format( getTopic(bot, cname) ) )
@@ -240,11 +261,34 @@ def dtopic(bot, input):
                 bot.reply( "Default topic for the current channel is not set." )
 dtopic.commands = ['dtopic']
 
+def prefix(bot, input):
+    """Set channel topic prefix"""
+    if not input.admin:
+        return False
+    if not input.origin[0] == ID.HON_SC_CHANNEL_MSG:
+        bot.reply("Run me from channel intended for the prefix!")
+    else:
+        cname = bot.id2chan[input.origin[2]]
+        if input.group(2):
+            print( "Inserting prefix for {0}: {1}".format( cname, input.group(2) ) )
+            setTopicPrefix(bot, cname, input.group(2))
+            bot.reply("Prefix set")
+        else:
+            if getTopicPrefix(bot, cname):
+                bot.reply( "Current: {0}".format( getTopicPrefix(bot, cname) ) )
+            else:
+                bot.reply( "Prefix for the current channel is not set." )
+prefix.commands = ['prefix']
+
 def topic(bot,input):
     """Sets topic on channel issued"""
     if not input.admin:
         return False
-    bot.write_packet(ID.HON_CS_UPDATE_TOPIC,input.origin[2],input.group(2))
+    cname = bot.id2chan[input.origin[2]]
+    topicstr = input.group(2)
+    if getTopicPrefix(bot, cname):
+        topicstr = "{0} {1}".format(getTopicPrefix(bot, cname), input.group(2))
+    bot.write_packet(ID.HON_CS_UPDATE_TOPIC, input.origin[2], topicstr)
 topic.commands = ['topic']
 topic.event = [ID.HON_SC_CHANNEL_MSG]
 
