@@ -13,6 +13,8 @@ def setup(bot):
 
     if bot.config.region == 'na':
         verinfo = bot.masterserver_request({'version' : '0.0.0.0', 'os' : 'lac' ,'arch' : 'x86-biarch'},path = 'patcher/patcher.php')
+    elif bot.config.region == 'la':
+        verinfo = bot.masterserver_request({'version' : '0.0.0.0', 'os' : 'wbc' ,'arch' : 'i686'},path = 'patcher/patcher.php')
     else:
         verinfo = bot.masterserver_request({'version' : '0.0.0.0', 'os' : 'wgc' ,'arch' : 'i686'},path = 'patcher/patcher.php')
     verinfo = verinfo[0]
