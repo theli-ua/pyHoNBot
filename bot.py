@@ -406,7 +406,7 @@ class Bot( asynchat.async_chat ):
                 else:
                     s.nick = None
                     s.account_id = None
-                s.owner = s.nick == self.config.owner
+                s.owner = s.nick.lower() == self.config.owner.lower()
                 s.admin = s.owner or s.nick.lower() in self.config.admins
                 if not s.admin and hasattr(self.config,'officer_admin') and \
                         self.config.officer_admin and s.account_id is not None and\
