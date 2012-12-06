@@ -5,7 +5,7 @@ def setup(bot):
     bot.config.module_config('welcome_members',[1,'Will welcome members in /c m if set to non-zero value'])
     bot.config.module_config('officers', [[], 'Officers alts'])
     bot.config.module_config('mentors', [[], 'Mentor List'])
-    bot.mentordnd = []
+    bot.dnd = []
 
 def change_member(bot,origin,data):
     who,status,whodid = data[0],data[1],data[2]
@@ -124,6 +124,8 @@ def officers(bot, input):
     for ply in bot.id2nick:
         if ply == bot.account_id:
             continue
+        if bot.id2nick[ply] in bot.dnd:
+            continue
         if ply in bot.clan_status and ply in bot.clan_roster:
             if bot.clan_status[ply] is ID.HON_STATUS_ONLINE and bot.clan_roster[ply]['rank'] in ['Officer', 'Leader']:
                 avail_officers.append(bot.id2nick[ply])
@@ -174,16 +176,16 @@ def announce(bot, input):
 announce.commands = ['announce']
 
 def dnd(bot, input):
-    """Mentors can set themselves to not appear in .mentors command"""
-    if not input.nick in bot.config.mentors:
+    """Mentors or Officers can set themselves to not appear in .mentors/.officers command"""
+    if not input.nick in bot.config.mentors and not input.nick in bot.config.officers:
         return
-    for key, nick in enumerate(bot.mentordnd):
+    for key, nick in enumerate(bot.dnd):
         if input.nick == nick:
-            bot.reply("You are now available in mentors command.")
-            del(bot.mentordnd[key])
+            bot.reply("You are now available in mentors/officers command.")
+            del(bot.dnd[key])
             return
-    bot.reply("You are now unavailable in mentors command.")
-    bot.mentordnd.append(input.nick)
+    bot.reply("You are now unavailable in mentors/officers command.")
+    bot.dnd.append(input.nick)
 dnd.commands = ['dnd']
 
 def mentors(bot, input):
@@ -194,7 +196,7 @@ def mentors(bot, input):
     for ply in bot.config.mentors:
         if ply not in bot.nick2id:
             continue
-        if ply in bot.mentordnd:
+        if ply in bot.dnd:
             continue
         id = bot.nick2id[ply]
         if id in bot.clan_status:
