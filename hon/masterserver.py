@@ -38,7 +38,11 @@ def request(query,path = None,decode = True):
     details = urlencode(query,True).encode('utf8')
     url = Request('http://{0}/{1}'.format(MASTERSERVER, path),details, headers = {'X-Forwarded-For': 'unknown'})
     url.add_header("User-Agent",USER_AGENT)
-    data = urlopen(url).read().decode("utf8", 'ignore')
+    try:
+        data = urlopen(url).read().decode("utf8", 'ignore')
+    except:
+        print("Error querying masterservers")
+        return None
     if decode:
         return loads(data)
     else:
