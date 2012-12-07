@@ -252,6 +252,9 @@ def get_stats(bot,input,table,hero=None):
         stats[k] = stats_data[v]
     total = float(stats['matches'])
     wins = float(stats['wins'])
+    if float(stats['exp_time']) == 0 or float(stats['matches']) == 0:
+        bot.say("No matches played or error occurred.")
+        return
     if total == 0.0 or wins == 0.0:
         stats['win_percent'] = 0.0
     else:
@@ -282,9 +285,6 @@ def get_stats(bot,input,table,hero=None):
     else:
         stats['rating_type'] = 'MMR'
     print( "Debug: exp_time: %f, matches: %f" % (float(stats['exp_time']), float(stats['matches'])) )
-    if float(stats['exp_time']) == 0 or float(stats['matches']) == 0:
-        bot.say("No matches played or error occurred.")
-        return
     """
     stats['TSR'] = ((float(stats['K'])/float(stats['D'])/1.15)*0.65)+\
             ((float(stats['A'])/float(stats['D'])/1.55)*1.20)+\
