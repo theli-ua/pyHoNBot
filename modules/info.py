@@ -25,17 +25,13 @@ doc.priority = 'low'
 
 def commands(phenny, input): 
    # This function only works in private message
-   if input.origin[0] == ID.HON_SC_CHANNEL_MSG:
-      phenny.reply("I only respond to this command in whisper. Type: /w " + phenny.nick + " .commands")
-      return
-   if isinstance(input.origin[1],int): return
+   if isinstance(input.origin[1], int): return
    names = ', '.join(sorted(phenny.doc.iterkeys()))
-   phenny.say('Commands I recognise:')
+   bot.write_packet( ID.HON_CS_WHISPER, input.nick, 'Commands I recognise:')
    for line in [names[i:i+245] for i in range(0, len(names), 245)]:
-      phenny.say(line)
+      bot.write_packet( ID.HON_CS_WHISPER, input.nick, line)
       sleep(1)
-   phenny.say(("For help, do '.doc example' where example is the " + 
-               "name of the command you want help for."))
+   bot.write_packet( ID.HON_CS_WHISPER, input.nick, "For help, do '.doc example' where example is the name of the command you want help for.")
 commands.commands = ['commands']
 commands.priority = 'low'
 
