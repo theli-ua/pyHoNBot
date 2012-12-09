@@ -177,7 +177,7 @@ announce.commands = ['announce']
 
 def dnd(bot, input):
     """Mentors or Officers can set themselves to not appear in .mentors/.officers command"""
-    if not input.nick in bot.config.mentors and not input.nick in bot.config.officers:
+    if not input.nick in bot.config.mentors or not input.nick in bot.config.officers:
         return
     for key, nick in enumerate(bot.dnd):
         if input.nick == nick:
