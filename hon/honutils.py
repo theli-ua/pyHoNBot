@@ -2,6 +2,7 @@ colors = {
 	"mentorwings": "#FF6600",
 	"s2logo": "#FF0000",
 	"sgm": "#DD0040",
+	"gmgold": "#DD0040",
 	"gmshield": "#DD0040",
 	"banhammer": "#DD0040",
 	"tech": "#DD0040",
