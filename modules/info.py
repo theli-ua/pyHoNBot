@@ -26,15 +26,12 @@ doc.priority = 'low'
 def commands(phenny, input): 
    # This function only works in private message
    if isinstance(input.origin[1], int): return
-   target = ID.HON_CS_WHISPER
-   if input.origin[2] in [ID.HON_CS_WHISPER, ID.HON_CS_PM]:
-      target = input.origin[2]
    names = ', '.join(sorted(phenny.doc.iterkeys()))
-   bot.write_packet( target, input.nick, 'Commands I recognise:')
+   bot.reply('Commands I recognise:')
    for line in [names[i:i+245] for i in range(0, len(names), 245)]:
-      bot.write_packet( target, input.nick, line)
+      bot.reply(line)
       sleep(1)
-   bot.write_packet( target, input.nick, "For help, do '.doc example' where example is the name of the command you want help for.")
+   bot.reply("For help, do '.doc example' where example is the name of the command you want help for.")
 commands.commands = ['commands']
 commands.priority = 'low'
 
