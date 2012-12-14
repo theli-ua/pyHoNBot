@@ -27,11 +27,11 @@ def commands(phenny, input):
    # This function only works in private message
    if isinstance(input.origin[1], int): return
    names = ', '.join(sorted(phenny.doc.iterkeys()))
-   bot.reply('Commands I recognise:')
+   phenny.reply('Commands I recognise:')
    for line in [names[i:i+245] for i in range(0, len(names), 245)]:
-      bot.reply(line)
+      phenny.reply(line)
       sleep(1)
-   bot.reply("For help, do '.doc example' where example is the name of the command you want help for.")
+   phenny.reply("For help, do '.doc example' where example is the name of the command you want help for.")
 commands.commands = ['commands']
 commands.priority = 'low'
 
