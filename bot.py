@@ -120,7 +120,7 @@ class Bot( asynchat.async_chat ):
 
     def auth(self):
         auth_data = masterserver.auth(self.config.nick,self.config.password)
-        if 'ip' not in auth_data:
+        if 'ip' not in auth_data or 'auth_hash' not in auth_data:
             print("Login Failure")
             return False
         self.ip = auth_data['ip']
