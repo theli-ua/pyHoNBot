@@ -19,7 +19,28 @@ LA_MASTERSERVER = 'masterserver.lat.s2games.com'
 MASTERSERVER = None
 REGION = 'na'
 
+def srp_auth(login,password):
+    import srp
+    query = { 'f' : 'pre_auth' , 'login' : login}
+    usr = srp.User( login, password )
+    _, A = usr.start_authentication()
+    query['A'] = A.encode('hex')
+    res = request(query)
+    if 'B' not in res: return res
+    s = res['salt'].decode('hex')
+    B = res['B'].decode('hex')
+    M = usr.process_challenge( s, B )
+    del(query['A'])
+    query['f'] = 'srpAuth'
+    query['proof'] = M.encode('hex')
+    print(query)
+    res = request(query)
+    print res
+    
+
 def auth(login,password=None,pass_hash=None):
+    if REGION == 'na' :
+        return srp_auth(login,password)
     if password is None and pass_hash is None:
         return None
     if pass_hash is None:
