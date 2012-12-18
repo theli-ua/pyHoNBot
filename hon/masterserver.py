@@ -39,7 +39,7 @@ def srp_auth(login,password):
     
 
 def auth(login,password=None,pass_hash=None):
-    if REGION == 'na' :
+    #if REGION == 'na' :
         #return srp_auth(login,password)
     if password is None and pass_hash is None:
         return None
