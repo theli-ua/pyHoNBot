@@ -1,5 +1,5 @@
 from utils.phpserialize import *
-from hashlib import md5
+from hashlib import md5,sha256
 try:
     #3.x
     from urllib.request import Request
@@ -19,20 +19,33 @@ LA_MASTERSERVER = 'masterserver.lat.s2games.com'
 MASTERSERVER = None
 REGION = 'na'
 
+s2_n = 'DA950C6C97918CAE89E4F5ECB32461032A217D740064BC12FC0723CD204BD02A7AE29B53F3310C13BA998B7910F8B6A14112CBC67BDD2427EDF494CB8BCA68510C0AAEE5346BD320845981546873069B337C073B9A9369D500873D647D261CCED571826E54C6089E7D5085DC2AF01FD861AE44C8E64BCA3EA4DCE942C5F5B89E5496C2741A9E7E9F509C261D104D11DD4494577038B33016E28D118AE4FD2E85D9C3557A2346FAECED3EDBE0F4D694411686BA6E65FEE43A772DC84D394ADAE5A14AF33817351D29DE074740AA263187AB18E3A25665EACAA8267C16CDE064B1D5AF0588893C89C1556D6AEF644A3BA6BA3F7DEC2F3D6FDC30AE43FBD6D144BB'
+s2_g = '2'
+
 def srp_auth(login,password):
     import srp
     query = { 'f' : 'pre_auth' , 'login' : login}
-    usr = srp.User( login, password )
+    usr = srp.User( login, None, hash_alg=srp.SHA256, ng_type=srp.NG_CUSTOM, n_hex = s2_n , g_hex = s2_g )
     _, A = usr.start_authentication()
     query['A'] = A.encode('hex')
     res = request(query)
     if 'B' not in res: return res
     s = res['salt'].decode('hex')
     B = res['B'].decode('hex')
+    print res['salt2']
+    usr.password = sha256(md5(md5(password).hexdigest() + '3ZnRv^;4T+gumROHG[iANi[!~esTo0}').hexdigest() + 'taquzaph_?98phab&junaj=z=kuChusu').hexdigest()
+    usr.p = usr.password
     M = usr.process_challenge( s, B )
+    #try:
+        #M2 = srp._pysrp.long_to_bytes(M).encode('hex')
+    #except:
+        #M2 = srp._ctsrp.bn_to_bytes(M).encode('hex')
+    #print (M2.encode('hex') , '\n' ,)
+    #print (len(M))
     del(query['A'])
     query['f'] = 'srpAuth'
     query['proof'] = M.encode('hex')
+#     (6:47:59 PM) Shawn xxxxxxxxxxx (DeityLink): SHA256(MD5 ( password + salt2 + "[!~esTo0}") + "taquzaph_?98phab&amp;junaj=z=kuChusu")
     print(query)
     res = request(query)
     print res
@@ -40,7 +53,7 @@ def srp_auth(login,password):
 
 def auth(login,password=None,pass_hash=None):
     if REGION == 'na' :
-        return srp_auth(login,password)
+       return srp_auth(login,password)
     if password is None and pass_hash is None:
         return None
     if pass_hash is None:
