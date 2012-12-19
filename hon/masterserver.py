@@ -11,7 +11,7 @@ except:
     from urllib2 import urlopen
     from urllib import urlencode
 
-USER_AGENT = "S2 Games/Heroes of Newerth/2.3.5.1/lac/x86-biarch"
+USER_AGENT = "S2 Games/Heroes of Newerth/2.6.32.2/wac/i686"
 NA_MASTERSERVER = 'masterserver.hon.s2games.com'
 SEA_GARENA_MASTERSERVER = 'masterserver.garena.s2games.com'
 CIS_GARENA_MASTERSERVER = 'masterserver.cis.s2games.com'
@@ -33,19 +33,13 @@ def srp_auth(login,password):
     s = res['salt'].decode('hex')
     B = res['B'].decode('hex')
     print res['salt2']
-    usr.password = sha256(md5(md5(password).hexdigest() + '3ZnRv^;4T+gumROHG[iANi[!~esTo0}').hexdigest() + 'taquzaph_?98phab&junaj=z=kuChusu').hexdigest()
+    salt2 = res['salt2']
+    usr.password = sha256(md5(md5(password).hexdigest() + salt2 + '[!~esTo0}').hexdigest() + 'taquzaph_?98phab&junaj=z=kuChusu').hexdigest()
     usr.p = usr.password
     M = usr.process_challenge( s, B )
-    #try:
-        #M2 = srp._pysrp.long_to_bytes(M).encode('hex')
-    #except:
-        #M2 = srp._ctsrp.bn_to_bytes(M).encode('hex')
-    #print (M2.encode('hex') , '\n' ,)
-    #print (len(M))
     del(query['A'])
     query['f'] = 'srpAuth'
     query['proof'] = M.encode('hex')
-#     (6:47:59 PM) Shawn xxxxxxxxxxx (DeityLink): SHA256(MD5 ( password + salt2 + "[!~esTo0}") + "taquzaph_?98phab&amp;junaj=z=kuChusu")
     print(query)
     res = request(query)
     print res
