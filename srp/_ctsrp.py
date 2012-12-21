@@ -247,7 +247,11 @@ def H_bn_bn( hash_class, dest, n1, n2 ):
     BN_bn2bin(n1, bin1)
     BN_bn2bin(n2, bin2)
     h.update( bin1.raw )
-    h.update( bin2.raw )
+    if len(bin2.raw) < 256:
+        d = '\x00'*(256 - len(bin2.raw)) + bin2.raw
+        h.update(d)
+    else:
+        h.update( bin2.raw )
     d = h.digest()
     BN_bin2bn(d, len(d), dest)
     
@@ -300,7 +304,8 @@ def HNxorg( hash_class, N, g ):
     BN_bn2bin(g, bg)
     
     hN = hash_class( bN.raw ).digest()
-    hg = hash_class( bg.raw ).digest()
+    #hg = hash_class( bg.raw ).digest()
+    hg = hash_class( '\x00' * (256 - len(bg.raw)) + bg.raw ).digest()
     
     return ''.join( chr( ord(hN[i]) ^ ord(hg[i]) ) for i in range(0,len(hN)) )
 
