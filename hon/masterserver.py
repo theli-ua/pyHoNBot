@@ -32,7 +32,6 @@ def srp_auth(login,password):
     if 'B' not in res: return res
     s = res['salt'].decode('hex')
     B = res['B'].decode('hex')
-    print res['salt2']
     salt2 = res['salt2']
     usr.password = sha256(md5(md5(password).hexdigest() + salt2 + '[!~esTo0}').hexdigest() + 'taquzaph_?98phab&junaj=z=kuChusu').hexdigest()
     usr.p = usr.password
@@ -40,10 +39,8 @@ def srp_auth(login,password):
     del(query['A'])
     query['f'] = 'srpAuth'
     query['proof'] = M.encode('hex')
-    print(query)
     res = request(query)
-    print res
-    
+    return res
 
 def auth(login,password=None,pass_hash=None):
     if REGION == 'na' :
