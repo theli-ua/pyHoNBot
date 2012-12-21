@@ -176,11 +176,11 @@ def H( hash_class, *args, **kwargs ):
 
 def HNxorg( hash_class, N, g ):
     hN = hash_class( long_to_bytes(N) ).digest()
-    hg = hash_class( long_to_bytes(g) ).digest()
+    gb = long_to_bytes(g)
+    gb = '\x00'*(256-len(gb)) + gb
+    hg = hash_class( gb ).digest()
 
     return ''.join( chr( ord(hN[i]) ^ ord(hg[i]) ) for i in range(0,len(hN)) )
-    
-    
     
 def gen_x( hash_class, salt, username, password ):
     return H( hash_class, salt, H( hash_class, username + ':' + password ) )
@@ -290,7 +290,9 @@ class User (object):
             raise ValueError("Both n_hex and g_hex are required when ng_type = NG_CUSTOM")
         N,g        = get_ng( ng_type, n_hex, g_hex )
         hash_class = _hash_map[ hash_alg ]
-        k          = H( hash_class, N, g )
+        gb = long_to_bytes(g)
+        gb = '\x00'*(256-len(gb)) + gb
+        k          = H( hash_class, N, gb )
         
         self.I     = username
         self.p     = password
