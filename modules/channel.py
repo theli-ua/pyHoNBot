@@ -16,6 +16,7 @@ def setup(bot):
     bot.config.module_config('clanwhitelist', [[], 'Clan whitelist'])
     bot.config.module_config('default_topic', [[], 'Default Topics'])
     bot.config.module_config('default_prefix', [[], 'Default Topic Prefix'])
+    bot.config.module_config('promote_clan', [0, "Auto-Promote clan members to channel officer"])
 
 silenced = {}
 
@@ -111,6 +112,8 @@ def channel_user_joined_channel(bot,origin,data):
     #banlist management
     nick = normalize_nick(data[0]).lower()
     if data[1] in bot.clan_roster:
+        if bot.config.promote_clan:
+            bot.write_packet( ID.HON_CS_CHANNEL_PROMOTE, data[2], data[1] )
         if not 'upgrades' in bot.clan_roster[data[1]]:
             bot.clan_roster[data[1]]['upgrades'] = user_upgrades(data, 1)
     if CHANNEL_MAX == 0:
