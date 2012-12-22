@@ -435,7 +435,7 @@ class Bot( asynchat.async_chat ):
                                 continue
                             if hasattr(self.config, 'clan_use') and self.config.clan_use and input.account_id not in self.clan_roster and not input.admin:
                                 continue
-                            if hasattr(self.config, 'bad_commands') and any(cmd for cmd in func.commands if cmd in self.config.bad_commands) and not input.owner:
+                            if hasattr(self.config, 'bad_commands') and hasattr(func, 'commands') and any(cmd for cmd in func.commands if cmd in self.config.bad_commands) and not input.owner:
                                 continue
                             phenny = self.wrapped(list(origin), input, text, match)
                             t = time.time()

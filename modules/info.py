@@ -26,7 +26,11 @@ doc.priority = 'low'
 def commands(phenny, input): 
    # This function only works in private message
    if isinstance(input.origin[1], int): return
-   names = ', '.join(sorted(phenny.doc.iterkeys()))
+   keys = sorted(phenny.doc.iterkeys())
+   for key in keys
+      if key in phenny.config.bad_commands:
+         del(keys[key])
+   names = ', '.join(keys)
    phenny.reply('Commands I recognise:')
    for line in [names[i:i+245] for i in range(0, len(names), 245)]:
       phenny.reply(line)
