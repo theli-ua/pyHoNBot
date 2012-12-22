@@ -27,7 +27,7 @@ def commands(phenny, input):
    # This function only works in private message
    if isinstance(input.origin[1], int): return
    keys = sorted(phenny.doc.iterkeys())
-   for key in keys
+   for key in keys:
       if key in phenny.config.bad_commands:
          del(keys[key])
    names = ', '.join(keys)
