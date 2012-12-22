@@ -11,7 +11,7 @@ except:
     from urllib2 import urlopen
     from urllib import urlencode
 
-USER_AGENT = "S2 Games/Heroes of Newerth/2.6.32.2/wac/i686"
+USER_AGENT = "S2 Games/Heroes of Newerth/2.6.32.2/lac/x86-biarch"
 NA_MASTERSERVER = 'masterserver.hon.s2games.com'
 SEA_GARENA_MASTERSERVER = 'masterserver.garena.s2games.com'
 CIS_GARENA_MASTERSERVER = 'masterserver.cis.s2games.com'
