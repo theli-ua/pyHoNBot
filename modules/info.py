@@ -26,7 +26,7 @@ doc.priority = 'low'
 def commands(phenny, input): 
    # This function only works in private message
    if isinstance(input.origin[1], int): return
-   keys = phenny.doc.iterkeys()
+   keys = list(phenny.doc.iterkeys())
    for key in keys:
       if key in phenny.config.bad_commands:
          del(keys[key])
