@@ -14,7 +14,6 @@ from hon.honutils import normalize_nick
 import time
 from hon.honutils import normalize_nick
 from utils.dep import dep
-from utils.forum import VB
 
 home = os.getcwd() 
 
@@ -53,15 +52,6 @@ class Bot( asynchat.async_chat ):
         #self.writelock = threading.Lock()
         #self.sleep = time.time() - 10
         #self.send_threshold = 1
-
-        try:
-            self.vb = VB( self.config.forumurl, self.config.forumapikey )
-            if not self.vb.Login( self.config.forumuser, self.config.forumpassword ):
-                print("Forum credentials are invaid")
-            else:
-                print("Logged into forum")
-        except:
-            print("Unable to connect to forum")
 
         self.ac_in_buffer_size = 2
         #self.ac_out_buffer_size = 2
@@ -410,6 +400,7 @@ class Bot( asynchat.async_chat ):
                     s.account_id = None
                 s.owner = s.nick.lower() == self.config.owner.lower()
                 s.admin = s.owner or s.nick.lower() in self.config.admins
+                s.admin = s.admin or hasattr(self.config,'clan_admin') and self.config.clan_admin and s.account_id in self.clan_roster
                 if not s.admin and hasattr(self.config,'officer_admin') and \
                         self.config.officer_admin and s.account_id is not None and\
                         s.account_id in self.clan_roster and\
@@ -438,10 +429,13 @@ class Bot( asynchat.async_chat ):
                     elif isinstance(data,unicode):
                         text = data
                         match = regexp.match(text)
-                        if match: 
-
+                        if match:
                             input = self.input(list(origin), text, data, match)
                             if input.nick.lower() in self.config.ignore:
+                                continue
+                            if hasattr(self.config, 'clan_use') and self.config.clan_use and input.account_id not in self.clan_roster and not input.admin:
+                                continue
+                            if hasattr(self.config, 'bad_commands') and any(cmd for cmd in func.commands if cmd in self.config.bad_commands) and not input.owner:
                                 continue
                             phenny = self.wrapped(list(origin), input, text, match)
                             t = time.time()
@@ -458,5 +452,5 @@ class Bot( asynchat.async_chat ):
                                 else: self.call(func, list(origin), phenny, input)
 
     def noauth(self, input):
-            self.write_packet(packets.ID.HON_SC_WHISPER, input.nick,'You do not have access to this command.')
+            self.write_packet(packets.ID.HON_SC_WHISPER, input.nick, 'You do not have access to this command.')
             return False

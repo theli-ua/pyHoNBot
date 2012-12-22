@@ -60,6 +60,9 @@ def setup(bot):
     default_config = {
             # 'key' : ['default_value' , 'doc'],
             'officer_admin' : [1 , "If set bot's clan officers/leaders will be treated as admins"],
+            'clan_admin'    : [0 , "If set bot's clan members will all be admins"],
+            'clan_use'      : [0 , "Only allow clan and admins to interact with the bot"],
+            'bad_commands'  : [[], "List of commands to disable whilst having the module active"],
             'cooldown'      : [3 , "Per-user cooldown in seconds"],
             'channel_cooldown': [30, "Channel answer cooldown"],
             'channels'      : [[], "Set of channels to join, use part/join commands to conveniently modify it"],
@@ -69,6 +72,35 @@ def setup(bot):
             }
 
     bot.config = ConfigClass(bot.config,default_config,_config_path)
+
+def badcmd(bot, input):
+    if not input.owner:
+        return False
+    if not input.group(2):
+        return
+    cmd = input.group(2).lower()
+    if cmd in ['badcmd', 'unbadcmd']:
+        bot.reply("You don't want to do this.")
+        return
+    if cmd in bot.config.bad_commands:
+        bot.reply("Command already blacklisted")
+    else:
+        bot.config.set_add('bad_commands', cmd)
+        bot.reply("Added command to blacklist")
+badcmd.commands = ['badcmd']
+
+def unbadcmd(bot, input):
+    if not input.owner:
+        return False
+    if not input.group(2):
+        return
+    cmd = input.group(2).lower()
+    if cmd in bot.config.bad_commands:
+        bot.config.set_del('bad_commands', cmd)
+        bot.reply("Command removed")
+    else:
+        bot.reply("Command not in list")
+unbadcmd.commands = ['unbadcmd']
 
 def config(bot,input):
     """ config - list config keys, config key - show doc and value, config key value - set key to value, whisper to set global(will be set for channel otherwise) """
