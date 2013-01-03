@@ -17,6 +17,7 @@ def setup(bot):
     bot.config.module_config('default_topic', [[], 'Default Topics'])
     bot.config.module_config('default_prefix', [[], 'Default Topic Prefix'])
     bot.config.module_config('promote_clan', [0, "Auto-Promote clan members to channel officer"])
+    bot.config.module_config('owner_promote', [0, "Only owner can promote in channel"])
 
 silenced = {}
 
@@ -216,6 +217,8 @@ kick.rule = (['kick'],'([^\ ]+)(?:\ +(.+))?')
 def promote(bot, input): 
     """makes bot promote user""" 
     if not input.admin: return False
+    if not input.owner and bot.config.owner_promote:
+        return
     if not input.group(2) and input.origin[0] == ID.HON_SC_CHANNEL_MSG:
         bot.write_packet(ID.HON_CS_CHANNEL_PROMOTE,input.origin[2],input.account_id)
     else:
@@ -232,6 +235,8 @@ promote.rule = (['promote'],'([^\ ]+)?(?:\ +(.+))?')
 def demote(bot, input): 
     """makes bot demote user""" 
     if not input.admin: return False
+    if not input.owner and bot.config.owner_promote:
+        return
     if not input.group(2) and input.origin[0] == ID.HON_SC_CHANNEL_MSG:
         bot.write_packet(ID.HON_CS_CHANNEL_DEMOTE,input.origin[2],input.account_id)
     else:
