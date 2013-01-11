@@ -127,7 +127,7 @@ def officers(bot, input):
         if bot.id2nick[ply] in bot.dnd:
             continue
         if ply in bot.clan_status and ply in bot.clan_roster:
-            if bot.clan_status[ply] is ID.HON_STATUS_ONLINE and (bot.clan_roster[ply]['rank'] in ['Officer', 'Leader'] or bot.id2nick[ply] in bot.config.officers:
+            if bot.clan_status[ply] is ID.HON_STATUS_ONLINE and (bot.clan_roster[ply]['rank'] in ['Officer', 'Leader'] or bot.id2nick[ply] in bot.config.officers):
                 avail_officers.append(bot.id2nick[ply])
         elif bot.id2nick[ply] in bot.config.officers:
             if ply in bot.user_status and bot.user_status[ply] is ID.HON_STATUS_ONLINE:
