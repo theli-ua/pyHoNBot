@@ -1,4 +1,5 @@
 colors = {
+	"aquamarine": "#00FDB2",
 	"mentorwings": "#FF6600",
 	"s2logo": "#FF0000",
 	"sgm": "#DD0040",
