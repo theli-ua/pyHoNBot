@@ -70,7 +70,7 @@ def ih(bot,input):
     """List inhouses"""
     inhouses = {}
     for game in _games.values():
-        if len(game.players) >= bot.config.ih_min_players or _check_ih(game.name,bot.config.ih_keywords,bot.config.ih_threshold):
+        if (bot.config.ih_nameonly == 0 and len(game.players) >= bot.config.ih_min_players) or _check_ih(game.name,bot.config.ih_keywords,bot.config.ih_threshold):
             players = [bot.id2nick[id] for id in game.players]
             inhouses[game.name] = '{0}^* [{1}]'.format(game.name,','.join(players))
     real_inhouses = []
@@ -109,3 +109,4 @@ def setup(bot):
     bot.config.module_config('ih_min_players',[3,'Minimum players number to consider game an "inhouse"'])
     bot.config.module_config('ih_threshold',[1,'Minimum number of keywords found in game''s name to announce it'])
     bot.config.module_config('ih_keywords',[['ih','inhouse'],'Key words to be found in game name to consider game an "inhouse"'])
+    bot.config.module_config('ih_nameonly', [0, 'Makes .ih command only show inhouses where the name match the keywords'])
