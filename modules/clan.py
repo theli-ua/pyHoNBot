@@ -35,6 +35,11 @@ def member_changestatus(bot,origin,data):
     id = data[0]
     if id in bot.clan_roster:
         bot.clan_status[id] = data[1]
+        if data[0] in [ID.HON_STATUS_OFFLINE]:
+            for key, nick in enumerate(bot.dnd):
+                if id in bot.id2nick and bot.id2nick[id] == nick: 
+                    del(bot.dnd[key])
+                    break
         if data[1] in [ID.HON_STATUS_ONLINE]:
             """ """
             #nick = bot.id2nick[id]
@@ -177,6 +182,9 @@ announce.commands = ['announce']
 
 def dnd(bot, input):
     """Mentors or Officers can set themselves to not appear in .mentors/.officers command"""
+    if input.nick not in bot.nick2id:
+        bot.reply("Error occurred")
+        return
     id = bot.nick2id[input.nick]
     if not id in bot.clan_roster or (id in bot.clan_roster and not bot.clan_roster[id]['rank'] in ['Officer', 'Leader']):
         if not input.nick in bot.config.mentors and not input.nick in bot.config.officers:

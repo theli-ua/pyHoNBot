@@ -44,6 +44,11 @@ name_change.thread = False
 
 def update_status(bot, origin, data):
     bot.user_status[data[0]] = data[1]
+    if hasattr(bot, 'dnd') and data[0] in bot.id2nick and bot.id2nick[data[0]] in bot.dnd and data[1] in [ID.HON_STATUS_OFFLINE]:
+        for key, nick in enumerate(bot.dnd):
+                if bot.id2nick[data[0]] == nick: 
+                    del(bot.dnd[key])
+                    break
 update_status.event = [ID.HON_SC_UPDATE_STATUS]
 
 def user_left_channel(bot, origin, data):
