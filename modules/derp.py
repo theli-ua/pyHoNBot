@@ -26,10 +26,13 @@ def roll(bot, input):
 		bot.write_packet(ID.HON_CS_CHANNEL_ROLL, input.group(2), input.origin[2])
 	else:
 		chan = input.group(3)
-        if chan is not None:
-            chan = bot.chan2id[chan.lower()]
-        elif input.origin[0] == ID.HON_SC_CHANNEL_MSG:
-            chan = input.origin[2]
-        if chan is not None:
-            bot.write_packet(ID.HON_CS_CHANNEL_ROLL, input.group(2), chan)
-roll.rule = (['roll'],'([^\ ]+)?(?:\ +(.+))?')
+		if chan is not None:
+			if chan.lower() in bot.chan2id:
+				chan = bot.chan2id[chan.lower()]
+			else:
+				chan = None
+		elif input.origin[0] == ID.HON_SC_CHANNEL_MSG:
+			chan = input.origin[2]
+		if chan is not None:
+			bot.write_packet(ID.HON_CS_CHANNEL_ROLL, input.group(2), chan)
+roll.rule = (['roll'],'(.*?)\\ "([a-zA-Z\\ ]+)"')
