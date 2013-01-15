@@ -4,7 +4,7 @@ from hon.packets import ID
 def setup(bot):
     bot.config.module_config('welcome_members',[1,'Will welcome members in /c m if set to non-zero value'])
     bot.config.module_config('officers', [[], 'Officers alts'])
-    bot.config.module_config('mentors', [[], 'Mentor List'])
+    bot.config.module_config('allowdnd', [[], 'Allowed to use DND command'])
     bot.dnd = []
 
 def change_member(bot,origin,data):
@@ -112,8 +112,6 @@ def info(bot,input):
             if id in bot.clan_roster:
                 player = bot.clan_roster[id]
                 rank = player['rank']
-                if nick in bot.config.mentors and rank == "Member":
-                    rank = "Mentor"
                 query = {'nickname' : nick}
                 query['f'] = 'show_stats'
                 query['table'] = 'player'
@@ -181,69 +179,19 @@ def announce(bot, input):
 announce.commands = ['announce']
 
 def dnd(bot, input):
-    """Mentors or Officers can set themselves to not appear in .mentors/.officers command"""
+    """Users can set themselves to not appear in player listing commands"""
     if input.nick not in bot.nick2id:
         bot.reply("Error occurred")
         return
     id = bot.nick2id[input.nick]
     if not id in bot.clan_roster or (id in bot.clan_roster and not bot.clan_roster[id]['rank'] in ['Officer', 'Leader']):
-        if not input.nick in bot.config.mentors and not input.nick in bot.config.officers:
+        if not input.nick in bot.config.officers and not input.nick in bot.config.allowdnd:
             return
     for key, nick in enumerate(bot.dnd):
         if input.nick == nick:
-            bot.reply("You are now available in mentors/officers command.")
+            bot.reply("You are now available.")
             del(bot.dnd[key])
             return
-    bot.reply("You are now unavailable in mentors/officers command.")
+    bot.reply("You are now unavailable.")
     bot.dnd.append(input.nick)
 dnd.commands = ['dnd']
-
-def mentors(bot, input):
-    """Find available mentors"""
-    if not input.account_id in bot.clan_roster:
-        return False
-    avail_mentors = []
-    for ply in bot.config.mentors:
-        if ply not in bot.nick2id:
-            continue
-        if ply in bot.dnd:
-            continue
-        id = bot.nick2id[ply]
-        if id in bot.clan_status:
-            if bot.clan_status[id] is ID.HON_STATUS_ONLINE:
-                avail_mentors.append(ply)
-    if len(avail_mentors) > 0:
-        outstr = ', '.join(avail_mentors)
-    else:
-        outstr = 'None'
-    bot.write_packet( ID.HON_CS_WHISPER, input.nick, "Available mentors: {0}".format( outstr ) )
-    # bot.reply( "Available mentors: {0}".format( outstr ) )
-mentors.commands = ['mentors']
-
-def mentor(bot, input):
-    """Add Mentor"""
-    if not input.admin:
-        return mentors(bot, input)
-    if not input.group(2):
-        return
-    nick = input.group(2).lower()
-    if not nick in bot.config.mentors:
-        bot.config.set_add('mentors', nick)
-        bot.reply("Added {0} to mentor list".format(nick))
-    else:
-        bot.reply(nick + " is already a mentor")
-mentor.commands = ['mentor']
-
-def unmentor(bot, input):
-    """Remove Mentor"""
-    if not input.admin:
-        return False
-    if not input.group(2):
-        return
-    nick = input.group(2).lower()
-    if nick in bot.config.mentors:
-        bot.config.set_del('mentors', nick)
-        bot.reply("Removed {0} from mentor list".format(nick))
-    else:
-        bot.reply(nick + " isn't a mentor")
-unmentor.commands = ['unmentor']
