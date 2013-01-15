@@ -49,6 +49,7 @@ class ID:
     HON_CS_CLAN_ADD_MEMBER = 0x47
     HON_CS_CLAN_REMOVE_MEMBER = 0x17
     HON_CS_CHANNEL_EMOTE = 0x65
+    HON_CS_CHANNEL_ROLL = 0x64
     HON_CS_BUDDY_ACCEPT = 0xB3
     HON_CS_START_MM_GROUP = 0x0C0A
     HON_CS_INVITE_TO_MM = 0x0C0D
@@ -174,6 +175,7 @@ cs_structs = {
         ID.HON_CS_WHISPER : 'ss',
         ID.HON_CS_CHANNEL_MSG : 'sI',
         ID.HON_CS_CHANNEL_EMOTE : 'sI',
+        ID.HON_CS_CHANNEL_ROLL : 'sI',
         ID.HON_CS_JOIN_CHANNEL : 's',
         ID.HON_CS_LEAVE_CHANNEL : 's',
         ID.HON_CS_USER_INFO : 's',
