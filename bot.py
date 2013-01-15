@@ -35,9 +35,7 @@ class Bot( asynchat.async_chat ):
         self.nick = self.config.nick
         self.buffer = ''
         self.doc = {}
-        self.stats = {}
         self.id2nick = {}
-        self.id2rawnick = {}
         self.nick2id = {}
         self.chan2id = {}
         self.id2chan = {}
@@ -136,7 +134,6 @@ class Bot( asynchat.async_chat ):
             if self.clan_roster[id]['nickname']:
                 nick = normalize_nick(self.clan_roster[id]['nickname']).lower()
             self.id2nick[id] = nick
-            self.id2rawnick[id] = self.clan_roster[id]['nickname'] # Raw Nickname
             self.nick2id[nick] = id
         for buddies in buddy_list.values():
             for buddy in buddies.values():
@@ -343,19 +340,21 @@ class Bot( asynchat.async_chat ):
                             else:
                                 origin[0] = packets.ID.HON_SC_WHISPER
                                 origin[1] = input.nick
-
+                    prefix = ''
+                    if origin[0] == packets.ID.HON_SC_CHANNEL_EMOTE:
+                        prefix = self.config.replyprefix
                     if attr == 'reply':
                         if origin[0] in [packets.ID.HON_SC_CHANNEL_MSG,packets.ID.HON_SC_CHANNEL_EMOTE]:
                             return (lambda msg:
-                                    self.bot.write_packet(origin[0],self.id2nick[origin[1]] + ': ' + msg,
+                                    self.bot.write_packet(origin[0], prefix + self.id2nick[origin[1]] + ': ' + msg,
                                         origin[2]))
                         else:
                             return (lambda msg:
-                                    self.bot.write_packet(origin[0],origin[1],msg))
+                                    self.bot.write_packet(origin[0],origin[1], prefix + msg))
                     elif attr == 'say':
                         if origin[0] in [packets.ID.HON_SC_CHANNEL_MSG,packets.ID.HON_SC_CHANNEL_EMOTE]:
                             return (lambda msg:
-                                    self.bot.write_packet(origin[0],msg,origin[2]))
+                                    self.bot.write_packet(origin[0], prefix + msg,origin[2]))
                         else:
                             return (lambda msg:
                                     self.bot.write_packet(origin[0],origin[1],msg))
@@ -366,6 +365,16 @@ class Bot( asynchat.async_chat ):
 
     def call(self, func, origin, phenny, *input): 
         try:
+            if hasattr(self.config, 'bad_commands') and \
+                hasattr(func, 'commands') and \
+                any(cmd for cmd in func.commands if cmd in self.config.bad_commands) and \
+                not input.owner:
+                return
+            if hasattr(self.config, 'clan_use') and \
+                self.config.clan_use and \
+                input.account_id not in self.clan_roster and \
+                not input.admin:
+                return
             if func(phenny, *input) is False:
                 self.noauth(*input)
         except Exception, e:
@@ -433,10 +442,6 @@ class Bot( asynchat.async_chat ):
                             input = self.input(list(origin), text, data, match)
                             if input.nick.lower() in self.config.ignore:
                                 continue
-                            if hasattr(self.config, 'clan_use') and self.config.clan_use and input.account_id not in self.clan_roster and not input.admin:
-                                continue
-                            if hasattr(self.config, 'bad_commands') and hasattr(func, 'commands') and any(cmd for cmd in func.commands if cmd in self.config.bad_commands) and not input.owner:
-                                continue
                             phenny = self.wrapped(list(origin), input, text, match)
                             t = time.time()
                             if input.admin or input.nick not in self.cooldowns or\
@@ -450,7 +455,6 @@ class Bot( asynchat.async_chat ):
                                     t = threading.Thread(target=self.call, args=targs)
                                     t.start()
                                 else: self.call(func, list(origin), phenny, input)
-
     def noauth(self, input):
             self.write_packet(packets.ID.HON_SC_WHISPER, input.nick, 'You do not have access to this command.')
             return False

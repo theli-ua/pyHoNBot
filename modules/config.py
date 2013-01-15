@@ -69,6 +69,7 @@ def setup(bot):
             'admins'        : [[bot.config.owner], "Set of nicks for admin status, use admin add/del commands to conveniently modify it"],
             'ignore'        : [[], "Set of nicks to ignore. Use ignore add/dell to modify"],
             'banlist'       : [[], "Set of nicks to ban on sight. Use ban/unban to modify"],
+            'replyprefix'   : ['', "Set a reply prefix"]
             }
 
     bot.config = ConfigClass(bot.config,default_config,_config_path)
