@@ -371,6 +371,7 @@ class Bot( asynchat.async_chat ):
                 not input.owner:
                 return
             if hasattr(self.config, 'clan_use') and \
+                hasattr(input, 'account_id') and \
                 self.config.clan_use and \
                 input.account_id not in self.clan_roster and \
                 not input.admin:
