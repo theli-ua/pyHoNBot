@@ -128,6 +128,7 @@ def get_stats(bot,input,table,hero=None):
         player = input.group(3)
     if player is None:
         player = input.nick
+    player = player.strip()
     query = {'nickname' : player}
     if hero is None:
         query['table'] = table
@@ -136,6 +137,10 @@ def get_stats(bot,input,table,hero=None):
         query['f'] = 'get_hero_stats'
         query['hero'] = hero
     stats_data = bot.masterserver_request(query,cookie=True)
+
+    if len(stats_data) == 2:
+        bot.reply("Not a valid player")
+        return
     
     stats = {'nick' : player}
     mapping = { 
