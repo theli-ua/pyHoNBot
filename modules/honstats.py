@@ -139,8 +139,10 @@ def get_stats(bot,input,table,hero=None):
     stats_data = bot.masterserver_request(query,cookie=True)
 
     if 'auth' in stats_data:
+        print("WARNING: unexpected stats response, mail this line to developers:")
+        print(stats_data)
+        bot.auth()
         bot.reply("Cookie expired. Try again in a minute.")
-        bot.close()
         return
 
     if len(stats_data) == 2:
@@ -294,7 +296,7 @@ def get_stats(bot,input,table,hero=None):
         stats['rating_type'] = 'PSR'
     else:
         stats['rating_type'] = 'MMR'
-    # print( "Debug: exp_time: %f, matches: %f" % (float(stats['exp_time']), float(stats['matches'])) )
+    #print( "Debug: exp_time: %f, matches: %f" % (float(stats['exp_time']), float(stats['matches'])) )
     """
     stats['TSR'] = ((float(stats['K'])/float(stats['D'])/1.15)*0.65)+\
             ((float(stats['A'])/float(stats['D'])/1.55)*1.20)+\
