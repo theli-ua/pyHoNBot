@@ -207,7 +207,7 @@ class Bot( asynchat.async_chat ):
 
 
         if modules: 
-            print >> sys.stderr, 'Registered modules:', ', '.join(modules)
+            print 'Registered modules:', ', '.join(modules)
         else: print >> sys.stderr, "Warning: Couldn't find any modules"
 
         self.bind_commands()
