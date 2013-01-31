@@ -20,7 +20,7 @@ colors = {
 
 def normalize_nick(nick):
 	nick = nick.lower()
-	if nick[0] == '[':
+	if nick[1] == '[':
 		return nick[nick.index(']') + 1 :]
 	else:
 		return nick
