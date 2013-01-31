@@ -82,7 +82,7 @@ bot_join_ban.event = [ID.HON_SC_CHANGED_CHANNEL]
 bot_join_ban.thread = False
 
 def ply_join_ban(bot, origin, data):
-	nick = normalize_nick(data[0])
+	nick = normalize_nick(data[1])
 	if bot.banlist.IsBanlisted(nick):
 		for chan in bot.channel_channels.keys():
 			bot.write_packet(ID.HON_CS_CHANNEL_BAN, chan, nick)

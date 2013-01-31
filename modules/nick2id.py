@@ -24,12 +24,12 @@ joined_channel.priority = 'high'
 joined_channel.thread = False
 
 def user_joined_channel(bot,origin,data):
-    nick = normalize_nick(data[0])
-    bot.id2clan[data[1]] = GetClanTag(data[0])
-    bot.nick2clan[nick] = bot.id2clan[data[1]]
-    bot.nick2id[nick] = data[1]
-    bot.id2nick[data[1]] = nick
-    bot.user_status[data[1]] = data[3]
+    nick = normalize_nick(data[1])
+    bot.id2clan[data[2]] = GetClanTag(data[1])
+    bot.nick2clan[nick] = bot.id2clan[data[2]]
+    bot.nick2id[nick] = data[2]
+    bot.id2nick[data[2]] = nick
+    bot.user_status[data[2]] = data[3]
 user_joined_channel.event = [ID.HON_SC_JOINED_CHANNEL]
 user_joined_channel.priority = 'high'
 user_joined_channel.thread = False

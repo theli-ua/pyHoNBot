@@ -25,7 +25,7 @@ def normalize_nick(nick):
 	else:
 		return nick
 def user_upgrades(info, offset=0):
-	id = info[1]
+	id = info[2]
 	retval = {
 		"color": colors[info[5+offset]],
 		"symbol": len(info[4+offset]) > 0 and info[4+offset] or "default"

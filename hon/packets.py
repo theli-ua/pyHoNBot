@@ -208,7 +208,7 @@ sc_structs = {
         ID.HON_SC_CHANGED_CHANNEL : parse_channel_join,
         ID.HON_SC_INITIAL_STATUS  : parse_initiall_statuses,
         ID.HON_SC_UPDATE_STATUS : parse_user_status,
-        ID.HON_SC_JOINED_CHANNEL : 'sIIBBsss', #nick,id,chat_id,status,flags,chatsymbol,shield,icon
+        ID.HON_SC_JOINED_CHANNEL : 'IsIBBsss', #chat_id,nick,id,status,flags,chatsymbol,shield,icon
         ID.HON_SC_CLAN_MEMBER_ADDED : 'I',
         ID.HON_SC_CLAN_MEMBER_CHANGE : 'IBI', #whom,wat,who (theli, promoted to officer, by visions)
         ID.HON_SC_NAME_CHANGE : 'Is',

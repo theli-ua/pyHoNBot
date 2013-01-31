@@ -100,29 +100,29 @@ def channel_joined_channel(bot,origin,data):
 channel_joined_channel.event = [ID.HON_SC_CHANGED_CHANNEL]
 
 def channel_user_joined_channel_smurfs(bot,origin,data):
-    nick = normalize_nick(data[0]).lower()
-    silence_smurfs(bot,data[2],nick)
+    nick = normalize_nick(data[1]).lower()
+    silence_smurfs(bot,data[0],nick)
 channel_user_joined_channel_smurfs.event = [ID.HON_SC_JOINED_CHANNEL]
 channel_user_joined_channel_smurfs.thread = True
 
 def channel_user_joined_channel(bot,origin,data):
-    if data[2] not in bot.channel_channels:
-        bot.channel_channels[data[2]] = {}
-    bot.channel_channels[data[2]][data[1]] = [data[1],data[0],datetime.now(),None]
-    l = len(bot.channel_channels[data[2]])
+    if data[0] not in bot.channel_channels:
+        bot.channel_channels[data[0]] = {}
+    bot.channel_channels[data[0]][data[2]] = [data[2],data[1],datetime.now(),None]
+    l = len(bot.channel_channels[data[0]])
     CHANNEL_MAX = bot.config.channel_limit
     #banlist management
-    nick = normalize_nick(data[0]).lower()
-    if data[1] in bot.clan_roster:
+    nick = normalize_nick(data[1]).lower()
+    if data[2] in bot.clan_roster:
         if bot.config.promote_clan:
-            bot.write_packet( ID.HON_CS_CHANNEL_PROMOTE, data[2], data[1] )
-        if not 'upgrades' in bot.clan_roster[data[1]]:
-            bot.clan_roster[data[1]]['upgrades'] = user_upgrades(data, 1)
+            bot.write_packet( ID.HON_CS_CHANNEL_PROMOTE, data[0], data[2] )
+        if not 'upgrades' in bot.clan_roster[data[2]]:
+            bot.clan_roster[data[2]]['upgrades'] = user_upgrades(data, 1)
     if CHANNEL_MAX == 0:
         return
     if l > CHANNEL_MAX:
         l -= CHANNEL_MAX
-        for i in sorted(bot.channel_channels[data[2]].values(), key=lambda x:x[2]):
+        for i in sorted(bot.channel_channels[data[0]].values(), key=lambda x:x[2]):
             if l <= 0:break
             nick = normalize_nick(i[1])
             if i[0] not in bot.clan_roster and nick not in bot.config.whitelist and i[1].split(']')[0] not in ['[GM','[S2']:
