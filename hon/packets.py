@@ -200,7 +200,7 @@ cs_structs = {
         }
 sc_structs = {
         ID.HON_SC_PING : '',
-        ID.HON_SC_PM    : 'ss',
+        ID.HON_SC_PM    : 'Bss',
         ID.HON_SC_WHISPER : 'ss',
         ID.HON_SC_CHANNEL_MSG : 'IIs',
         ID.HON_SC_CHANNEL_EMOTE : 'IIs',
@@ -260,6 +260,9 @@ def parse_packet(data):
         res,data = parse_part(data,fmt)
         data = res
         if packet_id in chat_packets:
+            if packet_id == ID.HON_SC_PM:
+                #we will ignore that byte at start unless we'll find out its meaning
+                data = data[1:]
             origin[1] = data[0]
             if packet_id in [ID.HON_SC_CHANNEL_MSG,ID.HON_SC_CHANNEL_EMOTE,ID.HON_SC_CHANNEL_ROLL]:
                 origin[2] = data[1]
