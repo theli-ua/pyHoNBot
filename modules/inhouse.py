@@ -63,8 +63,9 @@ def initiall_statuses(bot,origin,data):
     #server, gamename
     for u in data[1]:
         if u[1] in [ ID.HON_STATUS_INLOBBY , ID.HON_STATUS_INGAME ]:
-            _add_game(u[0],u[4],0,u[3],bot)
+            _add_game(u[0],u[6],u[7],u[5],bot)
 initiall_statuses.event = [ID.HON_SC_INITIAL_STATUS]
+initiall_statuses.thread = False
 
 def ih(bot,input):
     """List inhouses"""

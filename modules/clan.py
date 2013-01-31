@@ -59,6 +59,7 @@ def member_initstatus(bot,origin,data):
         elif bot.id2nick[id] == bot.config.owner:
             bot.clan_status[id] = u[1]
 member_initstatus.event = [ID.HON_SC_INITIAL_STATUS]
+member_initstatus.thread = False
 
 def invite(bot,input):
     """invites to clan, admins only""" 
