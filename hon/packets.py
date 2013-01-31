@@ -144,7 +144,7 @@ def parse_initiall_statuses(packet_id,data):
     res,data = parse_part(data,'I') #count
     buddies = []
     for _ in xrange(res[-1]):
-        m,data = parse_part(data,'IBB') #id,status,flags
+        m,data = parse_part(data,'IBBss') #id,status,flags, color, icon
         if m[1] in [ ID.HON_STATUS_INLOBBY , ID.HON_STATUS_INGAME ]:
             tmp,data = parse_part(data,'ss') # server, gamename
             m.extend(tmp)
