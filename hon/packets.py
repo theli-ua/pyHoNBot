@@ -146,10 +146,10 @@ def parse_initiall_statuses(packet_id,data):
     for _ in xrange(res[-1]):
         m,data = parse_part(data,'IBBss') #id,status,flags, color, icon
         if m[1] in [ ID.HON_STATUS_INLOBBY , ID.HON_STATUS_INGAME ]:
-            tmp,data = parse_part(data,'ss') # server, gamename
+            tmp,data = parse_part(data,'ssI') # server, gamename , match id
             m.extend(tmp)
         else:
-            m.extend([None,None])
+            m.extend([None,None, None])
         buddies.append(m)
     res.append(buddies)
     return origin,res
