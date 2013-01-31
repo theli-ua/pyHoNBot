@@ -22,7 +22,12 @@ def setup(bot):
         print("no need to update stringtables")
         return
 
+    if bot.verbose:
+        print("Updating stringtables")
 
+
+    if bot.verbose:
+        print('Fetching Manifest: {0}{1}/{2}/{3}/manifest.xml.zip'.format(verinfo['url'],verinfo['os'],verinfo['arch'],verinfo['version']))
     manifest = None
     try:
         manifest = web.get('{0}{1}/{2}/{3}/manifest.xml.zip'.format(verinfo['url'],verinfo['os'],verinfo['arch'],verinfo['version']))
@@ -46,10 +51,14 @@ def setup(bot):
         if f['version'].count('.') == 3 and f['version'].endswith('.0'):
             f['version'] = f['version'][:-2]
         table = None
+        if bot.verbose:
+            print('Fetching {0}{1}/{2}/{3}/{4}.zip'.format(verinfo['url'],verinfo['os'],verinfo['arch'],f['version'],f['path']))
         try:
             table = web.get('{0}{1}/{2}/{3}/{4}.zip'.format(verinfo['url'],verinfo['os'],verinfo['arch'],f['version'],f['path']))
         except:pass
         if table is None:
+            if bot.verbose:
+                print('Fetching {0}{1}/{2}/{3}/{4}.zip'.format(verinfo['url2'],verinfo['os'],verinfo['arch'],f['version'],f['path']))
             try:
                 table = web.get('{0}{1}/{2}/{3}/{4}.zip'.format(verinfo['url2'],verinfo['os'],verinfo['arch'],f['version'],f['path']))
             except:pass
@@ -82,14 +91,19 @@ def setup(bot):
                         short_old = short
                         short_new = short
                         i = 0
+                        """
                         while short_old == short_new:
                             if i < len(longer_old):
                                 short_old += longer_old[i]
                             if i < len(longer_new):
                                 short_new += longer_new[i]
                             i+=1
+                        """
                         bot.heroshorts[short_old] = old
                         bot.heroshorts[short_new] = m2.group(1)
 
     bot.stringtable_version = verinfo['version']
+
+    if bot.verbose:
+        print("Finished updating stringtables")
     

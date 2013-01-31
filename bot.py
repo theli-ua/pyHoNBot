@@ -30,7 +30,8 @@ class Bot( asynchat.async_chat ):
         caller = inspect.stack()
         print("Error: {0} ({1}:{2} - {3})".format(msg, caller[1][1], caller[1][2], time.strftime('%X')))
     def __init__( self,config ):
-        asynchat.async_chat.__init__( self )   
+        asynchat.async_chat.__init__( self )
+        self.verbose = True
         self.config = config
         self.nick = self.config.nick
         self.buffer = ''
@@ -47,6 +48,7 @@ class Bot( asynchat.async_chat ):
         self.channel_cooldowns = {}
         self.clan_status = {}
         self.user_status = {}
+
         #self.writelock = threading.Lock()
         #self.sleep = time.time() - 10
         #self.send_threshold = 1
