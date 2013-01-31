@@ -76,7 +76,7 @@ def setup(bot):
             if m:
                 bot.stringtables[m.group(1)] = m.group(2)
                 m2 = re_hero_name.match(m.group(1))
-                if m2:
+                if m2 and m2.group(1).lower().find('tutorial') == -1:
                     short = m.group(2).lower()
                     if short.startswith('the '):
                         short = short[4:]
@@ -91,14 +91,12 @@ def setup(bot):
                         short_old = short
                         short_new = short
                         i = 0
-                        """
                         while short_old == short_new:
                             if i < len(longer_old):
                                 short_old += longer_old[i]
                             if i < len(longer_new):
                                 short_new += longer_new[i]
                             i+=1
-                        """
                         bot.heroshorts[short_old] = old
                         bot.heroshorts[short_new] = m2.group(1)
 
