@@ -165,6 +165,20 @@ def parse_user_status(packet_id,data):
             res.extend(tmp)
     return origin,res
 
+def parse_pm(packet_id,data):
+    type,data = parse_part(data, 'B')
+    type = type[0]
+    if type == 0:
+        res, _ = parse_part(data,'ss')
+    elif type == 1:
+        res, _ = parse_part(data,'sIBBsss') # nick, id, status, unknown, color, icon, message
+        res = [res[0],res[-1]]
+    else:
+        res = ['','']
+        print ('Unknown PM flag : {0}'.format(type))
+        print (dump(data))
+    origin = [packet_id, res[0] , None]
+    return origin, res[1]
 
 chat_packets = [ID.HON_SC_PM,ID.HON_SC_WHISPER,ID.HON_SC_CHANNEL_MSG,ID.HON_SC_CHANNEL_ROLL,ID.HON_SC_CHANNEL_EMOTE]
 cs_structs = {
@@ -200,7 +214,7 @@ cs_structs = {
         }
 sc_structs = {
         ID.HON_SC_PING : '',
-        ID.HON_SC_PM    : 'Bss',
+        ID.HON_SC_PM    : parse_pm,
         ID.HON_SC_WHISPER : 'ss',
         ID.HON_SC_CHANNEL_MSG : 'IIs',
         ID.HON_SC_CHANNEL_EMOTE : 'IIs',
@@ -260,9 +274,6 @@ def parse_packet(data):
         res,data = parse_part(data,fmt)
         data = res
         if packet_id in chat_packets:
-            if packet_id == ID.HON_SC_PM:
-                #we will ignore that byte at start unless we'll find out its meaning
-                data = data[1:]
             origin[1] = data[0]
             if packet_id in [ID.HON_SC_CHANNEL_MSG,ID.HON_SC_CHANNEL_EMOTE,ID.HON_SC_CHANNEL_ROLL]:
                 origin[2] = data[1]
