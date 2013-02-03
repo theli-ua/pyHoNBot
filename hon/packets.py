@@ -144,12 +144,12 @@ def parse_initiall_statuses(packet_id,data):
     res,data = parse_part(data,'I') #count
     buddies = []
     for _ in xrange(res[-1]):
-        m,data = parse_part(data,'IBB') #id,status,flags
+        m,data = parse_part(data,'IBBss') #id,status,flags, color, icon
         if m[1] in [ ID.HON_STATUS_INLOBBY , ID.HON_STATUS_INGAME ]:
-            tmp,data = parse_part(data,'ss') # server, gamename
+            tmp,data = parse_part(data,'ssI') # server, gamename , match id
             m.extend(tmp)
         else:
-            m.extend([None,None])
+            m.extend([None,None, None])
         buddies.append(m)
     res.append(buddies)
     return origin,res
@@ -165,6 +165,20 @@ def parse_user_status(packet_id,data):
             res.extend(tmp)
     return origin,res
 
+def parse_pm(packet_id,data):
+    type,data = parse_part(data, 'B')
+    type = type[0]
+    if type == 0:
+        res, _ = parse_part(data,'ss')
+    elif type == 1:
+        res, _ = parse_part(data,'sIBBsss') # nick, id, status, unknown, color, icon, message
+        res = [res[0],res[-1]]
+    else:
+        res = ['','']
+        print ('Unknown PM flag : {0}'.format(type))
+        print (dump(data))
+    origin = [packet_id, res[0] , None]
+    return origin, res[1]
 
 chat_packets = [ID.HON_SC_PM,ID.HON_SC_WHISPER,ID.HON_SC_CHANNEL_MSG,ID.HON_SC_CHANNEL_ROLL,ID.HON_SC_CHANNEL_EMOTE]
 cs_structs = {
@@ -200,7 +214,7 @@ cs_structs = {
         }
 sc_structs = {
         ID.HON_SC_PING : '',
-        ID.HON_SC_PM    : 'ss',
+        ID.HON_SC_PM    : parse_pm,
         ID.HON_SC_WHISPER : 'ss',
         ID.HON_SC_CHANNEL_MSG : 'IIs',
         ID.HON_SC_CHANNEL_EMOTE : 'IIs',
