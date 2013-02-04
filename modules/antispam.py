@@ -39,7 +39,7 @@ def checkSpam(bot, origin, data):
 			bot.spamcd[nick].append(now)
 	else:
 		bot.spamcd[nick] = [now]
-checkSpam.event = [ID.HON_SC_CHANNEL_MSG, ID.HON_SC_CHANNEL_EMOTE]
+checkSpam.event = [ID.HON_SC_CHANNEL_MSG, ID.HON_SC_CHANNEL_EMOTE, ID.HON_SC_CHANNEL_ROLL]
 checkSpam.thread = False
 
 def addword(bot, input):
