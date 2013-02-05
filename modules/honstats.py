@@ -268,8 +268,6 @@ def get_stats(bot,input,table,hero=None):
     wins = float(stats['wins'])
     if float(stats['exp_time']) == 0 or float(stats['matches']) == 0:
         bot.say("No matches played or error occurred.")
-        print("Failure to fetch matches played, This may be an error. If an error, attach the following line into a new issue on our Github page.")
-        print(stats)
         return
     if total == 0.0 or wins == 0.0:
         stats['win_percent'] = 0.0
