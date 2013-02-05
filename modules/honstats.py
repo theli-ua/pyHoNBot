@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 depend = ['honstringtables']
-GAME_MODES = [("nm","ap"),"sd","rd","dm","bd","bp","cd","cm","ar","league",("cas","casual")]
+GAME_MODES = [("nm","ap"),"sd","rd","dm","bd","bp","cd","cm","ar","league"]
 #'smackdown'
 #'bloodlust'
 #'annihilation'
@@ -111,10 +111,12 @@ def rstats(bot,input):
     """Get ranked (mm) stats for [player] .. nick is optional"""
     get_stats(bot,input,'ranked')
 rstats.commands = ['rstats','stats']
+
 def cstats(bot,input):
     """Get casual (mm) stats for [player] .. nick is optional"""
     get_stats(bot,input,'casual')
-cstats.commands = ['cstats']
+# cstats.commands = ['cstats']
+
 def player_stats(bot,input):
     """Get public stats for [player] .. nick is optional"""
     get_stats(bot,input,'player')
@@ -266,6 +268,8 @@ def get_stats(bot,input,table,hero=None):
     wins = float(stats['wins'])
     if float(stats['exp_time']) == 0 or float(stats['matches']) == 0:
         bot.say("No matches played or error occurred.")
+        print("Failure to fetch matches played, This may be an error. If an error, attach the following line into a new issue on our Github page.")
+        print(stats)
         return
     if total == 0.0 or wins == 0.0:
         stats['win_percent'] = 0.0
@@ -314,8 +318,8 @@ def hero_stats(bot,input):
     table = 'hero_ranked'
     if input.group(2) == 'p':
         table = 'hero_pub'
-    elif input.group(2) == 'c':
-        table = 'hero_casual'
+    #elif input.group(2) == 'c':
+    #    table = 'hero_casual'
     get_stats(bot,input,table=table,hero=bot.heroshorts[input.group(1).lower()])
 
 def setup(bot):
