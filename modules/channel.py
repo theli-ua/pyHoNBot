@@ -74,8 +74,6 @@ def silence_smurfs(bot,chanid,nick):
     query = {'nickname' : nick,'f': 'show_stats','table': 'ranked'}
     stats_data = bot.masterserver_request(query,cookie=True)
     if 'rnk_games_played' not in stats_data:
-        bot.err("Received malformed data from masterserver")
-        print(stats_data)
         return
     if (int(stats_data['rnk_games_played']) - int(stats_data['rnk_discos'])) <= bot.config.silence_smurfs:
         bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER, chanid, nick, 0x7fffffff)
