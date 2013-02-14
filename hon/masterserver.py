@@ -80,11 +80,10 @@ def api_request(apikey, path):
     url = 'http://{0}/{1}?token={2}'.format(API_URL, quote_plus(path, '/'), apikey)
     try:
         data = urlopen(url, None, 3).read()
+        return json.loads(data)
     except:
         print("Error querying HoNAPI")
-    if not data or data.find('No results') >= 0:
         return None
-    return json.loads(data)
 
 def set_region(region):
     global REGION,MASTERSERVER
