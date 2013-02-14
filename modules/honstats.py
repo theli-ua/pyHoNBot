@@ -136,7 +136,7 @@ def get_stats(bot,input,table,hero=None):
         query['f'] = 'show_stats'
         stats_data = bot.masterserver_request(query,cookie=True)
     else:
-        stats_data = bot.honapi_request( 'hero_statistics/{0}/nickname/{1}/name/{2}/'.format( table, player, bot.stringtables[hero + '_name'] ) )
+        stats_data = bot.honapi_request( 'hero_statistics/{0}/nickname/{1}/name/{2}/'.format( table[5:], player, bot.stringtables[hero + '_name'] ) )
         if stats_data is None:
             bot.say("No matches played or error occurred.")
             return
@@ -316,12 +316,11 @@ def get_stats(bot,input,table,hero=None):
     bot.say(bot.config.honstats_player.format(**stats))
 
 def hero_stats(bot,input):
-    #table = 'ranked'
-    table = 'all'
+    table = 'hero_ranked'
     if input.group(2) == 'p':
-        table = 'public'
+        table = 'hero_public'
     elif input.group(2) == 'c':
-        table = 'casual'
+        table = 'hero_casual'
     get_stats(bot,input,table=table,hero=bot.heroshorts[input.group(1).lower()])
 
 def setup(bot):
