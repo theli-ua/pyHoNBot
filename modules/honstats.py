@@ -316,7 +316,8 @@ def get_stats(bot,input,table,hero=None):
     bot.say(bot.config.honstats_player.format(**stats))
 
 def hero_stats(bot,input):
-    table = 'ranked'
+    #table = 'ranked'
+    table = 'all'
     if input.group(2) == 'p':
         table = 'public'
     elif input.group(2) == 'c':
