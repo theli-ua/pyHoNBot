@@ -108,6 +108,13 @@ class Bot( asynchat.async_chat ):
             #return self.masterserver_request(query,path,decode,cookie)
         return response
 
+    def honapi_request(self, query):
+        if not hasattr(self.config, 'api_key') or len(self.config.api_key) == 0:
+            print("HoNAPI key not set")
+            return None
+        response = masterserver.api_request(self.config.api_key, query)
+        return response
+
     def auth(self):
         auth_data = masterserver.auth(self.config.nick,self.config.password)
         if 'ip' not in auth_data or 'auth_hash' not in auth_data:

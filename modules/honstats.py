@@ -122,7 +122,6 @@ def player_stats(bot,input):
     get_stats(bot,input,'player')
 player_stats.commands = ['pstats']
 
-
 def get_stats(bot,input,table,hero=None):
     if hero is None:
         player = input.group(2)
@@ -135,10 +134,14 @@ def get_stats(bot,input,table,hero=None):
     if hero is None:
         query['table'] = table
         query['f'] = 'show_stats'
+        stats_data = bot.masterserver_request(query,cookie=True)
     else:
-        query['f'] = 'get_hero_stats'
-        query['hero'] = hero
-    stats_data = bot.masterserver_request(query,cookie=True)
+        stats_data = bot.honapi_request( 'hero_statistics/all/nickname/{0}/name/{1}/'.format( player, bot.stringtables[hero + '_name'] ) )
+        if stats_data is None:
+            bot.say("No matches played or error occurred.")
+            return
+        else:
+            stats_data = stats_data[0]
 
     if 'auth' in stats_data:
         print("WARNING: unexpected stats response, mail this line to developers:")
