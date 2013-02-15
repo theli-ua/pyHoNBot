@@ -81,7 +81,7 @@ def api_request(apikey, path):
     try:
         data = urlopen(url, None, 3).read()
         return json.loads(data)
-    except Exception, e:
+    except Exception as e:
         print("Error querying HoNAPI: {0}".format(e.strerror))
         return None
 
