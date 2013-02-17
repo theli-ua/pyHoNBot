@@ -15,7 +15,7 @@ def spam_silence(bot, chanid, nick):
 	else:
 		silences[nick] += 1
 	if silences[nick] >= bot.config.spam_silence_ban:
-		bot.banlist.Add('N/A', nick, 'Anti-Spam')
+		# bot.banlist.Add('N/A', nick, 'Anti-Spam')
 		bot.write_packet(ID.HON_CS_CHANNEL_BAN, chanid, nick)
 		del(silences[nick])
 	else:
