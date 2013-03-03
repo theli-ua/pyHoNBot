@@ -335,7 +335,7 @@ class Bot( asynchat.async_chat ):
                 if attr in ['reply','say']:
                     #emote instead of channel message
                     if origin[0] == packets.ID.HON_SC_CHANNEL_MSG:
-                        origin[0] = packets.ID.HON_SC_CHANNEL_MSG
+                        origin[0] = packets.ID.HON_SC_CHANNEL_EMOTE
 
                     if origin[0] in [packets.ID.HON_SC_CHANNEL_MSG,packets.ID.HON_SC_CHANNEL_EMOTE]:
                         #prevent channel overspam
