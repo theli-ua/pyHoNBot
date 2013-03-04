@@ -52,9 +52,12 @@ def match(bot,input):
                     except:pass
                 match_stats['mode'] = '[' + ','.join(mode) + ']'
                 match_stats['name'] = summary['mname']
-                match_stats['mdt'] = summary['mdt']
+                if 'mdt' in summary:
+                    match_stats['mdt'] = summary['mdt']
+                else:
+                    match_stats['mdt'] = 0
                 match_stats['len'] = str(timedelta(seconds = int(summary['time_played'])))
-                match_stats['date'] = summary['mdt']
+                match_stats['date'] = match_stats['mdt']
                 match_type = summary['class']
 
                 #player stats

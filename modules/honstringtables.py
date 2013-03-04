@@ -17,6 +17,9 @@ def setup(bot):
         verinfo = bot.masterserver_request({'version' : '0.0.0.0', 'os' : 'wbc' ,'arch' : 'i686'},path = 'patcher/patcher.php')
     else:
         verinfo = bot.masterserver_request({'version' : '0.0.0.0', 'os' : 'wgc' ,'arch' : 'i686'},path = 'patcher/patcher.php')
+    if verinfo is None:
+        print "Could not load honstringtables module"
+        return
     verinfo = verinfo[0]
     if bot.stringtable_version == verinfo['version']:
         print("no need to update stringtables")
