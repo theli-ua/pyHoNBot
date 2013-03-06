@@ -305,13 +305,17 @@ def silence(bot, input):
     nick = input.group(2)
     time = input.group(3)
     chan = input.group(4)
+    if time is None:
+        time = 300 # Default at 5 mins
     if chan is not None:
         chan = bot.chan2id[chan.lower()]
     elif input.origin[0] == ID.HON_SC_CHANNEL_MSG:
         chan = input.origin[2]
     if chan is not None and time is not None and nick is not None:
+        print "Y"
         bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER,chan,nick,1000*int(time))
     elif chan is None and time is not None and nick is not None:
+        print "N"
         for chanid in bot.channel_channels.keys():
-            bot.write_packet(ID.HON_CS_CHANNEL_KICK, chanid, nick, 1000*int(time))
-silence.rule = (['silence'],'([^\ ]+) ([0-9]+)(?:\ +(.+))?')
+            bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER, chanid, nick, 1000*int(time))
+silence.rule = (['silence'],'([^\ $]+)(?:\ +([0-9]+))?(?:\ +(.+))?')
