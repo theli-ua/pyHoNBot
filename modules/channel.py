@@ -312,10 +312,8 @@ def silence(bot, input):
     elif input.origin[0] == ID.HON_SC_CHANNEL_MSG:
         chan = input.origin[2]
     if chan is not None and time is not None and nick is not None:
-        print "Y"
         bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER,chan,nick,1000*int(time))
     elif chan is None and time is not None and nick is not None:
-        print "N"
         for chanid in bot.channel_channels.keys():
             bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER, chanid, nick, 1000*int(time))
 silence.rule = (['silence'],'([^\ $]+)(?:\ +([0-9]+))?(?:\ +(.+))?')
