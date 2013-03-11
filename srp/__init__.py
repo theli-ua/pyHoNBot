@@ -11,7 +11,7 @@ if not _mod:
     try:
         import srp._ctsrp
         _mod = srp._ctsrp
-    except ImportError:
+    except:
         pass
     
 if not _mod:
