@@ -83,6 +83,7 @@ def api_request(apikey, path):
         return json.loads( data )
     except Exception as e:
         print "Error querying HoNAPI:", e
+        print "URL: %s".format( url )
         return None
 
 def set_region(region):
