@@ -82,6 +82,9 @@ def api_request(apikey, path):
         data = urlopen( url, None, 3 ).read()
         return json.loads( data )
     except Exception as e:
+        if hasattr(e, 'code') and e.code == 404:
+            print "Invalid API Key"
+            return None
         print "Error querying HoNAPI:", e
         print "URL: {0}".format( url )
         return None

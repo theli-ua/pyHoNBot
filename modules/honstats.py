@@ -1,4 +1,5 @@
 from datetime import timedelta
+import re
 
 depend = ['honstringtables']
 GAME_MODES = [("nm","ap"),"sd","rd","dm","bd","bp","cd","cm","ar","league"]
@@ -132,6 +133,9 @@ def get_stats(bot,input,table,hero=None):
         player = input.group(3)
     if player is None:
         player = input.nick
+    if not re.match(r'^[\w_`]+$', player):
+        bot.reply('Invalid username')
+        return
     player = player.strip()
     query = {'nickname' : player}
     if hero is None:
@@ -139,8 +143,13 @@ def get_stats(bot,input,table,hero=None):
         query['f'] = 'show_stats'
         stats_data = bot.masterserver_request(query,cookie=True)
     else:
-        stats_data = bot.honapi_request( 'hero_statistics/{0}/nickname/{1}/name/{2}/'.format( table[5:], player, bot.stringtables[hero + '_name'] ) )
+        longName = bot.stringtables[hero + '_name']
+        stats_data = bot.honapi_request( 'hero_statistics/{0}/nickname/{1}/name/{2}/'.format( table[5:], player, longName ) )
         if stats_data is None:
+            if longName.find( ' ' ) > 0 and longName.split( ' ' )[1].lower() == player.lower(): # Guess they're doing full hero name when it includes a space
+                split = longName.split( ' ' )
+                bot.reply( "Correct usage: .{0} [player] or .{1} [player]".format( split[0].lower(), split[0][:4].lower() ) )
+                return
             bot.say("No matches played or error occurred.")
             return
         else:
