@@ -77,10 +77,10 @@ def request(query,path = None,decode = True):
         return data
 
 def api_request(apikey, path):
-    url = 'http://{0}/{1}?token={2}'.format(API_URL, quote_plus(path, '/'), apikey)
+    url = 'http://{0}/{1}?token={2}'.format( API_URL, quote_plus(path, '/').replace('+', '%20'), apikey )
     try:
-        data = urlopen(url, None, 3).read()
-        return json.loads(data)
+        data = urlopen( url, None, 3 ).read()
+        return json.loads( data )
     except Exception as e:
         print "Error querying HoNAPI:", e
         return None
