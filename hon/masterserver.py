@@ -5,13 +5,12 @@ try:
     #3.x
     from urllib.request import Request
     from urllib.request import urlopen
-    from urllib.parse import urlencode
+    from urllib.parse import urlencode, quote
 except:
     #2.7
     from urllib2 import Request
     from urllib2 import urlopen
-    from urllib import urlencode
-from urllib import quote_plus
+    from urllib import urlencode, quote
 USER_AGENT = "S2 Games/Heroes of Newerth/2.6.32.2/lac/x86-biarch"
 NA_MASTERSERVER = 'masterserver.hon.s2games.com'
 SEA_GARENA_MASTERSERVER = 'masterserver.garena.s2games.com'
@@ -77,7 +76,7 @@ def request(query,path = None,decode = True):
         return data
 
 def api_request(apikey, path):
-    url = 'http://{0}/{1}?token={2}'.format( API_URL, quote_plus(path, '/').replace('+', '%20'), apikey )
+    url = 'http://{0}/{1}?token={2}'.format( API_URL, quote(path, '/'), apikey )
     try:
         data = urlopen( url, None, 3 ).read()
         return json.loads( data )
