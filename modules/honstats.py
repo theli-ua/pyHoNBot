@@ -98,9 +98,9 @@ def match(bot,input):
 
                 match_stats['wards'] = player_stats['wards']
                 time = float(summary['time_played']) / 60.0
-                match_stats['xpm'] = float(player_stats['exp'])/time
-                match_stats['gpm'] = float(player_stats['gold'])/time
-                match_stats['apm'] = float(player_stats['actions'])/time
+                match_stats['xpm'] = time > 0 and float(player_stats['exp'])/time or 0
+                match_stats['gpm'] = time > 0 and float(player_stats['gold'])/time or 0
+                match_stats['apm'] = time > 0 and float(player_stats['actions'])/time or 0
                 match_stats['nick'] = player_stats['nickname']
 
                 if match_stats['hero'] + '_name' in bot.stringtables:
