@@ -307,6 +307,8 @@ def silence(bot, input):
     chan = input.group(4)
     if time is None:
         time = 300 # Default at 5 mins
+    elif time > 0x7fffffff:
+        time = 0x7fffffff
     if chan is not None:
         chan = bot.chan2id[chan.lower()]
     elif input.origin[0] == ID.HON_SC_CHANNEL_MSG:
