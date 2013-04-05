@@ -6,7 +6,7 @@
 """
 
 import os, imp, sys,threading,inspect
-import re
+import re, struct
 import socket, asyncore, asynchat
 from hon import masterserver,packets
 from struct import unpack
@@ -65,7 +65,9 @@ class Bot( asynchat.async_chat ):
         
 
     def write_packet(self,packet_id,*args):
-        self.write(packets.pack(packet_id,*args))
+        data = packets.pack(packet_id,*args)
+        self.write(struct.pack('<H',len(data)))
+        self.write(data)
  
     def write( self, data ):
         #self.writelock.acquire()
