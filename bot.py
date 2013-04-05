@@ -93,10 +93,10 @@ class Bot( asynchat.async_chat ):
  
     def found_terminator( self ):
         if self.got_len:
-            self.dispatch(self.buffer)
             self.set_terminator(2)
+            self.dispatch(self.buffer)
         else:
-            self.set_terminator(unpack(">H",self.buffer)[0])
+            self.set_terminator(unpack("<H",self.buffer)[0])
         self.buffer = ''
         self.got_len = not self.got_len
 
