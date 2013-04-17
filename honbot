@@ -33,6 +33,8 @@ def create_default_config(fn):
    password = 'example'
    owner = 'yournickname'
 
+   api_key = ''
+
    # exclude modules from loading
    exclude = ['mumble','fixmm','logger','forumcheck']
 
