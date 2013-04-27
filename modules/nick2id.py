@@ -52,14 +52,16 @@ def update_status(bot, origin, data):
 update_status.event = [ID.HON_SC_UPDATE_STATUS]
 
 def user_left_channel(bot, origin, data):
-    nick = bot.id2nick[data[0]]
-    bot.write_packet(ID.HON_CS_USER_INFO, nick)
+    if data[0] in bot.id2nick:
+        nick = bot.id2nick[data[0]]
+        bot.write_packet(ID.HON_CS_USER_INFO, nick)
 user_left_channel.event = [ID.HON_SC_LEFT_CHANNEL]
 
 def user_offline(bot, origin, data):
     if data[0] in bot.nick2id:
         id = bot.nick2id[data[0]]
-        del(bot.nick2id[data[0]])
-        if id in bot.id2nick:
-            del(bot.id2nick[id])
+        if not id in bot.clan_roster:
+            del(bot.nick2id[data[0]])
+            if id in bot.id2nick:
+                del(bot.id2nick[id])
 user_offline.event = [ID.HON_SC_USER_INFO_OFFLINE, ID.HON_SC_USER_INFO_NO_EXIST]
