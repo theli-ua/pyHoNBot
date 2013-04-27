@@ -117,7 +117,7 @@ def activityreport(bot, input):
     toOut = sorted(toOut, cmp=sortArray)
     for row in toOut:
         outStr += "{0}:\t\t\t{1}{2}\t{3}\n".format( row['nick'], len(row['nick']) <= 6 and '\t' or '', row['date'], row['rank'] )
-    f = open( bot.config.logdir + 'activity.log', 'w' )
+    f = open( os.path.join( bot.config.logdir, "activity.log" ), 'w' )
     f.write( outStr )
     bot.reply("Log written to log directory. URL in officer forum")
     bot.reportRunning = False
