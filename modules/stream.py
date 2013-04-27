@@ -106,7 +106,6 @@ def Broadcast(bot, stream):
 		if chanName.lower() in bot.chan2id:
 			chanid = bot.chan2id[chanName.lower()]
 			bot.write_packet(ID.HON_SC_CHANNEL_EMOTE, string, chanid)
-Broadcast.commands = ['streamtest']
 
 def setup(bot):
 	bot.lastStream = 0
