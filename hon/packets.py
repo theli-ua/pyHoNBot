@@ -3,7 +3,7 @@ import struct
 class ID:
     #generic constants
     HON_CHAT_PORT = 11031
-    HON_PROTOCOL_VERSION = 42
+    HON_PROTOCOL_VERSION = 43
 
     HON_STATUS_OFFLINE    =  0
     HON_STATUS_ONLINE     =  3
@@ -237,6 +237,8 @@ sc_structs = {
         ID.HON_SC_USER_INFO_NO_EXIST : 's',
         ID.HON_SC_USER_INFO_OFFLINE : 'ss',
         ID.HON_SC_USER_INFO_IN_GAME : 'sss',
+        ID.HON_SC_CHANNEL_PROMOTE : 'III',
+        ID.HON_SC_CHANNEL_DEMOTE : 'III'
         }
 def pack(packet_id, *args):
     args = list(args)
