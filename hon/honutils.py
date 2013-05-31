@@ -9,6 +9,7 @@ colors = {
 	"tech": "#DD0040",
 	"sbteye": "#0059FF",
 	"emerald": "#1CFC2F",
+	"stardustgreen": "#1CFC2F",
 	"tanzanite": "#863EF0",
 	"pink": "#FC65A5",
 	"diamond": "#2ACC1FA",
