@@ -69,7 +69,8 @@ def setup(bot):
             'admins'        : [[bot.config.owner], "Set of nicks for admin status, use admin add/del commands to conveniently modify it"],
             'ignore'        : [[], "Set of nicks to ignore. Use ignore add/dell to modify"],
             'banlist'       : [[], "Set of nicks to ban on sight. Use ban/unban to modify"],
-            'replyprefix'   : ['', "Set a reply prefix"]
+            'replyprefix'   : ['', "Set a reply prefix"],
+            'channel_whitelist': [[], "Users who can always have the bot reply in-channel"]
             }
 
     bot.config = ConfigClass(bot.config,default_config,_config_path)
@@ -102,6 +103,34 @@ def unbadcmd(bot, input):
     else:
         bot.reply("Command not in list")
 unbadcmd.commands = ['unbadcmd']
+
+def chanwhite(bot, input):
+    if not input.admin:
+        return False
+    if not input.group(2):
+        return
+    nick = input.group(2)
+    if nick in bot.config.channel_whitelist:
+        bot.reply("User already whitelisted")
+        return
+    else:
+        bot.config.set_add( 'channel_whitelist', nick )
+        bot.reply("User added")
+chanwhite.commands = ['chanwhitelist']
+
+def chanunwhite(bot, input):
+    if not input.admin:
+        return False
+    if not input.group(2):
+        return
+    nick = input.group(2)
+    if nick in bot.config.channel_whitelist:
+        bot.reply("User un-whitelisted")
+        bot.config.set_del( 'channel_whitelist', nick )
+        return
+    else:
+        bot.reply("User not whitelisted")
+chanunwhite.commands = ['chanunwhitelist']
 
 def config(bot,input):
     """ config - list config keys, config key - show doc and value, config key value - set key to value, whisper to set global(will be set for channel otherwise) """

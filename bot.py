@@ -342,7 +342,7 @@ class Bot( asynchat.async_chat ):
                     if origin[0] in [packets.ID.HON_SC_CHANNEL_MSG,packets.ID.HON_SC_CHANNEL_EMOTE]:
                         #prevent channel overspam
                         t = time.time()
-                        if not input.admin:
+                        if not input.admin and input.nick not in self.bot.config.channel_whitelist:
                             if origin[2] not in self.bot.channel_cooldowns or \
                                     ( origin[2] in self.bot.channel_cooldowns and \
                                     t - self.bot.channel_cooldowns[origin[2]]\
