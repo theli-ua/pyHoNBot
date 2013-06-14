@@ -419,7 +419,10 @@ class Bot( asynchat.async_chat ):
                 else:
                     s.nick = None
                     s.account_id = None
-                s.owner = s.nick.lower() == self.config.owner.lower()
+                if isinstance( self.config.owner, list ):
+                    s.owner = s.nick.lower() in [o.lower() for o in self.config.owner]
+                else:
+                    s.owner = s.nick.lower() == self.config.owner.lower()
                 s.admin = s.owner or s.nick.lower() in self.config.admins
                 s.admin = s.admin or hasattr(self.config,'clan_admin') and self.config.clan_admin and s.account_id in self.clan_roster
                 if not s.admin and hasattr(self.config,'officer_admin') and \

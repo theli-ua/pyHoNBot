@@ -66,7 +66,7 @@ def setup(bot):
             'cooldown'      : [3 , "Per-user cooldown in seconds"],
             'channel_cooldown': [30, "Channel answer cooldown"],
             'channels'      : [[], "Set of channels to join, use part/join commands to conveniently modify it"],
-            'admins'        : [[bot.config.owner], "Set of nicks for admin status, use admin add/del commands to conveniently modify it"],
+            'admins'        : [( bot.config.owner if isinstance(bot.config.owner, list) else [bot.config.owner] ), "Set of nicks for admin status, use admin add/del commands to conveniently modify it"],
             'ignore'        : [[], "Set of nicks to ignore. Use ignore add/dell to modify"],
             'banlist'       : [[], "Set of nicks to ban on sight. Use ban/unban to modify"],
             'replyprefix'   : ['', "Set a reply prefix"],
