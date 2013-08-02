@@ -14,6 +14,9 @@ def setup(bot):
 
 def derp(bot,*args):
     """Derp"""
+    if not hasattr( bot, 'stringtables' ):
+    	bot.say("Derp")
+    	return
     bot.say(bot.stringtables[derps[randint(0,len(derps) - 1)]])
 derp.commands = ['derp']
 
