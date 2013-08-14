@@ -158,6 +158,10 @@ def get_stats(bot,input,table,hero=None):
         else:
             stats_data = stats_data[0]
 
+    if not stats_data:
+        bot.say( "Error occurred." )
+        return
+
     if 'auth' in stats_data:
         print("WARNING: unexpected stats response, mail this line to developers:")
         print(stats_data)
