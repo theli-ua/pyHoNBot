@@ -379,7 +379,7 @@ class Bot( asynchat.async_chat ):
             if hasattr(self.config, 'bad_commands') and \
                 hasattr(func, 'commands') and \
                 any(cmd for cmd in func.commands if cmd in self.config.bad_commands) and \
-                not input.owner:
+                hasattr(input, 'owner') and not input.owner:
                 return
             if hasattr(self.config, 'clan_use') and \
                 hasattr(input, 'account_id') and \
