@@ -10,6 +10,9 @@ silences = {}
 def spam_silence(bot, chanid, nick):
 	if bot.config.spam_silence == 0:
 		return
+	if bot.config.spam_clan_immune == 1:
+		if nick in bot.nick2id and bot.nick2id[nick] in bot.clan_roster:
+			return
 	if nick not in silences:
 		silences[nick] = 1
 	else:
@@ -72,6 +75,7 @@ delword.commands = ['delword']
 
 def setup(bot):
 	bot.spamcd = {}
+	bot.config.module_config('spam_clan_immune', [1, 'Clan members are immune to spam protection/bad word silence/bans, 1 = Yes, 0 = No'])
 	bot.config.module_config('spam_silence_ban', [3, 'x silences for spam will ban (Covers badword silences too)'])
 	bot.config.module_config('spam_silence', [5, 'Silence for x minutes when spam detected, 0 = disabled (Also used for badwords)'])
 	bot.config.module_config('spam_length', [5, 'Seconds until messages are removed from the spam stack'])
