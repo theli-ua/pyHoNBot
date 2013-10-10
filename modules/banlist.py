@@ -112,10 +112,14 @@ def unban(bot, input):
 	if bot.banlist.Remove(nick):
 		bot.reply("Removed {0} from banlist".format(nick))
 		for chan in bot.channel_channels.keys():
-			if bot.id2chan[chan].find("Group") > 0: continue
 			bot.write_packet(ID.HON_CS_CHANNEL_UNBAN, chan, nick)
 	else:
-		bot.reply("{0} is not banlisted".format(nick))
+		bot.reply("{0} is not banlisted, attempting to unban anyway.".format(nick))
+		if input.origin[0] == ID.HON_SC_CHANNEL_MSG:
+			bot.write_packet( ID.HON_CS_CHANNEL_UNBAN, input.origin[2], nick )
+		else:
+			for chan in bot.channel_channels.keys():
+				bot.write_packet( ID.HON_CS_CHANNEL_UNBAN, chan, nick )
 unban.commands = ['unban']
 unban.thread = False
 
