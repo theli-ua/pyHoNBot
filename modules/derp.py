@@ -17,7 +17,7 @@ def derp(bot,*args):
     if not hasattr( bot, 'stringtables' ):
     	bot.say("Derp")
     	return
-    bot.say(bot.stringtables[derps[randint(0,len(derps) - 1)]])
+    bot.say (bot.stringtables[ derps[ randint( 0, len( derps ) - 1 ) ] ].replace( "\n", " " ) )
 derp.commands = ['derp']
 
 def roll(bot, input):
