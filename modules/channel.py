@@ -14,6 +14,7 @@ def setup(bot):
     bot.config.module_config('spam_threshold',[0,'number of seconds, if user repeats his message in channel with delay lower than this he will be considered spamming and banned'])
     bot.config.module_config('whitelist',[[],'whitelist for antispam etc'])
     bot.config.module_config('clanwhitelist', [[], 'Clan whitelist'])
+    bot.config.module_config('default_auth', [[], 'Default auths'])
     bot.config.module_config('default_topic', [[], 'Default Topics'])
     bot.config.module_config('default_prefix', [[], 'Default Topic Prefix'])
     bot.config.module_config('promote_clan', [0, "Auto-Promote clan members to channel officer"])
@@ -88,13 +89,14 @@ def channel_joined_channel(bot,origin,data):
             if not 'upgrades' in bot.clan_roster[m[1]]:
                 bot.clan_roster[m[1]]['upgrades'] = user_upgrades(m)
     # Default topic setting
+    cname = bot.id2chan[data[1]]
     topic = data[3]
     if 'name' in bot.clan_info:
         if ( len(topic) == 0 ) or ( topic == "Welcome to the {0} clan channel!".format( bot.clan_info['name'] ) ):
-            cname = bot.id2chan[data[1]]
             if getTopic(bot, cname):
                 bot.write_packet( ID.HON_CS_UPDATE_TOPIC, data[1], getTopic(bot, cname) )
-
+    if cname in bot.config.default_auth:
+        bot.write_packet( ID.HON_CS_CHANNEL_AUTH_ENABLE, data[1] )
 channel_joined_channel.event = [ID.HON_SC_CHANGED_CHANNEL]
 
 def channel_user_joined_channel_smurfs(bot,origin,data):
@@ -248,6 +250,23 @@ def demote(bot, input):
         if chan is not None:
             bot.write_packet(ID.HON_CS_CHANNEL_DEMOTE,chan,bot.nick2id[nick.lower()])
 demote.rule = (['demote'],'([^\ ]+)?(?:\ +(.+))?')
+
+def dauth( bot, input ):
+    """Toggle whether channel should be auth enabled by default"""
+    if not input.admin:
+        return False
+    if not input.origin[0] == ID.HON_SC_CHANNEL_MSG:
+        bot.reply("Run me from channel intended for the default auth!")
+    else:
+        cname = bot.id2chan[input.origin[2]]
+        authed = False
+        if cname in bot.config.default_auth:
+            bot.config.set_del( 'default_auth', cname )
+        else:
+            bot.config.set_add( 'default_auth', cname )
+            authed = True
+        bot.reply( "Default auth in this channel is now " + ( authed and "enabled" or "disabled" ) )
+dauth.commands = ['dauth']
 
 def dtopic(bot, input):
     """Set default channel topic, run this from intended channel"""
