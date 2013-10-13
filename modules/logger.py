@@ -23,6 +23,7 @@ CM_PSEUDO_CHANNEL = 'clan messages'
 CLAN_EVENTS_PSEUDO_CHANNEL = 'clan events'
 WHISP_PSEUDO_CHANNEL = 'whispers'
 ONLINE_PSEUDO_CHANNEL = 'online count'
+RANK_CHANGE = 'rank change'
 
 def get_logger(bot,filename):
     my_logger = logging.getLogger(filename)
@@ -46,8 +47,7 @@ def get_file(phenny, chan):
 
 
 def setup(bot):
-
-    bot.config.module_config('logchannels',[[CM_PSEUDO_CHANNEL,CLAN_EVENTS_PSEUDO_CHANNEL,WHISP_PSEUDO_CHANNEL],'list of channels to log, use log/unlog commands to add/del to this list'])
+    bot.config.module_config('logchannels',[[CM_PSEUDO_CHANNEL,CLAN_EVENTS_PSEUDO_CHANNEL,WHISP_PSEUDO_CHANNEL,RANK_CHANGE],'list of channels to log, use log/unlog commands to add/del to this list'])
     bot.config.module_config('logdir',['/tmp/','path to store channel logs in'])
 
     bot.reportRunning = False
@@ -177,6 +177,24 @@ def log_add_member(bot,origin,data):
     log_message(bot, nick, CLAN_EVENTS_PSEUDO_CHANNEL, 'joined the clan')
 log_add_member.event = [ID.HON_SC_CLAN_MEMBER_ADDED]
 log_add_member.thread = False
+
+def logPromote(bot, origin, data):
+    chan = bot.id2chan[data[0]]
+    promoted = bot.id2nick[data[1]]
+    promoter = bot.id2nick[data[2]]
+
+    logstr = "Promoted {0} in {1}".format( promoted, chan )
+    log_message( bot, promoter, RANK_CHANGE, logstr )
+logPromote.event = [ID.HON_SC_CHANNEL_PROMOTE]
+
+def logDemote(bot, origin, data):
+    chan = bot.id2chan[data[0]]
+    promoted = bot.id2nick[data[1]]
+    promoter = bot.id2nick[data[2]]
+
+    logstr = "Demoted {0} in {1}".format( promoted, chan )
+    log_message( bot, promoter, RANK_CHANGE, logstr )
+logDemote.event = [ID.HON_SC_CHANNEL_DEMOTE]
 
 if __name__ == '__main__':
     print __doc__.strip()

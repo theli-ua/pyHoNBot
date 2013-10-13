@@ -128,6 +128,8 @@ class Bot( asynchat.async_chat ):
         self.auth_hash = auth_data['auth_hash']
         self.got_len = False
         self.nick = auth_data['nickname']
+        self.id2nick[self.account_id] = self.nick
+        self.nick2id[self.nick] = self.account_id
         if "clan_member_info" in auth_data:
             self.clan_info = auth_data["clan_member_info"]
         else:
