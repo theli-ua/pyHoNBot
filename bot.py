@@ -473,3 +473,5 @@ class Bot( asynchat.async_chat ):
     def noauth(self, input):
             self.write_packet(packets.ID.HON_SC_WHISPER, input.nick, 'You do not have access to this command.')
             return False
+    def log( self, msg ):
+      print( "[{0}] {1}".format( time.strftime("%H:%M"), msg ) )
