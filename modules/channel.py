@@ -98,6 +98,7 @@ def channel_joined_channel(bot,origin,data):
     if cname in bot.config.default_auth:
         bot.write_packet( ID.HON_CS_CHANNEL_AUTH_ENABLE, data[1] )
 channel_joined_channel.event = [ID.HON_SC_CHANGED_CHANNEL]
+channel_joined_channel.priority = 'low'
 
 def channel_user_joined_channel_smurfs(bot,origin,data):
     nick = normalize_nick(data[1]).lower()
