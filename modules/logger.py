@@ -68,13 +68,23 @@ def log_message(phenny, teller, chan, msg):
 def log(bot, input): 
     """Adds channel to log list, owner only""" 
     if not input.owner: return False
-    bot.config.set_add('logchannels',input.group(2).lower())
+    channel = input.group(2).lower( )
+    if channel in bot.config.logchannels:
+        bot.reply( "Channel already logged" )
+        return
+    bot.config.set_add( 'logchannels', channel )
+    bot.reply( "Added channel to logger." )
 log.commands = ['log']
 
 def unlog(bot, input): 
     """Removes channel from log list, owner only""" 
     if not input.admin: return False
-    bot.config.set_del('logchannels',input.group(2).lower())
+    channel = input.group(2).lower( )
+    if channel not in bot.config.logchannels:
+        bot.reply( "Channel is not logged." )
+        return
+    bot.config.set_del( 'logchannels', channel )
+    bot.reply( "Channel is no longer logged." )
 unlog.commands = ['unlog']
 
 def string2date(string):
@@ -119,7 +129,7 @@ def activityreport(bot, input):
         outStr += "{0}:\t\t\t{1}{2}\t{3}\n".format( row['nick'], len(row['nick']) <= 6 and '\t' or '', row['date'], row['rank'] )
     f = open( os.path.join( bot.config.logdir, "activity.log" ), 'w' )
     f.write( outStr )
-    bot.reply("Log written to log directory. URL in officer forum")
+    bot.reply("Log written to log directory.")
     bot.reportRunning = False
 activityreport.commands = ['activityreport']
 activityreport.thread = True
