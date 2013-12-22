@@ -15,6 +15,7 @@ colors = {
 	"diamond": "#2ACC1FA",
 	"goldshield": "#DBBF4A",
 	"silvershield": "#7C8DA7",
+	"frostfieldssilver": "#D3DDEB",
 	"white": "#FFFFFF",
 	"": "#FFFFFF"
 }
@@ -28,7 +29,7 @@ def normalize_nick(nick):
 def user_upgrades(info, offset=0):
 	id = info[2]
 	retval = {
-		"color": colors[info[5+offset]],
+		"color": info[5+offset] in colors and colors[info[5+offset]] or '',
 		"symbol": len(info[4+offset]) > 0 and info[4+offset] or "default"
 	}
 	return retval
