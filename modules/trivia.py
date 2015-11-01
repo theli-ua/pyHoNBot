@@ -43,12 +43,20 @@ class Trivia:
 			nick = bot.id2nick[origin[1]]
 			aid = origin[1]
 
-			self.sendMsg( "{0} got it right and scored {1}!".format( nick, score ) )
-			time.sleep(4)
+			self.sendMsg( "^y{0} ^wgot it right and scored a point! The answer was: ^g{1}".format( nick, self.current['answer'] ) )
+			self.running = False
+			bot.write_packet(ID.HON_CS_CHANNEL_SILENCE_USER, bot.chan2id[bot.trivia.channel], nick, (60 * 1000))
+			print ( "Trivia - Nick: {0} Question: {1} Answer: {2}".format( nick, self.current['question'], self.current['answer'] ) )
+			time.sleep(3)
+			self.sendMsg( "Next question will show up soon!" )
+			time.sleep(20)
+			self.sendMsg( "Get ready!" )
+			time.sleep(7)
+			self.running = True
 			self.nextQuestion()
 	def sendMsg(self, message):
 		chan = self.bot.chan2id[self.channel]
-		self.bot.write_packet( ID.HON_SC_CHANNEL_EMOTE, "Trivia: " + message, chan )
+		self.bot.write_packet( ID.HON_SC_CHANNEL_EMOTE, "Trivia: ^w" + message, chan )
 	def setPoints(self, accountid, points):
 		if accountid in self.scores:
 			self.scores[accountid] += points
@@ -111,10 +119,10 @@ receivemessage.thread = True
 
 def trivia(bot, input):
 	if input.origin[2] != bot.chan2id[bot.trivia.channel]:
-		bot.reply("This only works in the HoNTrivia channel.")
+		bot.say("^wThis only works in the HoNTrivia channel.")
 		return
 	if not input.group(2):
-		bot.reply("Accepted arguments: start, stop")
+		bot.say("^wAccepted arguments are ^gstart ^wand ^rstop^w.")
 	else:
 		if input.group(2) == "start":
 			bot.trivia.start()
@@ -122,14 +130,14 @@ def trivia(bot, input):
 			if input.admin:
 				bot.trivia.stop()
 			else:
-				bot.reply("Only an admin can use stop. It will stop automatically after inactivity.")
+				bot.say("^wOnly an admin can use stop. It will stop automatically after inactivity.")
 trivia.commands = ['trivia']
 
 def setup(bot):
 	bot.config.module_config( 'trivia_channel', ['hontrivia', 'Set the channel the trivia bot will work in'] )
 	bot.config.module_config( 'trivia_file', ['triviadb', 'Set the channel the trivia bot will work in'] )
-	bot.config.module_config( 'trivia_timeout', [15, 'Set the timeout for a question'] )
-	bot.config.module_config( 'trivia_endtimeout', [30, 'Set the timeout for trivia'] )
+	bot.config.module_config( 'trivia_timeout', [60, 'Set the timeout for a question'] )
+	bot.config.module_config( 'trivia_endtimeout', [120, 'Set the timeout for trivia'] )
 
 	bot.trivia = Trivia(bot)
 
