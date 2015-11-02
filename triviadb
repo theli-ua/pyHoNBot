@@ -2,19 +2,226 @@
 (dp1
 S'question'
 p2
-S"What is Andromeda's first ability called?"
+S"Who says the line: I got nuts, but no balls..."
 p3
 sS'answer'
 p4
-S'Comet'
+S'The Chipper'
 p5
 sa(dp6
 S'question'
 p7
-S"What is Bubbles' ultimate ability called?"
+S"Who says the line: You haven't seen anything terrifying yet!"
 p8
 sS'answer'
 p9
-S'Kelp Field'
+S'Riptide'
 p10
+sa(dp11
+S'question'
+p12
+S"Who says the line: Neither heaven nor hell will stop me!"
+p13
+sS'answer'
+p14
+S'Calamity'
+p15
+sa(dp16
+S'question'
+p17
+S"What is the name of Sir Benzington's first ability?"
+p18
+sS'answer'
+p19
+S'Joust'
+p20
+sa(dp21
+S'question'
+p22
+S"What is the name of Riptide's ultimate ability?"
+p23
+sS'answer'
+p24
+S'Eye of the Storm'
+p25
+sa(dp26
+S'question'
+p27
+S"How many avatars does Engineer have?"
+p28
+sS'answer'
+p29
+S'7'
+p30
+sa(dp31
+S'question'
+p32
+S"Who started The Third Corruption?"
+p33
+sS'answer'
+p34
+S'Calamity'
+p35
+sa(dp36
+S'question'
+p37
+S"How many avatars does Pyromancer have?"
+p38
+sS'answer'
+p39
+S'7'
+p40
+sa(dp41
+S'question'
+p42
+S"What is the name of Klanx's first ability?"
+p43
+sS'answer'
+p44
+S'B.A.N.G.'
+p45
+sa(dp46
+S'question'
+p47
+S"What is the name of Klanx's second ability?"
+p48
+sS'answer'
+p49
+S'H.A.W.K.'
+p50
+sa(dp51
+S'question'
+p52
+S"Who can create a Spirit Mimic of herself?"
+p53
+sS'answer'
+p54
+S'Moira'
+p55
+sa(dp56
+S'question'
+p57
+S"What is the range of Portal Key?"
+p58
+sS'answer'
+p59
+S'1200'
+p60
+sa(dp61
+S'question'
+p62
+S"What is the name of the skill that binds 2 enemy units together, stuns and deals damage if they move too far apart?"
+p63
+sS'answer'
+p64
+S'Bound by Fate'
+p65
+sa(dp66
+S'question'
+p67
+S"Who says the line: All sacrilege must be cultivated!"
+p68
+sS'answer'
+p69
+S'Sacrilege'
+p70
+sa(dp71
+S'question'
+p72
+S"What is the name of Kane's ultimate ability?"
+p73
+sS'answer'
+p74
+S'Face Off'
+p75
+sa(dp76
+S'question'
+p77
+S"What is the duration of Cleansing Wind's movement speed bonus?"
+p78
+sS'answer'
+p79
+S'6'
+p80
+sa(dp81
+S'question'
+p82
+S"What is the max duration of As One?"
+p83
+sS'answer'
+p84
+S'30'
+p85
+sa(dp86
+S'question'
+p87
+S"What is the range of Ball Lightning?"
+p88
+sS'answer'
+p89
+S'1400'
+p90
+sa(dp91
+S'question'
+p92
+S"What is the cooldown of Face Off when used on towers?"
+p93
+sS'answer'
+p94
+S'20'
+p95
+sa(dp96
+S'question'
+p97
+S"What is the mana cost of Polarity Swap?"
+p98
+sS'answer'
+p99
+S'0'
+p100
+sa(dp101
+S'question'
+p102
+S"Who says the line: A wonderful purchase, Paragon!"
+p103
+sS'answer'
+p104
+S'Merrick'
+p105
+sa(dp106
+S'question'
+p107
+S"What is the name of the skill that has 2 auras which can be switched for mana and heath regeneration?"
+p108
+sS'answer'
+p109
+S'Balance of Power'
+p110
+sa(dp111
+S'question'
+p112
+S"Who says the line: Burn in unholy flame!"
+p113
+sS'answer'
+p114
+S'Brimstone'
+p115
+sa(dp116
+S'question'
+p117
+S"What is the name of the ability that creates a circular wall?"
+p118
+sS'answer'
+p119
+S'Sunder's Vault'
+p120
+sa(dp121
+S'question'
+p122
+S"Who says the line: Creatures of Newerth, your time has come!"
+p123
+sS'answer'
+p124
+S'Queen Riftwalker'
+p125
 sa.
