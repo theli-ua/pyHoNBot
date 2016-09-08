@@ -134,7 +134,7 @@ def parse_channel_join(packet_id,data):
     res.append(tmp)
     members = []
     for _ in xrange(tmp[0]):
-        tmp,data = parse_part(data,'sIBBsss') #nick,id,status,flags,chatsymbol,shield,icon?
+        tmp,data = parse_part(data,'sIBBsssI') #nick,id,status,flags,chatsymbol,shield,icon,ascension
         members.append(tmp)
     res.append(members)
     return origin,res
@@ -144,7 +144,7 @@ def parse_initiall_statuses(packet_id,data):
     res,data = parse_part(data,'I') #count
     buddies = []
     for _ in xrange(res[-1]):
-        m,data = parse_part(data,'IBBss') #id,status,flags, color, icon
+        m,data = parse_part(data,'IBBssI') #id,status,flags, color, icon, ascension
         if m[1] in [ ID.HON_STATUS_INLOBBY , ID.HON_STATUS_INGAME ]:
             tmp,data = parse_part(data,'s') #server
             m.append(tmp[0])
@@ -161,7 +161,7 @@ def parse_initiall_statuses(packet_id,data):
 
 def parse_user_status(packet_id,data):
     origin = [packet_id,None,None]
-    res,data = parse_part(data,'IBBIssss') #id,status,flags,clan_id,clan_name,chatsymbol,shield,icon
+    res,data = parse_part(data,'IBBIssssI') #id,status,flags,clan_id,clan_name,chatsymbol,shield,icon,ascension
     if res[1] in [ ID.HON_STATUS_INLOBBY , ID.HON_STATUS_INGAME ]:
         tmp,data = parse_part(data,'s') #server
         res.append(tmp[0])
@@ -176,7 +176,7 @@ def parse_pm(packet_id,data):
     if type == 0:
         res, _ = parse_part(data,'ss')
     elif type == 1:
-        res, _ = parse_part(data,'sIBBsss') # nick, id, status, unknown, color, icon, message
+        res, _ = parse_part(data,'sIBBssIs') # nick, id, status, unknown, color, icon, ascesnion, message
         res = [res[0],res[-1]]
     else:
         res = ['','']
@@ -227,7 +227,7 @@ sc_structs = {
         ID.HON_SC_CHANGED_CHANNEL : parse_channel_join,
         ID.HON_SC_INITIAL_STATUS  : parse_initiall_statuses,
         ID.HON_SC_UPDATE_STATUS : parse_user_status,
-        ID.HON_SC_JOINED_CHANNEL : 'IsIBBsss', #chat_id,nick,id,status,flags,chatsymbol,shield,icon
+        ID.HON_SC_JOINED_CHANNEL : 'IsIBBsssI', #chat_id,nick,id,status,flags,chatsymbol,shield,icon,ascension
         ID.HON_SC_CLAN_MEMBER_ADDED : 'I',
         ID.HON_SC_CLAN_MEMBER_CHANGE : 'IBI', #whom,wat,who (theli, promoted to officer, by visions)
         ID.HON_SC_NAME_CHANGE : 'Is',
