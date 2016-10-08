@@ -3,7 +3,7 @@ import struct
 class ID:
     #generic constants
     HON_CHAT_PORT = 11031
-    HON_PROTOCOL_VERSION = 63
+    HON_PROTOCOL_VERSION = 67
 
     HON_STATUS_OFFLINE    =  0
     HON_STATUS_ONLINE     =  3
