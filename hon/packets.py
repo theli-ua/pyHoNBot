@@ -213,7 +213,7 @@ cs_structs = {
         ID.HON_CS_CHANNEL_DEMOTE : 'II',
         ID.HON_CS_CLAN_ADD_MEMBER : 's',
         ID.HON_CS_CLAN_MESSAGE : 's',
-        ID.HON_CS_GLOBAL_MESSAGE : 's',
+        ID.HON_CS_GLOBAL_MESSAGE : 'IBs',
         ID.HON_CS_CLAN_REMOVE_MEMBER : 'I',
         ID.HON_CS_KICK_FROM_MM : 'B',
         }
